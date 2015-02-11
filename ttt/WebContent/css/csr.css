@@ -1,0 +1,306 @@
+
+ body,td,input,div,form,select,textarea,pre{font-size:10pt; font-family:Helvetica;color:#2c2c2c; }
+ body
+ {	border-width:0; overflow:auto;
+    scrollbar-face-color: #f2f2f2; scrollbar-highlight-color: #EFEFEF; 
+    scrollbar-3dlight-color: #ffffff; scrollbar-shadow-color: #cccccc;
+    scrollbar-darkshadow-color: #ffffff; scrollbar-track-color: #ffffff;
+    scrollbar-arrow-color: #dcdcdc;
+ }
+ img{border:0;}
+ form{margin:0; padding:0;}
+ 
+ a,label{cursor:pointer;}
+
+ A:link 
+ {	COLOR: #2E75B0; TEXT-DECORATION: none
+ }
+ A:visited 
+ {	COLOR: #2E75B0; TEXT-DECORATION: none
+ }
+ A:active 
+ {	COLOR: #2E75B0; TEXT-DECORATION: none
+ }
+ A:hover 
+ {	COLOR: #67a8b2; TEXT-DECORATION: none
+ }
+ hr 
+ {	
+	border: 0;
+	width: 100%;
+	color: #fafafa;
+	background-color: #fafafa;
+	height: 2px;
+	
+	/*
+	height: 3px;
+    border: 0;
+    box-shadow: inset 1px 3px 3px -3px rgba(0,0,0,0.5);
+    */
+ }
+
+.input_text{border:1px solid #aaaaaa;}
+textarea{overflow:auto; border:1px solid #aaaaaa;}
+select{border:1px solid #aaaaaa;}
+.header_td{text-align:center; width:100%; background-color:#E4E4C0; border-bottom:1px solid #fdfdfd;}
+.header2_td{text-align:center; background-color:#E4E4C0; border-bottom:1px solid #fdfdfd;}
+.header2_1_td{text-align:center; background-color:#E4E4C0; border-bottom:0px solid #fdfdfd;}
+.header3_td{text-align:center; background-color:#F7F7EA; border-bottom:1px solid #fdfdfd;}
+.light_grey_td{text-align:center; background-color:#EFDCDC; color:#333333; border-bottom:1px solid #fdfdfd;}
+.left_td{text-align:left; padding: 0 0 0 20px; width:100px; background-color:#F0F0DC; border-bottom:1px solid #fdfdfd;} 
+.left_td2{text-align:center; padding: 0 0 0 20px; width:100px; background-color:#F0F0DC; border-bottom:1px solid #fdfdfd;} 
+.left_td3{text-align:left; padding: 0 0 0 20px; background-color:#F0F0DC; border-bottom:0px solid #fdfdfd;} 
+.check_td{text-align:right; width:0px; background-color:#F0F0DC; border-bottom:1px solid #fdfdfd;} 
+.dv_line{background-color:#f8f8f8; height:1px; padding:0;} 
+.dv_line2{background-color:#E4E4C0; height:1px; padding:0;}
+.dv_line3{background-color:#AFAF4B; height:1px; padding:0;}
+.dv_line4{background-color:#ffffff; height:2px; padding:0;} 
+.center_td{text-align:center;}
+.left_center_td{text-align:center;background-color:#F0F0DC;}
+.qa_td{text-align:left; padding: 0 0 0 10px; width:15%; background-color:#F0F0DC; border-bottom:1px solid #fdfdfd;}
+.company_pros_td{padding: 10px 10px 10px 10px;}
+.curriculum_td{padding: 3px 10px 3px 10px;}
+.spinner_hidden { display: none; }
+.spinner_unhidden { display: block; }
+.obj_hide { display: none; }
+.obj_display { display: block; }
+ .view_reference_file_left_td{width: 20%; text-align:right; padding: 0 0 0 0px; background-color:#F0F0DC; border-bottom:1px solid #fdfdfd;}
+ .view_reference_file_right_td{width: 30%; text-align:left; padding: 0 0 0 5px; background-color:#F0F0DC; border-bottom:1px solid #fdfdfd;}
+ .view_reference_file_left_td2{width: 22%; text-align:right; padding: 0 0 0 0px; background-color:#F0F0DC; border-bottom:1px solid #fdfdfd;}
+ .view_reference_file_right_td2{width: 28%; text-align:left; padding: 0 0 0 5px; background-color:#F0F0DC; border-bottom:1px solid #fdfdfd;}
+ .submit_tracking_left_td{width: 30%; text-align:right; padding: 0 0 0 0px; background-color:#F0F0DC; border-bottom:1px solid #fdfdfd;}
+ .submit_tracking_right_td{width: 20%; text-align:left; padding: 0 0 0 5px; background-color:#F0F0DC; border-bottom:1px solid #fdfdfd;}
+ .submit_tracking_left_td2{width: 30%; text-align:right; padding: 0 0 0 0px; background-color:#F0F0DC; border-bottom:1px solid #fdfdfd;}
+ .submit_tracking_right_td2{width: 20%; text-align:left; padding: 0 0 0 5px; background-color:#F0F0DC; border-bottom:1px solid #fdfdfd;}
+ 
+.box 
+{ 
+	border : 1px solid #9DD0EA; 
+	padding : 10px 0px 0px 0px; 
+} 
+.title 
+{ 
+	position : relative; 
+	top : 10px; 
+	left : 25px; 
+	border-left : 1px solid #9DD0EA; 
+	border-right : 1px solid #9DD0EA; 
+	background-color : white; 
+	padding : 0 5px; 
+	font-weight: normal;
+}
+/*** Not used ***/
+div.my_left_box
+{
+    float: left;
+    padding: 0px;
+    width: 1000px;
+    border: 1px solid gray;
+    height:100%;
+}
+
+div.my_right_box
+{
+    float: right;
+    padding: 0px;
+
+    border: 1px solid gray;
+    height:100%;
+}
+
+/**** 3d text **********/
+h10 {
+	/*color:#BBD2DA;
+	//font:normal 20pt Arial;*/
+  text-shadow: 0 1px 0 #ccc,
+               0 2px 0 #c9c9c9,
+               0 3px 0 #bbb;
+               /*0 4px 0 #b9b9b9,
+               0 5px 0 #aaa,
+               0 6px 1px rgba(0,0,0,.1),
+               0 0 5px rgba(0,0,0,.1),
+               0 1px 3px rgba(0,0,0,.3),
+               0 3px 5px rgba(0,0,0,.2),
+               0 5px 10px rgba(0,0,0,.25),
+               0 10px 10px rgba(0,0,0,.2),
+               0 20px 20px rgba(0,0,0,.15);  */
+}
+/**** from ozlab ******/
+.titleOz 
+{
+	width: 675px;
+	padding-top: 20px;
+	padding-bottom: 5px;
+	padding-left: 25px;
+	font: 9.5pt Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: #424340;
+	border-bottom : 1px dotted #69c;
+	background: url('/csr/images/common/greendownarrow.gif') no-repeat;
+	background-position: 0px 21px;
+}
+.titleOz a 
+{
+	font: 10.5pt Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: #424340;
+	text-decoration:none;
+}
+.titleStatic 
+{
+	width: 675px;
+	padding-top: 20px;
+	padding-bottom: 5px;
+	padding-left: 25px;
+	font: 10.5pt Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: #424340;
+	border-bottom : 1px dotted #69c;
+	background: url('/csr/images/common/pointer_hover.gif') no-repeat;
+	background-position: 0px 21px;
+}
+.studyDateAnchors 
+{
+	width: 337px;
+	padding-top: 20px;
+	padding-bottom: 5px;
+	padding-left: 25px;
+	font: 10.5pt Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: #424340;
+	border-bottom : 1px dotted #69c;
+	background: url('/csr/images/common/pointer_hover.gif') no-repeat;
+	background-position: 0px 21px;
+}
+/* publication page article title */
+.articleTitle 
+{
+	width: 675px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-left: 12px;
+	font: 9pt Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: #424340;
+	border-bottom : 1px solid #ccc;
+}
+.articleTitle a 
+{
+	color: #424340;
+	text-decoration: none;
+}
+.articleTitle a:hover 
+{
+	color: #000000;
+}
+
+.subTitleStatic 
+{
+	width: 400px;
+	padding-top: 10px;
+	padding-bottom: 5px;
+	/*padding-left: 25px;*/
+	/*margin-left: 180px;*/
+	font: 9.5pt Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: #000;
+	border-bottom : 1px dotted #69c;
+	/*background: url('img/pointer_hover.gif') no-repeat;
+	background-position: 0px 10px;*/
+}
+
+.heading 
+{
+	width: 675px;
+	padding-top: 30px;
+	padding-bottom: 5px;
+	padding-left: 25px;
+	font: 11pt Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	border-bottom : 1px dotted #5e605c;
+	background: url('/csr/images/common/icon.gif') no-repeat;
+	background-position: 0px 31px;
+}
+
+.boxGreen 
+{
+	width: 700px; 
+	/*height: 1040px;*/
+	height: auto;
+	margin-top: 5px; 
+	background-color: #f7f7f7;
+	display: none;
+}
+.boxWhite 
+{
+	width: 700px; 
+	height: auto;
+	margin-top: 5px; 
+	background-color: #ffffff;
+	display: none;
+}
+
+.boxEmbedded 
+{
+	width: 700px; 
+	height: 170px;
+	margin-top: 5px; 
+	background-color: #EFFBE3;
+}
+
+.greenTextBox 
+{
+	width: 700px; 
+	height: 170px; 
+	margin-top: 5px; 
+	background-color: #EFFBE3;
+}
+.greenTextBoxDisplay 
+{
+	width: 700px; 
+	height: auto; 
+	margin-top: 5px; 
+	background-color: #f7f7f7; /* green #EFFBE3 */
+}
+.text 
+{
+	width: 650px; 
+	height: 150px;
+	padding-top: 20px; 
+	padding-left: 10px;
+}
+/* For Research Team page */
+.text5 
+{
+	width: 650px; 
+	height: 150px; 
+	padding-top: 7px;
+	padding-left: 10px;
+}
+
+/* Bioinfo Projects page */
+.text2 
+{
+	width: 460px; 
+	height: auto;
+	padding-top: 15px; 
+	padding-left: 8px;
+	margin-left: 180px;
+	padding-bottom:5px;
+}
+
+/*research page*/
+.text3
+{
+	width: 665px; 
+	height: auto;
+	padding-top: 10px; 
+	padding-left: 15px;
+	padding-bottom:5px;
+}
+.text4
+{
+	width: 600px; 
+	height: auto;
+	padding-top: 5px;
+}

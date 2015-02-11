@@ -1,0 +1,9 @@
+To Read Select Option Value
+
+$('#selectId').val();
+To Set Select Option Value
+
+$('#selectId').val('newValue');
+To Read Selected Text
+
+$('#selectId>option:selected').text();
