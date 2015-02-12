@@ -7,3 +7,5 @@ $('#selectId').val('newValue');
 To Read Selected Text
 
 $('#selectId>option:selected').text();
+
+#file upload plugins

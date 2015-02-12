@@ -151,6 +151,88 @@
         }
         httpRequest.send(null);
     }
+	//**********************************************************************************************
+	//http://stackoverflow.com/questions/4856917/jquery-upload-progress-and-ajax-file-upload
+	//var fd = new FormData;
+	//fd.append('photo1', file);
+	//fd.append('photo2', file2);
+	//fd.append('other_data', 'foo bar');
+	//xhr.send(fd);
+	//**********************************************************************************************
+	function httpRequestFileUpload(strURL, formData, strResultFunc) 
+	{	
+		var httpRequest;
+        if (window.XMLHttpRequest) 
+	    { 
+	        httpRequest = new XMLHttpRequest();
+	        if (httpRequest.overrideMimeType) httpRequest.overrideMimeType('text/xml');
+	    } 
+	    else if (window.ActiveXObject) 
+	    { 
+	        try 
+	        {
+	        	httpRequest = new ActiveXObject("Msxml2.XMLHTTP");
+	        } 
+	        catch (e) 
+	        {
+	            try 
+	            {
+	            	httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+	            } 
+	            catch (e) 
+	            {}
+	        }
+	    }
+	
+	    if (httpRequest==null) 
+	    {
+	        alert("ERROR :( Cannot create an XMLHTTP instance");
+	        return;
+	    }
+	    
+	    httpRequest.addEventListener('progress', function(e) 
+	    {
+	        var done = e.position || e.loaded, total = e.totalSize || e.total;
+	        log('httpRequest progress: ' + (Math.floor(done/total*1000)/10) + '%');
+	    }, false);
+	    
+	    if ( httpRequest.upload ) 
+	    {
+	    	httpRequest.upload.onprogress = function(e) 
+	        {
+	            var done = e.loaded || e.loaded, total = e.totalSize || e.total;
+	            log('httpRequest.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done/total*1000)/10) + '%');
+	        };
+	    }
+	    
+        httpRequest.onreadystatechange = function(e)
+        {	
+        	try
+        	{		
+                if (this.readyState == 4) //the full server response is received with 4 when it is complete
+                {	
+                	var strResponse = this.responseText;
+			        switch (this.status)
+			        {
+				        case 404: alert('ERROR: The requested URL ' + strURL + ' could not be found, httpRequestFileUpload(...) of httpRequest.js.');// Page-not-found error
+	                  	 		  break;
+				        case 500: handleErrorFullPage(strResponse);// Display results in a full window for server-side errors
+				        		  break;
+				        default:  eval(strResultFunc + '(strResponse);');// Call the desired result function
+				                   break;
+			        }               	
+			   }//(httpRequest.readyState == 4)
+            }//try
+            catch(e)
+			{
+            	log("ERROR: "+e+" from httpRequestFileUpload("+strURL+") in httpRequest.js");
+				alert("ERROR: there was a problem from the server response.\n(error string: "+e+")");
+			}
+        }
+
+        httpRequest.open('POST', strURL, true);
+        httpRequest.send(formData);
+    }
     function handleErrorFullPage(strIn) 
     {
 		var errorWin;

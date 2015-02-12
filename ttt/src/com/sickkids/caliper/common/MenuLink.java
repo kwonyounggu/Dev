@@ -35,6 +35,7 @@ public class MenuLink
 	public static final String menu_ttt_admin_manage_hospitals=TTT_CONTEXT+"?op=menu_ttt_admin_manage_hospitals&sm=0";
 	public static final String menu_ttt_admin_manage_accounts=TTT_CONTEXT+"?op=menu_ttt_admin_manage_accounts&sm=0";
 	public static final String menu_ttt_admin_manage_training=TTT_CONTEXT+"?op=menu_ttt_admin_manage_training&sm=0";
+	public static final String menu_ttt_admin_manage_fileupload=TTT_CONTEXT+"?op=menu_ttt_admin_manage_fileupload&sm=0";
 
 	
 	public static final String ttt_logout=TTT_CONTEXT+"?op=ttt_logout&sm=0";

@@ -17,13 +17,19 @@
 		<servlet-name>ActionController</servlet-name>
 		<servlet-class>com.sickkids.caliper.servlet.ActionController</servlet-class>
 	</servlet>
-	
+	<servlet>
+		<servlet-name>FileUploadServlet</servlet-name>
+		<servlet-class>com.sickkids.caliper.servlet.FileUploadServlet</servlet-class>
+	</servlet>
      
     <servlet-mapping>
 		<servlet-name>ActionController</servlet-name>
 		<url-pattern>/controller</url-pattern>
 	</servlet-mapping>
-	
+	<servlet-mapping>
+		<servlet-name>FileUploadServlet</servlet-name>
+		<url-pattern>/file_upload</url-pattern>
+	</servlet-mapping>
     <!-- 
     remove the following servlet tags if you want 
     to disable remoting for this application 
