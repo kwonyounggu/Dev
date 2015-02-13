@@ -131,6 +131,7 @@ public class FileUploadServlet extends HttpServlet implements Servlet
 			forwardErrorPage(request,response,e.toString());
 		}
 		
+		Utils.delay(5);
 		//response.getWriter().print(ajaxUpdateResult);
 		response.getWriter().print("OK");
 		response.getWriter().close();

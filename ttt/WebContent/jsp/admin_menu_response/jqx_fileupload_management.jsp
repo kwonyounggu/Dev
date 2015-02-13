@@ -131,6 +131,7 @@
                 
                 addButton.click(function (event) 
                 {               
+                	
                 	var offset = $("#jqxgrid").offset();
                     $("#popupWindow").jqxWindow({title: 'add', position: { x: parseInt(offset.left) + 200, y: parseInt(offset.top) + 65 } });
                     $("#popupHeader").html("<img src='images/common/plus_16.png' width=16 height=16 valign='middle' style='margin-right: 15px;'/>Add");
@@ -140,7 +141,7 @@
                     $("#lastName").val("");
                     $("#emailInput").val(""); 
                     $('#validBox').jqxCheckBox('check');
-                    
+                           	    	
                     $("#popupWindow").jqxWindow('open');
                 });
                 editButton.click(function (event) 
@@ -174,6 +175,8 @@
 		                    $("#resetPasswordBox").jqxCheckBox('val', selectedDataRecord.resetPassword);
 		                    $("#validBox").jqxCheckBox('val', selectedDataRecord.valid);
 		                    
+		                    
+		        	    			        	    	
 		                    $("#popupHeader").html("<img src='images/common/edit_16.png' width=16 height=16 valign='middle' style='margin-right: 15px;'/>Edit");
 		                    var offset = $("#jqxgrid").offset();
 		                    $("#popupWindow").jqxWindow({ title: 'edit', position: { x: parseInt(offset.left) + 200, y: parseInt(offset.top) + 65 } });
@@ -184,8 +187,9 @@
                 });
                 
                 deleteButton.click(function (event) 
-                {
+                {	//this is required
                 	alert("Deleting a record is not allowed!");
+                	
                 });
                            	
             },
@@ -225,6 +229,9 @@
         $("#popupWindow").on('open', function () 
         {
             $('#errorMsg').html("");
+            $("#fileuploadPercent").html("(0%) ");
+            $("#ajaxPercent").html("(0%) ");
+            
             if($("#popupWindow").jqxWindow('title')=="edit")
             {            	
             }
@@ -288,7 +295,8 @@
 			  
 			var formdata = new FormData();//html5 and ie10
 	        formdata.append("studyId", "12345");
-	        formdata.append("docFile", fileInputId.files[0]);
+	        //formdata.append("docFile", fileInputId.files[0]);
+	        formdata.append("docFile", $("#fileInputId")[0].files[0]);
 	        
 	        httpRequestFileUpload("/ttt/file_upload",formdata, "ajaxUploadStudyDocResponse");
         });     
@@ -296,7 +304,8 @@
         /**********************************************************************************/
         /*** Initialize the given components **********************************************/
         /**********************************************************************************/
-        $("#spinner_img").hide();
+        $("#spinner").hide();
+        //$("#ajaxPercent").hide();
         $("#accessLimitDate").jqxDateTimeInput({width: '110px', height: '20px', formatString: 'MMM dd yyyy', value: new Date(<%=Utils.login_access_limit_date.getTime()%>), min: new Date(), allowKeyboardDelete: false});
         $("#resetPasswordBox").jqxCheckBox({ width: 120, height: 25, checked: true, locked: false });
         $("#validBox").jqxCheckBox({ width: 120, height: 25, checked: true });
@@ -332,11 +341,12 @@
 				]
 			}
 		);		
+		
 	});//$(document).ready
 	function ajaxUploadStudyDocResponse(data)
 	{
 		//alert(data);
-		alert("You have successfully updated the selected study!\nThe document file has successfully uploaded as well.");
+		alert("You have successfully updated the selected study!\nThe document file has successfully uploaded as well."+data);
 	}
 	function disableComponents(doIt)
 	{
@@ -380,7 +390,7 @@
 	{
 		log("getAdminAccountActionResponse("+strResponse+")");
 		
-		$("#spinner_img").hide();
+		//$("#spinner_img").hide();
 		if(strResponse.indexOf('session_timeout')==0) 
 		{
 			alert("Your session is expired. Please login again.");
@@ -472,7 +482,7 @@
 					<table height="40" width="100%">
 						<tr><td align="left" valign="middle" style="padding-left: 5px; font-size:13pt;">
 								<img src='images/common/blue_circle.gif' width=16 height=17 valign="middle"/>
-								<span style="color: #32344B font-weight:bold; font-size:12pt; font-family: arial;">&nbsp;&nbsp;Login Account Management</span>
+								<span style="color: #32344B font-weight:bold; font-size:12pt; font-family: arial;">&nbsp;&nbsp;File Upload</span>
 							</td>
 							<td align="right" valign="middle" style="padding-right: 20px; font-size:10pt; font-family: arial; color: #32344B;">
 								
@@ -619,14 +629,15 @@
 			                    
 			                    <tr height='3'><td colspan='2'></td></tr>
 			                    <tr style='vertical-align: top;'>
-			                        <td align="right" width="40%">File:</td>
-			                        <td align="left"><input type='file' id="fileInputId" name="fileInputName" accept="application/pdf" size=40 value='' maxlength="256"  style='imemode:inactive'/></div>
+			                        <td colspan='2' align='center'>
+			                        File:<span id='fileuploadPercent'>(0%)&nbsp;</span><input type='file' id="fileInputId" name="fileInputName" size=40 value='' maxlength="256"  style='imemode:inactive'/>
 			                        </td>
 			                    </tr>
 
 			                    <tr height='10'><td colspan='2'></td></tr>
 			                    
-			                    <tr><td colspan='2' align='center'><img id='spinner_img' src='images/common/spinner.gif' width=32 height=32 /></td></tr>
+			                    <tr><td colspan='2' align='center' style='vertical-align:middle;' id='spinner'><img id='spinner_img' style='vertical-align:middle;' src='images/common/spinner.gif' width=32 height=32 /><span id='ajaxPercent' style='vertical-align:middle;'>(0%)</span></td></tr>
+			                    
 			                    <tr><td colspan='2' align='left' id='errorMsg'></td></tr>
 			                    <tr>
 			                        <td colspan='2' style="padding-top: 10px;" align="center">

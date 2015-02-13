@@ -192,34 +192,58 @@
 	    
 	    httpRequest.addEventListener('progress', function(e) 
 	    {
-	        var done = e.position || e.loaded, total = e.totalSize || e.total;
-	        log('httpRequest progress: ' + (Math.floor(done/total*1000)/10) + '%');
+	        var percents=e.total==0? 0 : (Math.floor(e.loaded/e.total*1000)/10); 
+	        log('httpRequest progress: ' + percents + '%');
+	        $("#ajaxPercent").html("("+percents+"%)");
+	        if(percents==Number(100)) $("#spinner").hide();
 	    }, false);
 	    
-	    if ( httpRequest.upload ) 
+	    httpRequest.addEventListener('loadstart', function(e) 
 	    {
+	    	$("#spinner").show();
+	    }, false);
+	    httpRequest.addEventListener('load', function(e) //when httpRequest is done
+	    {
+	    	$("#spinner").hide();
+	    }, false);
+	    httpRequest.addEventListener('error', function(e) 
+	    {
+	    	$("#spinner").hide();
+	    	log('error event generated from httpRequestFileUpload(...) of httpRequest.js.');
+	    	alert("Error: "+e.status);
+	    }, false);
+	    httpRequest.addEventListener('abort', function(e) 
+	    {
+	    	$("#spinner").hide();
+	        log('abort event generated from httpRequestFileUpload(...) of httpRequest.js.');
+	        alert("Abort: "+e.status);
+	    }, false);
+	    if ( httpRequest.upload ) 
+	    {	
 	    	httpRequest.upload.onprogress = function(e) 
 	        {
-	            var done = e.loaded || e.loaded, total = e.totalSize || e.total;
-	            log('httpRequest.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done/total*1000)/10) + '%');
+	            var percents=e.total==0? 0 : (Math.floor(e.loaded/e.total*1000)/10);
+	            log('httpRequest.upload progress: ' +  e.loaded + ' / ' + e.total + ' = ' + percents + '%');
+	            $("#fileuploadPercent").html("("+percents+"%) ");
 	        };
 	    }
 	    
         httpRequest.onreadystatechange = function(e)
         {	
         	try
-        	{		
+        	{	log("this.status="+this.status);	
                 if (this.readyState == 4) //the full server response is received with 4 when it is complete
                 {	
                 	var strResponse = this.responseText;
 			        switch (this.status)
 			        {
-				        case 404: alert('ERROR: The requested URL ' + strURL + ' could not be found, httpRequestFileUpload(...) of httpRequest.js.');// Page-not-found error
+				        case 404: alert('ERROR: The requested URL ' + strURL + ' could not be found, httpRequestFileUpload(...)');// Page-not-found error
 	                  	 		  break;
 				        case 500: handleErrorFullPage(strResponse);// Display results in a full window for server-side errors
 				        		  break;
-				        default:  eval(strResultFunc + '(strResponse);');// Call the desired result function
-				                   break;
+				        case 200: eval(strResultFunc + '(strResponse);');// Call the desired result function
+		                   		  break;
+				        default:  log("Unknown status: "+this.status);
 			        }               	
 			   }//(httpRequest.readyState == 4)
             }//try
