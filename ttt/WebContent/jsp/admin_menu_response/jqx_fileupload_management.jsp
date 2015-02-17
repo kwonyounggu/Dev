@@ -9,8 +9,7 @@
 <%@ page isELIgnored ="false" %> 
 <%
 	SQLDao sqlDao=(SQLDao)application.getAttribute("tttsqlDao");
-	List<HospitalBean> hospitalList=sqlDao.getHospitalList("where valid=true order by hospital_name asc");
-	List<AllRegisteredUserBean> userList=sqlDao.getListUserTableAndHospital();
+	List<FileLibraryBean> fileList=sqlDao.getFileList("order by file_name_formal asc");
  %>
 <script language="Javascript" type="text/javascript">
 	$(document).ready(function () 
@@ -21,33 +20,31 @@
 		var action_command;//add, edit, delete
 		var data=[
 			 		<%	
-			 			for(int i=0;i<userList.size();i++)
+			 			for(int i=0;i<fileList.size();i++)
 			 			{
-			 				AllRegisteredUserBean ab=userList.get(i);
+			 				FileLibraryBean ab=fileList.get(i);
 			 				out.print("{"); 
 			 				
 			 				//Visible
-			 				out.print("\"hospitalName\": \""+ab.getHopitalName()+"\","); 
-			 				out.print("\"name\": \""+ab.getFirstName()+" "+ab.getLastName()+"\","); 
-			 				out.print("\"userId\": \""+ab.getUserId()+"\","); 
-			 				out.print("\"email\": \""+ab.getEmail()+"\","); 
-			 				out.print("\"loginLevel\": \""+ab.getLoginLevel()+"\","); 
-			 				out.print("\"accessLimitDate\": \""+ab.getAccessLimitTime()+"\","); 
-			 				out.print("\"resetPassword\": \""+(ab.getResetPassword()==1 ? true: false)+"\",");
+			 				out.print("\"fileNameFormal\": \""+ab.getFileNameFormal()+"\","); 
+			 				out.print("\"fileType\": \""+ab.getFileType()+"\","); 
+			 				out.print("\"description\": \""+ab.getDescription()+"\","); 
+			 				out.print("\"submitterId\": \""+ab.getSubmitterId()+"\","); 
+			 				out.print("\"submissionTime\": \""+ab.getSubmissionTime()+"\","); 
+			 				out.print("\"fileSize\": \""+ab.getFileSize()+"\","); 
 			 				
 			 				//Invisible
-			 				out.print("\"hospitalId\": \""+ab.getHospitalId()+"\",");	
-			 				out.print("\"firstName\": \""+ab.getFirstName()+"\","); 
-			 				out.print("\"lastName\": \""+ab.getLastName()+"\","); 
-			 				out.print("\"practiceYear\": \""+ab.getPracticeYear()+"\","); 
-			 				out.print("\"healthDiscipline\": \""+ab.getHealthDiscipline()+"\","); 
-			 				out.print("\"primaryClinicalPractice\": \""+ab.getPrimayClinicalPractice()+"\","); 
-			 				out.print("\"seniority\": \""+ab.getSeniority()+"\","); 
+			 				out.print("\"fileId\": \""+ab.getFileId()+"\",");	
+			 				out.print("\"fileLocationPath\": \""+ab.getFileLocationPath()+"\","); 
+			 				out.print("\"fileVersion\": \""+ab.getFileVersion()+"\","); 
+			 				out.print("\"fileNameSubmitted\": \""+ab.getFileNameSubmitted()+"\","); 
+			 				out.print("\"fileNameGenerated\": \""+ab.getFileNameGenerated()+"\","); 
+			 				out.print("\"remarks\": \""+ab.getRemarks()+"\","); 
 			 				
 			 				//Visible
 		 					out.print("\"valid\": \""+ab.isValid()+"\"");
 			 				
-							out.print(((i+1)==userList.size() ? "}" : "},"));				
+							out.print(((i+1)==fileList.size() ? "}" : "},"));				
 			 			}
 	
 			 		%>
@@ -59,26 +56,24 @@
             datatype: "array",
             datafields:
             [
-                { name: "hospitalName", type: "string" },
-                { name: "name", type: "string" },
-                { name: "userId", type: "string" },
-                { name: "email", type: "string"},
-                { name: "loginLevel", type: "number" },
-                { name: "accessLimitDate", type: "date", format: 'MM/dd/yyyy'},
-                { name: "hospitalId", type: "string" },
-                { name: "firstName", type: "string" },
-                { name: "lastName", type: "string"},
-                { name: "practiceYear", type: "string" },
-                { name: "healthDiscipline", type: "string" },
-                { name: "primaryClinicalPractice", type: "string"},
-                { name: "seniority", type: "string" },
-                { name: "resetPassword", type: "bool" },
+                { name: "fileNameFormal", type: "string" },
+                { name: "fileType", type: "string" },
+                { name: "description", type: "string" },
+                { name: "submitterId", type: "string"},
+                { name: "submissionTime", type: "date", format: 'MM/dd/yyyy'},
+                { name: "fileSize", type: "number"},
+                { name: "fileId", type: "number" },
+                { name: "fileLocationPath", type: "string" },
+                { name: "fileVersion", type: "number"},
+                { name: "fileNameSubmitted", type: "string" },
+                { name: "fileNameGenerated", type: "string" },
+                { name: "remarks", type: "string"},
                 { name: "valid", type: "bool" }             
             ],
             addrow: function (rowid, rowdata, position, commit) {commit(true);},
             deleterow: function (rowid, commit) {commit(true); },
             updaterow: function (rowid, newdata, commit) {commit(true);},
-            sortcolumn: 'hospitalId',
+            sortcolumn: 'fileNameFormal',
             sortdirection: 'asc'
         };
 
@@ -137,9 +132,9 @@
                     $("#popupHeader").html("<img src='images/common/plus_16.png' width=16 height=16 valign='middle' style='margin-right: 15px;'/>Add");
                     
                     $("#jqxgrid").jqxGrid('clearselection');
-                    $("#firstName").val("");
-                    $("#lastName").val("");
-                    $("#emailInput").val(""); 
+                    //$("#firstName").val("");
+                    //$("#lastName").val("");
+                    //$("#emailInput").val(""); 
                     $('#validBox').jqxCheckBox('check');
                            	    	
                     $("#popupWindow").jqxWindow('open');
@@ -195,34 +190,31 @@
             },
             columns: 
             [
-              { text: 'Hospital Name', dataField: 'hospitalName', align: 'center', width: '18%' },
-              { text: 'Name', dataField: 'name', align: 'center', width: '15%' },
-              { text: 'Login ID', dataField: 'userId', align: 'center', width: '16%' },
-              { text: 'E-Mail', dataField: 'email', align: 'center', width: '19%' },
-              { text: 'Level', dataField: 'loginLevel', align: 'center', width: '6%'},
-              { text: 'Access Limit', dataField: 'accessLimitDate', align: 'center', cellsformat: 'd', width: '10%' },
-              { text: 'Reset PWD', dataField: 'resetPassword', align: 'center', columntype: 'checkbox', width: '10%' },
-              
-              { text: 'Hospital ID', dataField: 'hospitalId', align: 'center', width: '0%' },
-              { text: 'First Name', dataField: 'firstName', align: 'center', width: '0%' },
-              { text: 'Last Name', dataField: 'lastName', align: 'center', width: '0%' },
-              { text: 'Practive Year', dataField: 'practiceYear', align: 'center', width: '0%'},
-              { text: 'Health Discipline', dataField: 'healthDiscipline', align: 'center', width: '0%' },
-              { text: 'Primary Clinical Practice', dataField: 'primaryClinicalPractice', align: 'center', width: '0%' },
-              { text: 'Seniority', dataField: 'seniority', align: 'center', width: '0%' },
+              { text: 'File Name', dataField: 'fileNameFormal', align: 'center', width: '20%' },
+              { text: 'File Type', dataField: 'fileType', align: 'center', width: '10%' },
+              { text: 'Description', dataField: 'description', align: 'center', width: '30%' },
+              { text: 'Submitter ID', dataField: 'submitterId', align: 'center', width: '10%' },
+              { text: 'Uploaded at', dataField: 'submissionTime', align: 'center', width: '10%'},
+              { text: 'File Size', dataField: 'fileSize', align: 'center', cellsformat: 'd', width: '10%' },
 
-              { text: 'Valid', dataField: 'valid', align: 'center', columntype: 'checkbox', width: '6%' }
+              { text: 'File ID', dataField: 'fileId', align: 'center', width: '0%' },
+              { text: 'File Location Path', dataField: 'fileLocationPath', align: 'center', width: '0%' },
+              { text: 'File Version', dataField: 'fileVersion', align: 'center', width: '0%' },
+              { text: 'File Name Submitted', dataField: 'fileNameSubmitted', align: 'center', width: '0%'},
+              { text: 'File Name Generated', dataField: 'fileNameGenerated', align: 'center', width: '0%' },
+              { text: 'Remarks', dataField: 'remarks', align: 'center', width: '0%' },
+
+              { text: 'Valid', dataField: 'valid', align: 'center', columntype: 'checkbox', width: '10%' }
             ]
         });
    
         //Invisible columns
-        $("#jqxgrid").jqxGrid('hidecolumn', 'hospitalId');
-        $("#jqxgrid").jqxGrid('hidecolumn', 'firstName');
-        $("#jqxgrid").jqxGrid('hidecolumn', 'lastName');
-        $("#jqxgrid").jqxGrid('hidecolumn', 'practiceYear');
-        $("#jqxgrid").jqxGrid('hidecolumn', 'healthDiscipline');
-        $("#jqxgrid").jqxGrid('hidecolumn', 'primaryClinicalPractice');
-        $("#jqxgrid").jqxGrid('hidecolumn', 'seniority');
+        $("#jqxgrid").jqxGrid('hidecolumn', 'fileId');
+        $("#jqxgrid").jqxGrid('hidecolumn', 'fileLocationPath');
+        $("#jqxgrid").jqxGrid('hidecolumn', 'fileVersion');
+        $("#jqxgrid").jqxGrid('hidecolumn', 'fileNameSubmitted');
+        $("#jqxgrid").jqxGrid('hidecolumn', 'fileNameGenerated');
+        $("#jqxgrid").jqxGrid('hidecolumn', 'remarks');
         
         // initialize the popup window and buttons.
         $("#popupWindow").jqxWindow({width: 480, height: '100%', resizable: false,  isModal: true, autoOpen: false, showCloseButton: true, cancelButton: $("#popupWindowCancel"), modalOpacity: 0.01});
@@ -294,20 +286,22 @@
 			  */   	
 			  
 			var formdata = new FormData();//html5 and ie10
-	        formdata.append("studyId", "12345");
-	        //formdata.append("docFile", fileInputId.files[0]);
+	        formdata.append("action", action_command);
+	        formdata.append("fileName", $("#fileName").val());
+	        formdata.append("fileType", $("#fileType").val());
+	        formdata.append("description", $("#descriptionInput").val());
+	        formdata.append("valid", $("#validBox").jqxCheckBox('checked'));
 	        formdata.append("docFile", $("#fileInputId")[0].files[0]);
 	        
-	        httpRequestFileUpload("/ttt/file_upload",formdata, "ajaxUploadStudyDocResponse");
+	        httpRequestFileUpload("/ttt/file_upload",formdata, "ajaxFileUploadDocResponse");
+	        
         });     
         
         /**********************************************************************************/
         /*** Initialize the given components **********************************************/
         /**********************************************************************************/
         $("#spinner").hide();
-        //$("#ajaxPercent").hide();
-        $("#accessLimitDate").jqxDateTimeInput({width: '110px', height: '20px', formatString: 'MMM dd yyyy', value: new Date(<%=Utils.login_access_limit_date.getTime()%>), min: new Date(), allowKeyboardDelete: false});
-        $("#resetPasswordBox").jqxCheckBox({ width: 120, height: 25, checked: true, locked: false });
+
         $("#validBox").jqxCheckBox({ width: 120, height: 25, checked: true });
         
         /*Validate the given form*/
@@ -320,33 +314,131 @@
 				},
 				rules:
 				[	
-					{ input: '#firstName', message: 'First Name is required!', action: 'keyup, blur', rule: 'required' },
-                    { input: '#firstName', message: 'Your first name must contain only letters!', action: 'keyup', 
+					{ input: '#fileName', message: 'Descriptive File Name is required!', action: 'keyup, blur', rule: 'required' },
+                    { input: '#fileName', message: 'File name must contain only letters, number and space!', action: 'keyup', 
 						 rule: function(input, commit)
 						 {
-							 return isAlphabet(document.getElementById('firstName'));
+							 return checkAlphanumericSpace(document.getElementById('fileName').value);
 						 } 
 					},
-                    { input: '#firstName', message: 'Your first name must be between 3 and 15 characters!', action: 'keyup', rule: 'length=3,15' },
-                    { input: '#lastName', message: 'Last Name is required!', action: 'keyup, blur', rule: 'required' },
-                    { input: '#lastName', message: 'Your last name must contain only letters!', action: 'keyup', 
+                    { input: '#fileName', message: 'File name must be between 3 and 15 characters!', action: 'keyup', rule: 'length=3,15' },
+                    
+                    { input: '#descriptionInput', message: 'File description is required!', action: 'keyup, blur', rule: 'required' },
+                    { input: '#descriptionInput', message: 'File description must contain only letters, number, space and apostrophe!', action: 'keyup', 
                     	rule: function(input, commit)
 						 {
-							 return isAlphabet(document.getElementById('lastName'));
+							 return checkAlphanumericSpaceApostrophe(document.getElementById('descriptionInput').value);
 						 }  
                     },
-                    { input: '#lastName', message: 'Your last name must be between 3 and 15 characters!', action: 'keyup', rule: 'length=3,15' },
-					{ input: '#emailInput', message: 'E-mail is required!', action: 'keyup, blur', rule: 'required' },
-	                { input: '#emailInput', message: 'Invalid e-mail!', action: 'keyup', rule: 'email' }
+                    { input: '#descriptionInput', message: 'Description must be between 8 and 80 characters!', action: 'keyup', rule: 'length=8,80' },
+                    
+                    { input: '#fileInputId', message: 'File to upload is required!', action: 'keyup, blur', 
+                    	rule: function(input, commit)
+						 {
+                    		return input.val().length>0;
+						 } 
+                    },
+                    { input: '#fileInputId', message: 'File extention must match with the selected file type!', action: 'keyup', 
+                    	rule: function(input, commit)
+						 {
+							 return checkFileExtension(input.val());
+						 }  
+                    }
 				]
 			}
 		);		
 		
 	});//$(document).ready
-	function ajaxUploadStudyDocResponse(data)
+	function checkFileExtension(filename) 
 	{
-		//alert(data);
-		alert("You have successfully updated the selected study!\nThe document file has successfully uploaded as well."+data);
+		var file_extension=(/[.]/.exec(filename)) ? /[^.]+$/.exec(filename) : undefined;
+		var retVal=false;
+		if(file_extension!=undefined)
+		{
+			var ext = filename.substr(filename.lastIndexOf('.') + 1);
+			log("File ext="+ext);
+			switch(ext.toLowerCase())
+			{
+				case "gif":
+				case "jpg":
+				case "jpeg":
+				case "png":
+				case "tif": retVal=($("#fileType").val()==="image"); break;
+				case "htm":
+				case "html": retVal=($("#fileType").val()==="html"); break;
+				case "swf": retVal=($("#fileType").val()==="swf"); break;
+				case "txt": retVal=($("#fileType").val()==="txt"); break;
+				case "flv":
+				case "f4v":
+				case "mp4": retVal=($("#fileType").val()==="video"); log(" video retVal="+retVal);  break;
+				default: break;
+			}
+		}
+			
+		return retVal;
+	}
+	function ajaxFileUploadDocResponse(strResponse)
+	{
+		log("ajaxFileUploadDocResponse("+strResponse+")");
+
+		if(strResponse.indexOf('session_timeout')==0) 
+		{
+			alert("Your session is expired. Please login again.");
+			location.reload();			
+		}
+		else if(strResponse.indexOf('ajax_action_fileupload_management:')==-1)//not found
+		{
+			var action_command=$("#popupWindow").jqxWindow('title');
+
+			if(action_command=="add")
+			{	
+				/*
+				var aRow={
+						 "hospitalId":$("#hospitalId").val(),
+						 "hospitalName":$("#hospitalName").val(),
+						 "country":$("#country option[value='"+$("#country").val()+"']").text(),
+						 "phone":$('#phone').jqxMaskedInput('val'),
+						 "creatorId":"${trb.userId}",
+						 "creationTime":new Date(),
+						 "valid":$("#validBox").jqxCheckBox('checked')
+						 };
+				$('#jqxgrid').jqxGrid('addrow', null, aRow);
+				
+				$("#popupWindow").jqxWindow('close');
+				$("#hospitalId option[value='"+$("#hospitalId").val()+"']").remove();		
+				*/
+			}
+			else if(action_command=="edit")
+			{
+				/*
+				selectedRowIndex=$("#jqxgrid").jqxGrid('getselectedrowindex');
+				selectedDataRecord = $("#jqxgrid").jqxGrid('getrowdata', $('#jqxgrid').jqxGrid('getrowid', selectedRowIndex));
+				var aRow={
+						 "hospitalId":$("#editHospitalId").val(),
+						 "hospitalName":$("#hospitalName").val(),
+						 "country":$("#country option[value='"+$("#country").val()+"']").text(),
+						 "phone":$('#phone').jqxMaskedInput('val'),
+						 "creatorId":selectedDataRecord.creatorId,
+						 "creationTime":selectedDataRecord.creationTime,
+						 "valid":$("#validBox").jqxCheckBox('checked')
+						 };			
+				$('#jqxgrid').jqxGrid('updaterow', $('#jqxgrid').jqxGrid('getrowid', selectedRowIndex), aRow);
+				$("#popupWindow").jqxWindow('close');
+				*/
+			}
+			else if(action_command=="delete") //this won't be called
+			{
+				location.reload();
+			}					
+		}
+		else if(strResponse.indexOf('duplicate key value')>0)//found
+		{
+			$('#errorMsg').html("<span style='color:red;'>There exists a duplicate key value in either Hospital Name or ID!</span>");
+		}
+		else 
+		{
+			$('#errorMsg').html("<span style='color:red;'>"+strResponse.substring("ajax_action_hospital_management:".length)+"</span>");
+		}
 	}
 	function disableComponents(doIt)
 	{
@@ -500,126 +592,34 @@
 			            <div style="overflow: hidden;">
 			            	<form id='fileupload_form' action='./'>
 			                <table style='padding-top: 20px; padding-right: 10px; padding-bottom: 30px; padding-left: 10px;'>
-			                	<tr>
-			                        <td align="right" width="40%">Hospital Name:</td>
-			                        <td align="left">			                  
-										  <select id="hospitalId" style="width: 280px">
-											<%  //do error handler										
-											for(HospitalBean hb : hospitalList)
-											{
-												out.print("<option value='"+hb.getHospitalId()+"'>"+hb.getHospitalName()+"</option>");																
-											}
-										%>
-										</select>
+			                	
+			                    <tr>
+			                        <td align="right" width="40%">File Name:</td>
+			                        <td align="left">
+			                        	<input type='text' id="fileName" size='30' maxlength="80" class=input_text style='padding-left: 2px;imemode:inactive'/>			                        	
 			                        </td>
 			                    </tr>
 			                    <tr height='3'><td colspan='2'></td></tr>
 			                    <tr>
-			                        <td align="right" width="40%">First Name:</td>
+			                        <td align="right" width="40%">File Type:</td>
 			                        <td align="left">
-			                        	<input type='text' id="firstName" size='30' maxlength="80" class=input_text style='padding-left: 2px;imemode:inactive'/>			                        	
+			                        	<select id="fileType">
+											<option value="html" >Html (htm, html)</option>
+											<option value="image" >Image (gif, jpg, png, tif)</option>
+											<option value="swf" >Swf (Converted from Pdf)</option>
+											<option value="txt" >Text (txt)</option>
+											<option value="video" >Video (flv, f4v, mp4)</option>								
+										</select>		                        	
 			                        </td>
 			                    </tr>
 			                    <tr height='3'><td colspan='2'></td></tr>
 			                    <tr>
-			                        <td align="right" width="40%">Last Name:</td>
+			                        <td align="right" width="40%">Description:</td>
 			                        <td align="left">
-			                        	<input type='text' id="lastName" size='30' maxlength="80" class=input_text style='padding-left: 2px;imemode:inactive'/>			                        	
+			                        	<input type='text' id="descriptionInput" size=34 value='' maxlength="255" class=input_text style='padding-left: 2px;imemode:inactive'/>			                        	
 			                        </td>
 			                    </tr>
-			                    <tr height='3'><td colspan='2'></td></tr>
-			                    <tr>
-			                        <td align="right" width="40%">E-Mail:</td>
-			                        <td align="left">
-			                        	<input type='text' id="emailInput" size=34 value='' maxlength="255" class=input_text style='padding-left: 2px;imemode:inactive'/>			                        	
-			                        </td>
-			                    </tr>
-			                    <tr height='3'><td colspan='2'></td></tr>
-			                    <tr><td align="right" width="40%">Login Level:</td>
-			                    	<td align="left">
-										<select id="loginLevel">															 
-											<%
-												List<AllLoginLevelBean> loginLievelList=(List<AllLoginLevelBean>)application.getAttribute("tttloginLevelList");
-												for(AllLoginLevelBean cb : loginLievelList)	
-												{
-													out.print("<option value='"+cb.getLoginLevel()+"'>"+cb.getLoginLevelDescription()+"</option>");																
-												}
-											%>
-										</select>
-									</td>			
-								</tr>
-								<tr height='3'><td colspan='2'></td></tr>
-			                    <tr>
-			                        <td align="right" width="40%">Access Limit Date:</td>
-			                        <td align="left">
-			                        	<div id="accessLimitDate"/>
-			                        </td>
-			                    </tr>								
-			                    <tr height='3'><td colspan='2'></td></tr>
-			                    <tr>
-			                        <td align="right" width="40%">Practice Year:</td>
-			                        <td align="left">
-			                        	<select id="practiceYear">
-											<option value="<0" >&lt;0</option>
-											<option value="0-2" >0-2</option>
-											<option value="3-5" >3-5</option>
-											<option value="6-10" >6-10</option>
-											<option value=">10" >&gt;10</option>								
-										</select>
-			                        </td>
-			                    </tr>
-			                    <tr height='3'><td colspan='2'></td></tr>
-			                    <tr>
-			                        <td align="right" width="40%">Health Discipline:</td>
-			                        <td align="left">
-			                        	<select id="healthDiscipline">
-											<option value="Pharmacy" >Pharmacy</option>
-											<option value="Pharmacology" >Pharmacology</option>
-											<option value="Nursing" >Nursing</option>
-											<option value="Respiratory therapy" >Respiratory therapy</option>
-											<option value="Medicine (physician)" >Medicine (physician)</option>	
-											<option value="Medical record abstractor" >Medical record abstractor</option>	
-											<option value="Other (outside healthcare profession)" >Other (outside healthcare profession)</option>								
-										</select>
-			                        </td>
-			                    </tr>
-			                    <tr height='3'><td colspan='2'></td></tr>
-			                    <tr>
-			                        <td align="right" width="40%">Primary Clinical Practice:</td>
-			                        <td align="left">
-			                        	<select id="primaryClinicalPractice">
-											<option value="Adult" >Adult</option>
-											<option value="<18 years paediatric" ><18 years paediatric</option>
-											<option value="Mixed adult-geriatric" >Mixed adult-geriatric</option>
-											<option value="Adult-paediatric" >Adult-paediatric</option>
-										</select>&nbsp;(not in practice)
-			                        </td>
-			                    </tr>
-			                    <tr height='3'><td colspan='2'></td></tr>
-			                    <tr>
-			                        <td align="right" width="40%">Seniority:</td>
-			                        <td align="left">
-			                        	<select id="seniority">
-											<option value="0" >0 (Lowest junior level)</option>
-											<option value="1" >1</option>
-											<option value="2" >2</option>
-											<option value="3" >3</option>
-											<option value="4" >4</option>
-											<option value="5" >5 (Lowest senior level)</option>	
-											<option value="6" >6</option>
-											<option value="7" >7</option>
-											<option value="8" >8</option>
-											<option value="9" >9</option>
-											<option value="10" >10 (Highest senior level)</option>							
-										</select>
-			                        </td>
-			                    </tr>
-			                    <tr height='3'><td colspan='2'></td></tr>
-			                    <tr style='vertical-align: top;'>
-			                        <td align="right" width="40%">Reset Password:</td>
-			                        <td align="left"><div id='resetPasswordBox'></div>
-			                        </td>
-			                    </tr>
+
 			                    <tr height='3'><td colspan='2'></td></tr>
 			                    <tr style='vertical-align: top;'>
 			                        <td align="right" width="40%">Valid:</td>

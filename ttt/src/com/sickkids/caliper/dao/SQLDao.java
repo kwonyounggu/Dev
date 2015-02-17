@@ -917,7 +917,7 @@ public class SQLDao
 	    		{
 	    			cp.free(c);
 	    			c=null;
-	    			System.err.println("INFO: a connection freed, total connections="+cp.totalConnections()+" getCurriculumCurrentList() in SQLDao.java ");
+	    			System.err.println("INFO: a connection freed, total connections="+cp.totalConnections()+" getHospitalList() in SQLDao.java ");
 	    		}
 	        }
 			catch (Exception e)
@@ -926,6 +926,63 @@ public class SQLDao
 			}
 		}
 		Utils.logger.info("getHospitalList() of SQLDao.java is ending with "+list.size());
+		return list;
+	}
+	public List<FileLibraryBean> getFileList(String whereStatement) throws DAOException
+	{
+		Utils.logger.info("getFileList() of SQLDao.java is called...");
+
+		List<FileLibraryBean> list = new ArrayList<FileLibraryBean>();
+		Connection c = null;
+
+		try
+		{
+			c = cp.getConnection();
+			Statement s = c.createStatement();
+			ResultSet rs = s.executeQuery("select * from file_library "+whereStatement);
+			while (rs.next())
+			{
+				FileLibraryBean fb=new FileLibraryBean();			
+				
+				fb.setFileId(rs.getInt(1));
+				fb.setFileNameFormal(rs.getString(2));
+				fb.setDescription(rs.getString(3));
+				fb.setFileType(rs.getString(4));
+				fb.setFileLocationPath(rs.getString(5));
+				fb.setFileVersion(rs.getInt(6));
+				fb.setFileNameSubmitted(rs.getString(7));
+				fb.setFileNameGenerated(rs.getString(8));
+				fb.setSubmitterId(rs.getString(9));
+				fb.setSubmissionTime(rs.getTimestamp(10));
+				fb.setFileSize(rs.getLong(11));
+				fb.setRemarks(rs.getString(12));
+				fb.setValid(rs.getBoolean(13));
+				
+				list.add(fb);
+			}
+		}
+		catch (SQLException e)
+		{
+			Utils.logger.severe(e.getMessage()+" getFileList() in SQLDao.java");
+			throw new DAOException(e+", getFileList() in SQLDao.java");
+		}
+		finally
+		{
+			try
+	        {
+				if (c!= null) 
+	    		{
+	    			cp.free(c);
+	    			c=null;
+	    			System.err.println("INFO: a connection freed, total connections="+cp.totalConnections()+" getFileList() in SQLDao.java ");
+	    		}
+	        }
+			catch (Exception e)
+			{
+				Utils.logger.severe(e.getMessage());
+			}
+		}
+		Utils.logger.info("getFileList() of SQLDao.java is ending with "+list.size());
 		return list;
 	}
 }

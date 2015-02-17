@@ -24,6 +24,8 @@ import com.sickkids.caliper.common.MenuLink;
 import com.sickkids.caliper.common.Message;
 import com.sickkids.caliper.common.Utils;
 
+import com.sickkids.caliper.dao.AllRegisteredUserBean;
+import com.sickkids.caliper.dao.FileLibraryBean;
 import com.sickkids.caliper.dao.SQLDao;
 
 import com.sickkids.caliper.database.ConnectionPool;
@@ -61,44 +63,87 @@ public class FileUploadServlet extends HttpServlet implements Servlet
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
 
+		HttpSession session = request.getSession(false);
+		
 		String ajaxUpdateResult = "";
+		String retString="";
 		File uploadFile=null;
+		FileLibraryBean fb=new FileLibraryBean();
+		String action="";//add, edit, delete
 		//0. similar to the normal servlet responses
 		//1. session_timeout
 		//2. handle data_update through this servlet
 		//3. test exceptions
 		try 
 		{
-			List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
-			String studyId="000000";
-			for (FileItem item : items) 
+			AllRegisteredUserBean trb=null;
+			
+			if(session!=null)
 			{
-				System.out.println("item="+item.getFieldName());
-				
-				if (item.isFormField()) 
+				trb=(AllRegisteredUserBean)session.getAttribute("trb");
+			}
+			if(trb==null) retString="session_timeout";
+			else
+			{
+				List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+				//String studyId="000000";
+				for (FileItem item : items) 
 				{
-					ajaxUpdateResult += "Field " + item.getFieldName() + " with value: " + item.getString() + " is successfully read\n\r";
-					if(item.getFieldName().equals("studyId")) studyId=item.getString();
-				} 
-				else 
-				{
-					System.out.println("non form field="+item.getFieldName()+" "+ item.getName());
+					System.out.println("item="+item.getFieldName());
 					
-					String doc_file_link="/";//from the root of the context such as 8080/exemplar/uploaded_files/ttt_doc
-					String loc=app.getRealPath(doc_file_link);
-					//File path=new File(loc+"uploaded_files/ttt_doc");//change to this if the following way to display back to the user is no good.
-					File path=new File(System.getProperty("catalina.home")+"/uploaded_files/ttt_doc");
-
-					if(!path.exists()||!path.isDirectory()) path.mkdirs();
-					uploadFile=rename(new File(path+"/"+item.getName()),"sid_"+studyId);
-					item.write(uploadFile);//write the coming file with the given name
-		
-					doc_file_link="uploaded_files/ttt_doc/"+uploadFile.getName();
-					ajaxUpdateResult += "File " + item.getName() + " is successfully uploaded to "+uploadFile.getPath()+"\n\r";
+					if (item.isFormField()) 
+					{
+						System.out.println("form field="+item.getFieldName()+" "+ item.getString());
+						ajaxUpdateResult += "Field " + item.getFieldName() + " with value: " + item.getString() + " is successfully read\n\r";
+						//if(item.getFieldName().equals("studyId")) studyId=item.getString();
+						if(item.getFieldName().equals("fileName")) fb.setFileNameFormal(item.getString());
+						else if(item.getFieldName().equals("fileType")) fb.setFileType(item.getString());
+						else if(item.getFieldName().equals("description")) fb.setDescription(item.getString());
+						else if(item.getFieldName().equals("valid")) fb.setValid(item.getString().equals("true"));
+						else if(item.getFieldName().equals("action")) 
+						{
+							action=item.getString();
+							fb.setRemarks(action+" by "+trb.getUserId()+" at "+Utils.currentTimestamp());
+						}
+					} 
+					else 
+					{
+						System.out.println("non form field="+item.getFieldName()+" "+ item.getName());
+						if(item.getFieldName().equals("docFile")) fb.setFileNameSubmitted(item.getName());
+						String doc_file_link="/";//from the root of the context such as 8080/ttt/uploaded_files/ttt_doc
+						String loc=app.getRealPath(doc_file_link);
+						
+						File path=new File(System.getProperty("catalina.home")+"/uploaded_files/ttt_doc");
+	
+						if(!path.exists()||!path.isDirectory()) path.mkdirs();
+						uploadFile=rename(new File(path+"/"+item.getName()), fb.getFileType()); //prefixing the file type in the file name such as video_2015020202.mp4
+						item.write(uploadFile);//write the coming file with the given name
+			
+						doc_file_link="uploaded_files/ttt_doc/"+uploadFile.getName();
+						fb.setFileNameGenerated(uploadFile.getName());
+						fb.setFileLocationPath(doc_file_link);
+						fb.setFileSize(uploadFile.length());
+						//ajaxUpdateResult += "File " + item.getName() + " is successfully uploaded to "+uploadFile.getPath()+"\n\r";
+					}
+				}
+				fb.setSubmissionTime(Utils.currentTimestamp());
+				fb.setSubmitterId(trb.getUserId());
+				//temp comment
+				//sqlDao.updateInsertGenericSqlCmd(StringEscapeUtils.escapeJava("update ex_study set full_text_pdf1='"+uploadFile.getPath()+"' where study_id="+studyId));
+				if(action.equals("add"))
+				{
+					System.out.println(fb);
+				}
+				else if(action.equals("edit"))
+				{
+					
+				}
+				else if(action.equals("delete"))
+				{
+					
 				}
 			}
-			//temp comment
-			//sqlDao.updateInsertGenericSqlCmd(StringEscapeUtils.escapeJava("update ex_study set full_text_pdf1='"+uploadFile.getPath()+"' where study_id="+studyId));
+			
 		} 
 		catch (FileUploadException e) 
 		{
@@ -107,12 +152,12 @@ public class FileUploadServlet extends HttpServlet implements Servlet
 				uploadFile.delete();
 			}
 
-			Utils.logger.severe("(op=exemplar/file_upload): msg="+e+",\nCustomer IP: "+request.getRemoteAddr()+",\nfrom FileUploadServlet.java");
+			Utils.logger.severe("(op=/ttt/file_upload): msg="+e+",\nCustomer IP: "+request.getRemoteAddr()+",\nfrom FileUploadServlet.java");
 			emailList.clear();
 			nameList.clear();
 			emailList.add(Utils.csr_email_address);
 			nameList.add("CSR-ADMIN");
-			new MailInfo(Utils.csr_email_address, emailList, nameList, Utils.smtp,"FileUpload Failed", "(op=exemplar/file_upload): "+e+"<br><br> Generated at "+Utils.currentTimestamp()+".");
+			new MailInfo(Utils.csr_email_address, emailList, nameList, Utils.smtp,"FileUpload Failed", "(op=/ttt/file_upload): "+e+"<br><br> Generated at "+Utils.currentTimestamp()+".");
 			forwardErrorPage(request,response,e.toString());
 		} 
 		catch(Exception e)
@@ -122,18 +167,17 @@ public class FileUploadServlet extends HttpServlet implements Servlet
 				uploadFile.delete();
 			}
 
-			Utils.logger.severe("(op=exemplar/file_upload): msg="+e+",\nCustomer IP: "+request.getRemoteAddr()+",\nfrom FileUploadServlet.java");
+			Utils.logger.severe("(op=/ttt/file_upload): msg="+e+",\nCustomer IP: "+request.getRemoteAddr()+",\nfrom FileUploadServlet.java");
 			emailList.clear();
 			nameList.clear();
 			emailList.add(Utils.csr_email_address);
 			nameList.add("CSR-ADMIN");
-			new MailInfo(Utils.csr_email_address, emailList, nameList,Utils.smtp,"FileUpload Failed", "(op=exemplar/file_upload): "+e+"<br><br> Generated at "+Utils.currentTimestamp()+".");
+			new MailInfo(Utils.csr_email_address, emailList, nameList,Utils.smtp,"FileUpload Failed", "(op=/ttt/file_upload): "+e+"<br><br> Generated at "+Utils.currentTimestamp()+".");
 			forwardErrorPage(request,response,e.toString());
 		}
 		
-		Utils.delay(5);
-		//response.getWriter().print(ajaxUpdateResult);
-		response.getWriter().print("OK");
+		//Utils.delay(5);
+		response.getWriter().print(fb);
 		response.getWriter().close();
 	}
 	public void forwardWarningPage(HttpServletRequest request,HttpServletResponse response,String msg)throws ServletException, IOException

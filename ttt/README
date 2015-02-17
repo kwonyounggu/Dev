@@ -9,3 +9,41 @@ To Read Selected Text
 $('#selectId>option:selected').text();
 
 #file upload plugins
+
+####################################
+//Read PDF in flex flash player
+If it's an Flash app, then set the wmode to transparent: http://kb2.adobe.com/cps/127/tn_12701.html#main_Using_Window_Mode__wmode__values_
+And then create an iframe in your HTML page, where you load you PDF, set the iframe z-index, so it gets shown on top of the Flash object. Then you kan use the javascript bridge to interact with the iframe.
+ 
+Best regards
+
+http://help.adobe.com/en_US/as3/dev/WS901d38e593cd1bac3ef1d28412ac57b094b-8000.html
+- StageWebView
+
+#####################################
+http://avinashkaza.com/blog/?p=1
+#####################################
+item=action
+form field=action add
+item=fileName
+form field=fileName My Video File
+item=fileType
+form field=fileType video
+item=description
+form field=description Training about soemthing
+item=docFile
+non form field=docFile Freelance Programmer- the story of Dame Stephanie Shirley.mp4
+1st fname=sid_000000_20150217153738 ext=.mp4
+2nd fname=C:\Dev\apache-tomcat-7.0.32\uploaded_files\ttt_doc\sid_000000_20150217153738.mp4 ext=.mp4
+
+ajaxFileUploadDocResponse(Field action with value: add is successfully read
+
+Field fileName with value: My Video File is successfully read
+
+Field fileType with value: video is successfully read
+
+Field description with value: Training about soemthing is successfully read
+
+File Freelance Programmer- the story of Dame Stephanie Shirley.mp4 is successfully uploaded to C:\Dev\apache-tomcat-7.0.32\uploaded_files\ttt_doc\sid_000000_20150217153738.mp4
+
+)

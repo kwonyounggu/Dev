@@ -12,7 +12,7 @@ public class FileLibraryBean implements Serializable
 	private String description="";
 	private String fileType="";
 	private String fileLocationPath="";
-	private int fileVersion=-1;
+	private int fileVersion=1;
 	private String fileNameSubmitted="";
 	private String fileNameGenerated="";
 	private String submitterId="";
@@ -124,6 +124,68 @@ public class FileLibraryBean implements Serializable
 	public void setValid(boolean valid)
 	{
 		this.valid = valid;
+	}
+	public String toString()
+	{
+		return 
+		"fileId="+fileId+", "+
+		"fileNameFormal="+fileNameFormal+", "+
+		"description="+description+", "+
+		"fileType="+fileType+", "+
+		"fileLocationPath="+fileLocationPath+", "+
+		"fileVersion="+fileVersion+", "+
+		"fileNameSubmitted="+fileNameSubmitted+", "+
+		"fileNameGenerated="+fileNameGenerated+", "+
+		"submitterId="+submitterId+", "+
+		"submissionTime="+submissionTime+", "+
+		"fileSize="+fileSize+", "+
+		"remarks="+remarks+", "+
+		"valid="+valid;
+	}
+
+	public String getInsertStmt()
+	{
+		return "";
+		/*
+		return "insert into all_registered_user values("+appId+", "+
+				   "'"+userId+"', "+
+				   "'"+firstName+"', "+
+				   "'"+lastName+"', "+
+				   "'"+loginLevel+"', "+
+				   "'"+hospitalId+"', "+
+				   "'"+email+"', "+
+				   "'"+password+"', "+
+				   "'"+department+"', "+
+				   "'"+phone+"', "+
+				   "'"+resetPassword+"', "+
+				   "'"+position+"', "+
+				   "'"+description+"', "+
+				   "'"+accessLimitTime+"', "+
+				   "'"+practiceYear+"', "+
+				   "'"+healthDiscipline+"', "+
+				   "'"+primayClinicalPractice+"', "+
+				   "'"+seniority+"', "+
+				   "'"+creationTime+"', "+
+				   "'"+creatorId+"', "+
+				   "'"+remarks+"', "+
+				   ""+valid+")";*/
+	}
+	public String getUpdateStmt()
+	{
+		/*return "update all_registered_user set "+
+					"email='"+email+"', "+
+					"login_level='"+loginLevel+"', "+
+					"reset_password='"+resetPassword+"', "+
+					"access_limit_time='"+accessLimitTime+"', "+
+					"practice_year='"+practiceYear+"', "+
+					"health_discipline='"+healthDiscipline+"', "+
+					"primay_clinical_practice='"+primayClinicalPractice+"', "+
+					"seniority='"+seniority+"', "+
+					"remarks='"+remarks+"', "+
+					"valid="+valid+" "+
+					"where hospital_id='"+hospitalId+"' and user_id='"+userId+"'";*/
+		return "";
+					
 	}
 
 }
