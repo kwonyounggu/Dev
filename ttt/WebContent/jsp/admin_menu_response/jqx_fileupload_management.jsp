@@ -132,9 +132,9 @@
                     $("#popupHeader").html("<img src='images/common/plus_16.png' width=16 height=16 valign='middle' style='margin-right: 15px;'/>Add");
                     
                     $("#jqxgrid").jqxGrid('clearselection');
-                    //$("#firstName").val("");
-                    //$("#lastName").val("");
-                    //$("#emailInput").val(""); 
+                    $("#fileName").val("");
+                    $("#descriptionInput").val("");
+                    $("#fileInputId").val(""); 
                     $('#validBox').jqxCheckBox('check');
                            	    	
                     $("#popupWindow").jqxWindow('open');
@@ -151,33 +151,15 @@
                 	{                	
 	                    // get the clicked row's data and initialize the input fields.
 	                    selectedDataRecord = $("#jqxgrid").jqxGrid('getrowdata', $('#jqxgrid').jqxGrid('getrowid', selectedRowIndex));
-	                    $("#hospitalId").val(selectedDataRecord.hospitalId);
-	                    if(Number($("#hospitalId").prop("selectedIndex"))<0)
-	                    {
-	                    	alert("You have to make the Hospital valid before editing this!");	       
-	                    }
-	                    else
-	                    {
-		                    $("#firstName").val(selectedDataRecord.firstName);
-		                    $("#lastName").val(selectedDataRecord.lastName);
-		                    $("#emailInput").val(selectedDataRecord.email);
-		                    $("#loginLevel").val(selectedDataRecord.loginLevel);
-		                    $('#accessLimitDate').jqxDateTimeInput('val', parseDate(selectedDataRecord.accessLimitDate));
-		                    $("#practiceYear").val(selectedDataRecord.practiceYear); //log("practiceYear="+selectedDataRecord.practiceYear);
-		                    $("#healthDiscipline").val(selectedDataRecord.healthDiscipline); //log("healthDiscipline="+selectedDataRecord.healthDiscipline);
-		                    $("#primaryClinicalPractice").val(selectedDataRecord.primaryClinicalPractice); //log("primaryClinicalPractice="+selectedDataRecord.primaryClinicalPractice);
-		                    $("#seniority").val(selectedDataRecord.seniority); log("seniority="+selectedDataRecord.seniority);
-		                    $("#resetPasswordBox").jqxCheckBox('val', selectedDataRecord.resetPassword);
-		                    $("#validBox").jqxCheckBox('val', selectedDataRecord.valid);
-		                    
-		                    
-		        	    			        	    	
-		                    $("#popupHeader").html("<img src='images/common/edit_16.png' width=16 height=16 valign='middle' style='margin-right: 15px;'/>Edit");
-		                    var offset = $("#jqxgrid").offset();
-		                    $("#popupWindow").jqxWindow({ title: 'edit', position: { x: parseInt(offset.left) + 200, y: parseInt(offset.top) + 65 } });
-		                    $("#popupWindow").jqxWindow('open');
-		                    disableComponents(true);
-	                    }
+	                    $("#fileName").val(selectedDataRecord.fileNameFormal);
+	                    $("#fileType").val(selectedDataRecord.fileType);
+	                    $("#descriptionInput").val(selectedDataRecord.description);
+	                    $("#validBox").jqxCheckBox('val', selectedDataRecord.valid);
+	                    		        	    	
+	                    $("#popupHeader").html("<img src='images/common/edit_16.png' width=16 height=16 valign='middle' style='margin-right: 15px;'/>Edit");
+	                    var offset = $("#jqxgrid").offset();
+	                    $("#popupWindow").jqxWindow({ title: 'edit', position: { x: parseInt(offset.left) + 200, y: parseInt(offset.top) + 65 } });
+	                    $("#popupWindow").jqxWindow('open');
                 	}
                 });
                 
@@ -191,11 +173,11 @@
             columns: 
             [
               { text: 'File Name', dataField: 'fileNameFormal', align: 'center', width: '20%' },
-              { text: 'File Type', dataField: 'fileType', align: 'center', width: '10%' },
+              { text: 'Type', dataField: 'fileType', align: 'center', width: '6%' },
               { text: 'Description', dataField: 'description', align: 'center', width: '30%' },
-              { text: 'Submitter ID', dataField: 'submitterId', align: 'center', width: '10%' },
-              { text: 'Uploaded at', dataField: 'submissionTime', align: 'center', width: '10%'},
-              { text: 'File Size', dataField: 'fileSize', align: 'center', cellsformat: 'd', width: '10%' },
+              { text: 'Submitter ID', dataField: 'submitterId', align: 'center', width: '14%' },
+              { text: 'Uploaded at', dataField: 'submissionTime', align: 'center', cellsformat: 'd', width: '10%'},
+              { text: 'File Size', dataField: 'fileSize', align: 'center',  width: '10%' },
 
               { text: 'File ID', dataField: 'fileId', align: 'center', width: '0%' },
               { text: 'File Location Path', dataField: 'fileLocationPath', align: 'center', width: '0%' },
@@ -248,48 +230,12 @@
         	action_command=$("#popupWindow").jqxWindow('title');//add, edit, delete
         	var onsuccess=$("#fileupload_form").jqxValidator('validate');
 			if(!onsuccess) return;
-			
-			/*
-			$.ajax
-		     ({
-		         type: "post",
-		         dataType: "",
-		         url: "/ttt/controller?op=ajax_action_account_management",
-		         data: 
-		         {
-		    	 		action: 			action_command,
-		    	 		hospitalId:  		document.getElementById("hospitalId").value,
-		    	 		firstName:			document.getElementById("firstName").value,
-		    	 		lastName:			document.getElementById("lastName").value,
-		    	 		emailId:				document.getElementById("emailInput").value.toLowerCase(),
-		    	 		loginLevel:			document.getElementById("loginLevel").value,
-		    	 		accessLimitDate:	Date.parse($("#accessLimitDate").jqxDateTimeInput('getText')),
-		    	 		practiceYear:		document.getElementById("practiceYear").value,
-		    	 		healthDiscipline:	document.getElementById("healthDiscipline").value,
-		    	 		primaryClinicalPractice: document.getElementById("primaryClinicalPractice").value,
-		    	 		seniority:			document.getElementById("seniority").value,	
-		    	 		resetPassword:		$("#resetPasswordBox").jqxCheckBox('checked'),
-		    	 		validRecord:		$("#validBox").jqxCheckBox('checked')	    	 		
-		     	 },
-		     	 beforeSend: function()
-		     	 {
-                    $("#spinner_img").show();
-                 },
-		         success: getAdminAccountActionResponse,
-		         error: function(response) //called for 404 error, etc
-		         {
-		        	 //alert(response.responseText);	
-		        	 alert("Error: the requested resouce is not available");
-		        	 $("#spinner_img").hide();
-		         }
-		      }); 
-			  */   	
-			  
+	  
 			var formdata = new FormData();//html5 and ie10
 	        formdata.append("action", action_command);
-	        formdata.append("fileName", $("#fileName").val());
+	        formdata.append("fileName", trim($("#fileName").val()));
 	        formdata.append("fileType", $("#fileType").val());
-	        formdata.append("description", $("#descriptionInput").val());
+	        formdata.append("description", trim($("#descriptionInput").val()));
 	        formdata.append("valid", $("#validBox").jqxCheckBox('checked'));
 	        formdata.append("docFile", $("#fileInputId")[0].files[0]);
 	        
@@ -321,7 +267,7 @@
 							 return checkAlphanumericSpace(document.getElementById('fileName').value);
 						 } 
 					},
-                    { input: '#fileName', message: 'File name must be between 3 and 15 characters!', action: 'keyup', rule: 'length=3,15' },
+                    { input: '#fileName', message: 'File name must be between 5 and 45 characters!', action: 'keyup', rule: 'length=5,45' },
                     
                     { input: '#descriptionInput', message: 'File description is required!', action: 'keyup, blur', rule: 'required' },
                     { input: '#descriptionInput', message: 'File description must contain only letters, number, space and apostrophe!', action: 'keyup', 
@@ -335,13 +281,13 @@
                     { input: '#fileInputId', message: 'File to upload is required!', action: 'keyup, blur', 
                     	rule: function(input, commit)
 						 {
-                    		return input.val().length>0;
+                    		return ($("#popupWindow").jqxWindow('title')!="add" && input.val().length<=0) ? true : input.val().length>0;
 						 } 
                     },
                     { input: '#fileInputId', message: 'File extention must match with the selected file type!', action: 'keyup', 
                     	rule: function(input, commit)
 						 {
-							 return checkFileExtension(input.val());
+							 return ($("#popupWindow").jqxWindow('title')!="add" && input.val().length<=0) ? true : checkFileExtension(input.val());
 						 }  
                     }
 				]
@@ -386,27 +332,32 @@
 			alert("Your session is expired. Please login again.");
 			location.reload();			
 		}
-		else if(strResponse.indexOf('ajax_action_fileupload_management:')==-1)//not found
+		else if(strResponse.indexOf('ajax_action_file_upload:')==-1)//not found
 		{
 			var action_command=$("#popupWindow").jqxWindow('title');
 
 			if(action_command=="add")
 			{	
-				/*
+				var eachField=strResponse.split(", ");
+				
 				var aRow={
-						 "hospitalId":$("#hospitalId").val(),
-						 "hospitalName":$("#hospitalName").val(),
-						 "country":$("#country option[value='"+$("#country").val()+"']").text(),
-						 "phone":$('#phone').jqxMaskedInput('val'),
-						 "creatorId":"${trb.userId}",
-						 "creationTime":new Date(),
+						 "fileId":eachField[0].split("=")[1],
+						 "fileNameFormal":eachField[1].split("=")[1],
+						 "description":eachField[2].split("=")[1],
+						 "fileType":eachField[3].split("=")[1],
+						 "fileLocationPath":eachField[4].split("=")[1],
+						 "fileVersion":eachField[5].split("=")[1],
+						 "fileNameSubmitted":eachField[6].split("=")[1],
+						 "fileNameGenerated":eachField[7].split("=")[1],
+						 "submitterId":eachField[8].split("=")[1],
+						 "submissionTime":new Date(),
+						 "fileSize":eachField[10].split("=")[1],
+						 "remarks":eachField[11].split("=")[1],
 						 "valid":$("#validBox").jqxCheckBox('checked')
 						 };
 				$('#jqxgrid').jqxGrid('addrow', null, aRow);
 				
-				$("#popupWindow").jqxWindow('close');
-				$("#hospitalId option[value='"+$("#hospitalId").val()+"']").remove();		
-				*/
+				$("#popupWindow").jqxWindow('close');				
 			}
 			else if(action_command=="edit")
 			{
@@ -433,11 +384,11 @@
 		}
 		else if(strResponse.indexOf('duplicate key value')>0)//found
 		{
-			$('#errorMsg').html("<span style='color:red;'>There exists a duplicate key value in either Hospital Name or ID!</span>");
+			$('#errorMsg').html("<span style='color:red;'>There exists a duplicate key value in the given file name!</span>");
 		}
 		else 
 		{
-			$('#errorMsg').html("<span style='color:red;'>"+strResponse.substring("ajax_action_hospital_management:".length)+"</span>");
+			$('#errorMsg').html("<span style='color:red;'>"+strResponse.substring("ajax_action_file_upload:".length)+"</span>");
 		}
 	}
 	function disableComponents(doIt)
@@ -478,88 +429,6 @@
 			if(options[i].value==value) return options[i].text;
 		return Number(-1);//not found
 	}
-	function getAdminAccountActionResponse(strResponse)
-	{
-		log("getAdminAccountActionResponse("+strResponse+")");
-		
-		//$("#spinner_img").hide();
-		if(strResponse.indexOf('session_timeout')==0) 
-		{
-			alert("Your session is expired. Please login again.");
-			location.reload();			
-		}
-		else if(strResponse.indexOf('ajax_action_account_management:')==-1)//not found
-		{
-			var action_command=$("#popupWindow").jqxWindow('title');
-
-			if(action_command=="add")
-			{			  
-				var aRow={
-						 "hospitalName": $("#hospitalId option[value='"+$("#hospitalId").val()+"']").text(),
-						 "name":capitaliseFirstLetter($('#firstName').val())+" "+capitaliseFirstLetter($('#lastName').val()),
-						 "userId":$('#firstName').val().toLowerCase()+"."+$('#lastName').val().toLowerCase()+"."+$("#hospitalId").val(),
-						 "email":$('#emailInput').val().toLowerCase(),
-						 "loginLevel":$("#loginLevel").val(),
-						 "accessLimitDate":$("#accessLimitDate").jqxDateTimeInput('getDate'),
-						 "hospitalId":$("#hospitalId").val(),
-						 "firstName":$('#firstName').val(),
-						 "lastName":$('#lastName').val(),
-						 "practiceYear":$('#practiceYear').val(),
-						 "healthDiscipline":$('#healthDiscipline').val(),
-						 "primaryClinicalPractice":$('#primaryClinicalPractice').val(),
-						 "seniority":$('#seniority').val(),
-						 "resetPassword":$("#resetPasswordBox").jqxCheckBox('checked'),
-						 "valid":$("#validBox").jqxCheckBox('checked')
-						 };
-				$('#jqxgrid').jqxGrid('addrow', null, aRow);
-				
-				$("#popupWindow").jqxWindow('close');				
-			}
-			else if(action_command=="edit")
-			{
-				selectedRowIndex=$("#jqxgrid").jqxGrid('getselectedrowindex');
-				selectedDataRecord = $("#jqxgrid").jqxGrid('getrowdata', $('#jqxgrid').jqxGrid('getrowid', selectedRowIndex));
-				var aRow={
-						 "hospitalName": $("#hospitalId option[value='"+$("#hospitalId").val()+"']").text(),
-						 "name":capitaliseFirstLetter($('#firstName').val())+" "+capitaliseFirstLetter($('#lastName').val()),
-						 "userId":$('#firstName').val().toLowerCase()+"."+$('#lastName').val().toLowerCase()+"."+$("#hospitalId").val(),
-						 "email":$('#emailInput').val().toLowerCase(),
-						 "loginLevel":$("#loginLevel").val(),
-						 "accessLimitDate":$("#accessLimitDate").jqxDateTimeInput('getDate'),
-						 "hospitalId":$("#hospitalId").val(),
-						 "firstName":$('#firstName').val(),
-						 "lastName":$('#lastName').val(),
-						 "practiceYear":$('#practiceYear').val(),
-						 "healthDiscipline":$('#healthDiscipline').val(),
-						 "primaryClinicalPractice":$('#primaryClinicalPractice').val(),
-						 "seniority":$('#seniority').val(),
-						 "resetPassword":$("#resetPasswordBox").jqxCheckBox('checked'),
-						 "valid":$("#validBox").jqxCheckBox('checked')
-						 };	
-				$('#jqxgrid').jqxGrid('updaterow', $('#jqxgrid').jqxGrid('getrowid', selectedRowIndex), aRow);
-				
-				$("#popupWindow").jqxWindow('close');
-			}
-			else if(action_command=="delete")
-			{
-				//not working with incorrect index value
-				//selectedRowIndex=$("#jqxgrid").jqxGrid('getselectedrowindex'); log("rowid="+ $('#jqxgrid').jqxGrid('getrowid', selectedRowIndex));
-				//$('#jqxgrid').jqxGrid('deleterow', $('#jqxgrid').jqxGrid('getrowid', selectedRowIndex));
-				//$("#popupWindow").jqxWindow('close');
-				//$("#jqxgrid").jqxGrid('clearselection');
-				//$("#jqxgrid").jqxGrid('refreshdata');
-				location.reload();
-			}					
-		}
-		else if(strResponse.indexOf('duplicate key value')>0)//found
-		{
-			$('#errorMsg').html("<span style='color:red;'>There exists a duplicate key value not allowed with the same User Name in the hopital!</span>");
-		}
-		else 
-		{
-			$('#errorMsg').html("<span style='color:red;'>"+strResponse.substring("ajax_action_account_management:".length)+"</span>");
-		}
-	}
 </script>
 
 <table cellpadding="0" cellspacing="0" width="100%"> 
@@ -594,7 +463,7 @@
 			                <table style='padding-top: 20px; padding-right: 10px; padding-bottom: 30px; padding-left: 10px;'>
 			                	
 			                    <tr>
-			                        <td align="right" width="40%">File Name:</td>
+			                        <td align="right" width="40%">Descriptive File Name:</td>
 			                        <td align="left">
 			                        	<input type='text' id="fileName" size='30' maxlength="80" class=input_text style='padding-left: 2px;imemode:inactive'/>			                        	
 			                        </td>

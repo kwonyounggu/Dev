@@ -47,3 +47,7 @@ Field description with value: Training about soemthing is successfully read
 File Freelance Programmer- the story of Dame Stephanie Shirley.mp4 is successfully uploaded to C:\Dev\apache-tomcat-7.0.32\uploaded_files\ttt_doc\sid_000000_20150217153738.mp4
 
 )
+
+WED:
+EDIT WITH A NEW FILE: INFO (edit): fileId=10, fileNameFormal=text file file name field new, description=text file file name field desc nnnnnn, fileType=image, fileLocationPath=uploaded_files/ttt_doc/image_20150218163128.png, fileVersion=1, fileNameSubmitted=ttt_mock.png, fileNameGenerated=image_20150218163128.png, submitterId=younggu.kwon.00, submissionTime=2015-02-18 16:31:28.359, fileSize=556440, remarks=edit by younggu.kwon.00 at 2015-02-18 16:31:28.356, valid=true
+EDIT WITHOUT A NEW FILE: INFO (edit): fileId=10, fileNameFormal=text file file name field new, description=text file file name field desc nnnnnn, fileType=image, fileLocationPath=, fileVersion=1, fileNameSubmitted=, fileNameGenerated=, submitterId=younggu.kwon.00, submissionTime=2015-02-18 16:33:34.95, fileSize=0, remarks=edit by younggu.kwon.00 at 2015-02-18 16:33:34.95, valid=true

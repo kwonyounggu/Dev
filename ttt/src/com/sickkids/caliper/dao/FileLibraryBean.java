@@ -3,6 +3,8 @@ package com.sickkids.caliper.dao;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 public class FileLibraryBean implements Serializable
 {
 	private static final long serialVersionUID = 1L;
@@ -145,47 +147,36 @@ public class FileLibraryBean implements Serializable
 
 	public String getInsertStmt()
 	{
-		return "";
-		/*
-		return "insert into all_registered_user values("+appId+", "+
-				   "'"+userId+"', "+
-				   "'"+firstName+"', "+
-				   "'"+lastName+"', "+
-				   "'"+loginLevel+"', "+
-				   "'"+hospitalId+"', "+
-				   "'"+email+"', "+
-				   "'"+password+"', "+
-				   "'"+department+"', "+
-				   "'"+phone+"', "+
-				   "'"+resetPassword+"', "+
-				   "'"+position+"', "+
-				   "'"+description+"', "+
-				   "'"+accessLimitTime+"', "+
-				   "'"+practiceYear+"', "+
-				   "'"+healthDiscipline+"', "+
-				   "'"+primayClinicalPractice+"', "+
-				   "'"+seniority+"', "+
-				   "'"+creationTime+"', "+
-				   "'"+creatorId+"', "+
+		return "insert into file_library values("+fileId+", "+
+				   "'"+fileNameFormal+"', "+
+				   "'"+StringEscapeUtils.escapeSql(description)+"', "+
+				   "'"+fileType+"', "+
+				   "'"+fileLocationPath+"', "+
+				   "'"+fileVersion+"', "+
+				   "'"+fileNameSubmitted+"', "+
+				   "'"+fileNameGenerated+"', "+
+				   "'"+submitterId+"', "+
+				   "'"+submissionTime+"', "+
+				   "'"+fileSize+"', "+
 				   "'"+remarks+"', "+
-				   ""+valid+")";*/
+				   ""+valid+")";
 	}
 	public String getUpdateStmt()
 	{
-		/*return "update all_registered_user set "+
-					"email='"+email+"', "+
-					"login_level='"+loginLevel+"', "+
-					"reset_password='"+resetPassword+"', "+
-					"access_limit_time='"+accessLimitTime+"', "+
-					"practice_year='"+practiceYear+"', "+
-					"health_discipline='"+healthDiscipline+"', "+
-					"primay_clinical_practice='"+primayClinicalPractice+"', "+
-					"seniority='"+seniority+"', "+
+		return "update file_library set "+
+					"fileNameFormal='"+fileNameFormal+"', "+
+					"description='"+description+"', "+
+					"fileType='"+fileType+"', "+
+					"fileLocationPath='"+fileLocationPath+"', "+
+					"fileVersion='"+fileVersion+"', "+
+					"fileNameSubmitted='"+fileNameSubmitted+"', "+
+					"fileNameGenerated='"+fileNameGenerated+"', "+
+					"submitterId='"+submitterId+"', "+
+					"submissionTime='"+submissionTime+"', "+
+					"fileSize='"+fileSize+"', "+
 					"remarks='"+remarks+"', "+
 					"valid="+valid+" "+
-					"where hospital_id='"+hospitalId+"' and user_id='"+userId+"'";*/
-		return "";
-					
+					"where fileId='"+fileId+"'";					
 	}
 
 }
