@@ -161,22 +161,33 @@ public class FileLibraryBean implements Serializable
 				   "'"+remarks+"', "+
 				   ""+valid+")";
 	}
-	public String getUpdateStmt()
+	public String getUpdateSomeFieldsStmt()
 	{
 		return "update file_library set "+
-					"fileNameFormal='"+fileNameFormal+"', "+
+					"file_name_formal='"+fileNameFormal+"', "+
 					"description='"+description+"', "+
-					"fileType='"+fileType+"', "+
-					"fileLocationPath='"+fileLocationPath+"', "+
-					"fileVersion='"+fileVersion+"', "+
-					"fileNameSubmitted='"+fileNameSubmitted+"', "+
-					"fileNameGenerated='"+fileNameGenerated+"', "+
-					"submitterId='"+submitterId+"', "+
-					"submissionTime='"+submissionTime+"', "+
-					"fileSize='"+fileSize+"', "+
+					"file_type='"+fileType+"', "+									
 					"remarks='"+remarks+"', "+
 					"valid="+valid+" "+
-					"where fileId='"+fileId+"'";					
+					"where file_id='"+fileId+"'";					
+	}
+	//The following is replacing the old one with a new file information 
+	public String getUpdateAllFieldsStmt()
+	{
+		return "update file_library set "+
+					"file_name_formal='"+fileNameFormal+"', "+
+					"description='"+description+"', "+
+					"file_type='"+fileType+"', "+
+					"file_location_path='"+fileLocationPath+"', "+
+					"file_version='"+fileVersion+"', "+
+					"file_name_submitted='"+fileNameSubmitted+"', "+
+					"file_name_generated='"+fileNameGenerated+"', "+
+					"submitter_id='"+submitterId+"', "+
+					"submission_time='"+submissionTime+"', "+
+					"file_size='"+fileSize+"', "+
+					"remarks='"+remarks+"', "+
+					"valid="+valid+" "+
+					"where file_id='"+fileId+"'";					
 	}
 
 }

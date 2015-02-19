@@ -156,7 +156,7 @@
 	                    $("#descriptionInput").val(selectedDataRecord.description);
 	                    $("#validBox").jqxCheckBox('val', selectedDataRecord.valid);
 	                    		        	    	
-	                    $("#popupHeader").html("<img src='images/common/edit_16.png' width=16 height=16 valign='middle' style='margin-right: 15px;'/>Edit");
+	                    $("#popupHeader").html("<img src='images/common/edit_16.png' width=16 height=16 valign='middle' style='margin-right: 15px;'/>Edit <span style='color: #2D73BB; font-size: 11px;'>(Note: your update may interrupt the current operation if in use!)</span>");
 	                    var offset = $("#jqxgrid").offset();
 	                    $("#popupWindow").jqxWindow({ title: 'edit', position: { x: parseInt(offset.left) + 200, y: parseInt(offset.top) + 65 } });
 	                    $("#popupWindow").jqxWindow('open');
@@ -199,7 +199,7 @@
         $("#jqxgrid").jqxGrid('hidecolumn', 'remarks');
         
         // initialize the popup window and buttons.
-        $("#popupWindow").jqxWindow({width: 480, height: '100%', resizable: false,  isModal: true, autoOpen: false, showCloseButton: true, cancelButton: $("#popupWindowCancel"), modalOpacity: 0.01});
+        $("#popupWindow").jqxWindow({width: 480, height: '60%', isModal: true, autoOpen: false, showCloseButton: true, cancelButton: $("#popupWindowCancel"), modalOpacity: 0.01});
         $("#popupWindow").on('open', function () 
         {
             $('#errorMsg').html("");
@@ -217,7 +217,7 @@
         {
             if($("#popupWindow").jqxWindow('title')=="edit")
             {
-            	disableComponents(false);
+           	
             }
             else
             {           	
@@ -232,7 +232,13 @@
 			if(!onsuccess) return;
 	  
 			var formdata = new FormData();//html5 and ie10
+			
 	        formdata.append("action", action_command);
+	        if(action_command!="add") 
+	        {
+	        	formdata.append("fileId", selectedDataRecord.fileId);
+	        	formdata.append("fileVersion", Number(selectedDataRecord.fileVersion)+1);
+	        }
 	        formdata.append("fileName", trim($("#fileName").val()));
 	        formdata.append("fileType", $("#fileType").val());
 	        formdata.append("description", trim($("#descriptionInput").val()));
@@ -289,12 +295,24 @@
 						 {
 							 return ($("#popupWindow").jqxWindow('title')!="add" && input.val().length<=0) ? true : checkFileExtension(input.val());
 						 }  
+                    },
+                    { input: '#fileInputId', message: 'The selected File Type must match with the existing File Type!', 
+                    	rule: function(input, commit)
+						 {
+							 return ($("#popupWindow").jqxWindow('title')!="add" && input.val().length<=0) ? checkFileType($("#fileType").val()) : true;
+						 }  
                     }
 				]
 			}
 		);		
 		
 	});//$(document).ready
+	function checkFileType(newFileType)
+	{
+		selectedRowIndex=$("#jqxgrid").jqxGrid('getselectedrowindex');
+		selectedDataRecord = $("#jqxgrid").jqxGrid('getrowdata', $('#jqxgrid').jqxGrid('getrowid', selectedRowIndex));
+		return selectedDataRecord.fileType===newFileType;
+	}
 	function checkFileExtension(filename) 
 	{
 		var file_extension=(/[.]/.exec(filename)) ? /[^.]+$/.exec(filename) : undefined;
@@ -361,21 +379,48 @@
 			}
 			else if(action_command=="edit")
 			{
-				/*
 				selectedRowIndex=$("#jqxgrid").jqxGrid('getselectedrowindex');
 				selectedDataRecord = $("#jqxgrid").jqxGrid('getrowdata', $('#jqxgrid').jqxGrid('getrowid', selectedRowIndex));
-				var aRow={
-						 "hospitalId":$("#editHospitalId").val(),
-						 "hospitalName":$("#hospitalName").val(),
-						 "country":$("#country option[value='"+$("#country").val()+"']").text(),
-						 "phone":$('#phone').jqxMaskedInput('val'),
-						 "creatorId":selectedDataRecord.creatorId,
-						 "creationTime":selectedDataRecord.creationTime,
+
+				var eachField=strResponse.split(", ");
+				var aRow;
+				if(eachField[11].split("=")[1].indexOf("with new file info")>0)
+				{	aRow={
+						 "fileId":eachField[0].split("=")[1],
+						 "fileNameFormal":eachField[1].split("=")[1],
+						 "description":eachField[2].split("=")[1],
+						 "fileType":eachField[3].split("=")[1],
+						 "fileLocationPath":eachField[4].split("=")[1],
+						 "fileVersion":eachField[5].split("=")[1],
+						 "fileNameSubmitted":eachField[6].split("=")[1],
+						 "fileNameGenerated":eachField[7].split("=")[1],
+						 "submitterId":eachField[8].split("=")[1],
+						 "submissionTime":new Date(),
+						 "fileSize":eachField[10].split("=")[1],
+						 "remarks":eachField[11].split("=")[1],
 						 "valid":$("#validBox").jqxCheckBox('checked')
-						 };			
+						 };	
+				}
+				else
+				{
+					aRow={
+						 "fileId":eachField[0].split("=")[1],
+						 "fileNameFormal":eachField[1].split("=")[1],
+						 "description":eachField[2].split("=")[1],
+						 "fileType":eachField[3].split("=")[1],
+						 "fileLocationPath":selectedDataRecord.fileLocationPath,
+						 "fileVersion":selectedDataRecord.fileVersion,
+						 "fileNameSubmitted":selectedDataRecord.fileNameSubmitted,
+						 "fileNameGenerated":selectedDataRecord.fileNameGenerated,
+						 "submitterId":selectedDataRecord.submitterId,
+						 "submissionTime":selectedDataRecord.submissionTime,
+						 "fileSize":selectedDataRecord.fileSize,
+						 "remarks":eachField[11].split("=")[1],
+						 "valid":$("#validBox").jqxCheckBox('checked')
+						 };	
+				}
 				$('#jqxgrid').jqxGrid('updaterow', $('#jqxgrid').jqxGrid('getrowid', selectedRowIndex), aRow);
-				$("#popupWindow").jqxWindow('close');
-				*/
+				$("#popupWindow").jqxWindow('close');				
 			}
 			else if(action_command=="delete") //this won't be called
 			{
@@ -391,12 +436,7 @@
 			$('#errorMsg').html("<span style='color:red;'>"+strResponse.substring("ajax_action_file_upload:".length)+"</span>");
 		}
 	}
-	function disableComponents(doIt)
-	{
-		$("#hospitalId").prop('disabled', doIt);
-		$("#firstName").prop('disabled', doIt);
-		$("#lastName").prop('disabled', doIt);
-	}
+
 	function parseDate(d)
 	{
 		//log(d.toString()+"|"+isNaN(Date.parse(d)));
@@ -460,8 +500,7 @@
 			            <div id="popupHeader"></div>
 			            <div style="overflow: hidden;">
 			            	<form id='fileupload_form' action='./'>
-			                <table style='padding-top: 20px; padding-right: 10px; padding-bottom: 30px; padding-left: 10px;'>
-			                	
+			                <table style='padding-top: 10px; padding-right: 10px; padding-bottom: 30px; padding-left: 10px;'>			                	
 			                    <tr>
 			                        <td align="right" width="40%">Descriptive File Name:</td>
 			                        <td align="left">

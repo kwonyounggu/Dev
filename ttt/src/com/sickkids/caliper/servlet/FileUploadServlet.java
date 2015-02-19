@@ -89,14 +89,16 @@ public class FileUploadServlet extends HttpServlet implements Servlet
 					if (item.isFormField()) 
 					{
 						System.out.println("form field="+item.getFieldName()+" "+ item.getString());
-						if(item.getFieldName().equals("fileName")) fb.setFileNameFormal(item.getString());
+						if(item.getFieldName().equals("fileId")) fb.setFileId(Integer.parseInt(item.getString()));
+						else if(item.getFieldName().equals("fileVersion")) fb.setFileVersion(Integer.parseInt(item.getString()));
+						else if(item.getFieldName().equals("fileName")) fb.setFileNameFormal(item.getString());
 						else if(item.getFieldName().equals("fileType")) fb.setFileType(item.getString());
 						else if(item.getFieldName().equals("description")) fb.setDescription(item.getString());
 						else if(item.getFieldName().equals("valid")) fb.setValid(item.getString().equals("true"));
 						else if(item.getFieldName().equals("action")) 
 						{
 							action=item.getString();
-							fb.setRemarks(action+" by "+trb.getUserId()+" at "+Utils.currentTimestamp());
+							
 						}
 					} 
 					else 
@@ -122,22 +124,27 @@ public class FileUploadServlet extends HttpServlet implements Servlet
 				fb.setSubmitterId(trb.getUserId());
 				
 				if(action.equals("add"))
-				{
-					System.out.println("INFO (add): "+fb);
+				{					
+					fb.setRemarks(action+" by "+trb.getUserId()+" at "+Utils.currentTimestamp());
 					fb.setFileId((int) (sqlDao.getGenericLong("select max(file_id) from file_library")+1));
 					sqlDao.updateInsertGenericSqlCmd(fb.getInsertStmt());
+					System.out.println("INFO (add): "+fb);
 				}
 				else if(action.equals("edit"))
-				{
-					System.out.println("INFO (edit): "+fb);
+				{					
 					if(fb.getFileNameSubmitted().equals(""))
 					{
-						//update fileName, fileType, description
+						System.out.println("INFO (edit): update only three fields");
+						fb.setRemarks(action+" by "+trb.getUserId()+" at "+Utils.currentTimestamp()+" with only possible 5 fields without file info.");
+						sqlDao.updateInsertGenericSqlCmd(fb.getUpdateSomeFieldsStmt());
 					}
 					else
 					{
-						//update all except for the file_id 
+						System.out.println("INFO (edit): update all except field_id");
+						fb.setRemarks(action+" by "+trb.getUserId()+" at "+Utils.currentTimestamp()+" with new file info.");
+						sqlDao.updateInsertGenericSqlCmd(fb.getUpdateAllFieldsStmt());
 					}
+					System.out.println("INFO (edit): "+fb);
 				}
 				else if(action.equals("delete"))
 				{
