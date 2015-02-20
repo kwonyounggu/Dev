@@ -155,6 +155,7 @@
 	                    $("#fileType").val(selectedDataRecord.fileType);
 	                    $("#descriptionInput").val(selectedDataRecord.description);
 	                    $("#validBox").jqxCheckBox('val', selectedDataRecord.valid);
+	                    $("#fileInputId").val(""); 
 	                    		        	    	
 	                    $("#popupHeader").html("<img src='images/common/edit_16.png' width=16 height=16 valign='middle' style='margin-right: 15px;'/>Edit <span style='color: #2D73BB; font-size: 11px;'>(Note: your update may interrupt the current operation if in use!)</span>");
 	                    var offset = $("#jqxgrid").offset();
@@ -164,8 +165,27 @@
                 });
                 
                 deleteButton.click(function (event) 
-                {	//this is required
-                	alert("Deleting a record is not allowed!");
+                {	
+                	selectedRowIndex=$("#jqxgrid").jqxGrid('getselectedrowindex');
+                	log("selectedRowIndex in deleteButton="+selectedRowIndex);
+                	if(selectedRowIndex<0)
+                	{
+                		alert('You should select a row to delete!');
+                	}
+                	else
+                	{                	
+	                    // get the clicked row's data and initialize the input fields.
+	                    selectedDataRecord = $("#jqxgrid").jqxGrid('getrowdata', $('#jqxgrid').jqxGrid('getrowid', selectedRowIndex));
+	                    $("#fileName").val(selectedDataRecord.fileNameFormal);
+	                    $("#fileType").val(selectedDataRecord.fileType);
+	                    $("#descriptionInput").val(selectedDataRecord.description);
+	                    $("#validBox").jqxCheckBox('val', selectedDataRecord.valid);
+	                    $("#fileInputId").val(""); 		        	    	
+	                    $("#popupHeader").html("<img src='images/common/trash_16.png' width=16 height=16 valign='middle' style='margin-right: 15px;'/>Delete <span style='color: #2D73BB; font-size: 11px;'>(Note: the current operation may not be successful if the file in use!)</span>");
+	                    var offset = $("#jqxgrid").offset();
+	                    $("#popupWindow").jqxWindow({ title: 'delete', position: { x: parseInt(offset.left) + 200, y: parseInt(offset.top) + 65 } });
+	                    $("#popupWindow").jqxWindow('open');
+                	}
                 	
                 });
                            	
@@ -199,28 +219,33 @@
         $("#jqxgrid").jqxGrid('hidecolumn', 'remarks');
         
         // initialize the popup window and buttons.
-        $("#popupWindow").jqxWindow({width: 480, height: '60%', isModal: true, autoOpen: false, showCloseButton: true, cancelButton: $("#popupWindowCancel"), modalOpacity: 0.01});
+        $("#popupWindow").jqxWindow({width: 480, isModal: true, autoOpen: false, showCloseButton: true, cancelButton: $("#popupWindowCancel"), modalOpacity: 0.01});
         $("#popupWindow").on('open', function () 
         {
             $('#errorMsg').html("");
             $("#fileuploadPercent").html("(0%) ");
             $("#ajaxPercent").html("(0%) ");
             
-            if($("#popupWindow").jqxWindow('title')=="edit")
-            {            	
+            if($("#popupWindow").jqxWindow('title')=="delete")
+            {       
+            	disableComponents(true);
             }
             else
             {
+            	//double check
+            	//disableComponents(false);
             }
         });
         $("#popupWindow").on('close', function () 
         {
-            if($("#popupWindow").jqxWindow('title')=="edit")
+            if($("#popupWindow").jqxWindow('title')=="delete")
             {
-           	
+            	disableComponents(false);
             }
             else
-            {           	
+            {         
+            	//double check
+            	//disableComponents(false);
             }
         });
    
@@ -238,6 +263,7 @@
 	        {
 	        	formdata.append("fileId", selectedDataRecord.fileId);
 	        	formdata.append("fileVersion", Number(selectedDataRecord.fileVersion)+1);
+	        	formdata.append("fileNameGenerated", selectedDataRecord.fileNameGenerated);//delete
 	        }
 	        formdata.append("fileName", trim($("#fileName").val()));
 	        formdata.append("fileType", $("#fileType").val());
@@ -437,6 +463,13 @@
 		}
 	}
 
+	function disableComponents(doIt)
+	{
+		$("#fileName").prop('disabled', doIt);
+		$("#fileType").prop('disabled', doIt);
+		$("#descriptionInput").prop('disabled', doIt);
+		$("#fileInputId").prop('disabled', doIt);
+	}
 	function parseDate(d)
 	{
 		//log(d.toString()+"|"+isNaN(Date.parse(d)));
@@ -483,7 +516,7 @@
 					<table height="40" width="100%">
 						<tr><td align="left" valign="middle" style="padding-left: 5px; font-size:13pt;">
 								<img src='images/common/blue_circle.gif' width=16 height=17 valign="middle"/>
-								<span style="color: #32344B font-weight:bold; font-size:12pt; font-family: arial;">&nbsp;&nbsp;File Upload</span>
+								<span style="color: #32344B font-weight:bold; font-size:12pt; font-family: arial;">&nbsp;&nbsp;File Management</span>
 							</td>
 							<td align="right" valign="middle" style="padding-right: 20px; font-size:10pt; font-family: arial; color: #32344B;">
 								
@@ -537,21 +570,20 @@
 			                    
 			                    <tr height='3'><td colspan='2'></td></tr>
 			                    <tr style='vertical-align: top;'>
-			                        <td colspan='2' align='center'>
+			                        <td colspan='2' align='center' style='vertical-align: top;'>
 			                        File:<span id='fileuploadPercent'>(0%)&nbsp;</span><input type='file' id="fileInputId" name="fileInputName" size=40 value='' maxlength="256"  style='imemode:inactive'/>
 			                        </td>
 			                    </tr>
 
 			                    <tr height='10'><td colspan='2'></td></tr>
 			                    
-			                    <tr><td colspan='2' align='center' style='vertical-align:middle;' id='spinner'><img id='spinner_img' style='vertical-align:middle;' src='images/common/spinner.gif' width=32 height=32 /><span id='ajaxPercent' style='vertical-align:middle;'>(0%)</span></td></tr>
-			                    
-			                    <tr><td colspan='2' align='left' id='errorMsg'></td></tr>
+			                    <tr><td colspan='2' align='center' style='vertical-align:middle;' id='spinner'><img id='spinner_img' style='vertical-align:middle;' src='images/common/spinner.gif' width=32 height=32 /><span id='ajaxPercent' style='vertical-align:middle;'>(0%)</span></td></tr>			                    		                    
 			                    <tr>
-			                        <td colspan='2' style="padding-top: 10px;" align="center">
+			                        <td colspan='2' style="padding-top: 10px; padding-bottom: 10px;" align="center">
 			                        	<input style="margin-right: 5px;" type="button" id="popupWindowSubmit" value="Submit" />
 			                        	<input id="popupWindowCancel" type="button" value="Cancel" /></td>
 			                    </tr>
+			                    <tr><td colspan='2' align='left' id='errorMsg'></td></tr>
 			                    <tr height='15'><td colspan='2'></td></tr>
 			                </table>
 			                </form>

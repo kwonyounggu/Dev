@@ -189,5 +189,8 @@ public class FileLibraryBean implements Serializable
 					"valid="+valid+" "+
 					"where file_id='"+fileId+"'";					
 	}
-
+	public String getDeleteStmt()
+	{
+		return "delete from file_library where file_id='"+fileId+"'";					
+	}
 }

@@ -24,7 +24,7 @@
 		<li><a href="<%= MenuLink.menu_ttt_admin_manage_training %>" onfocus="this.blur()">Session Management</a></li>
 		<li>Data Library
 			<ul style='width: 185px;'>
-				<li><a onfocus='this.blur()' href='<%=MenuLink.menu_ttt_admin_manage_fileupload%>'>File Upload</a></li>
+				<li><a onfocus='this.blur()' href='<%=MenuLink.menu_ttt_admin_manage_fileupload%>'>File Management</a></li>
 				<li><a onfocus='this.blur()' href='/carm/carm_controller?op=menu_carm_central_admin_update_login_account&sm=0'>NA</a></li>
 				<li><a onfocus='this.blur()' href='/carm/carm_controller?op=menu_carm_central_admin_group_management&sm=0'>NA</a></li>
 				<li><a onfocus='this.blur()' href='/carm/carm_controller?op=menu_carm_central_admin_map_event_group_reviewer&sm=0'>NA</a></li>

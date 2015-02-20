@@ -608,12 +608,12 @@
 			                    <tr height='10'><td colspan='2'></td></tr>
 			                    
 			                    <tr><td colspan='2' align='center'><img id='spinner_img' src='images/common/spinner.gif' width=32 height=32 /></td></tr>
-			                    <tr><td colspan='2' align='left' id='errorMsg'></td></tr>
 			                    <tr>
-			                        <td colspan='2' style="padding-top: 10px;" align="center">
+			                        <td colspan='2' style="padding-top: 10px; padding-bottom: 10px;" align="center">
 			                        	<input style="margin-right: 5px;" type="button" id="popupWindowSubmit" value="Submit" />
 			                        	<input id="popupWindowCancel" type="button" value="Cancel" /></td>
 			                    </tr>
+			                    <tr><td colspan='2' align='left' id='errorMsg'></td></tr>
 			                    <tr height='15'><td colspan='2'></td></tr>
 			                </table>
 			                </form>

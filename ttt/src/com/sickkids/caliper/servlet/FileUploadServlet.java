@@ -44,6 +44,8 @@ public class FileUploadServlet extends HttpServlet implements Servlet
 	public static List<String> emailList=new ArrayList<String>();
 	public static List<String> nameList=new ArrayList<String>();
 	
+	public static final String PREDEFINED_FILE_PATH=System.getProperty("catalina.home")+"/uploaded_files/ttt_doc";
+	
 	private SQLDao sqlDao=null;
 
 	public void init(ServletConfig config) 
@@ -95,6 +97,7 @@ public class FileUploadServlet extends HttpServlet implements Servlet
 						else if(item.getFieldName().equals("fileType")) fb.setFileType(item.getString());
 						else if(item.getFieldName().equals("description")) fb.setDescription(item.getString());
 						else if(item.getFieldName().equals("valid")) fb.setValid(item.getString().equals("true"));
+						else if(item.getFieldName().equals("fileNameGenerated")) fb.setFileNameGenerated(item.getString());
 						else if(item.getFieldName().equals("action")) 
 						{
 							action=item.getString();
@@ -104,17 +107,25 @@ public class FileUploadServlet extends HttpServlet implements Servlet
 					else 
 					{
 						System.out.println("non form field="+item.getFieldName()+" "+ item.getName());
-						if(item.getFieldName().equals("docFile")) fb.setFileNameSubmitted(item.getName());
-						String doc_file_link="/";//from the root of the context such as 8080/ttt/uploaded_files/ttt_doc
-						String loc=app.getRealPath(doc_file_link);
 						
-						File path=new File(System.getProperty("catalina.home")+"/uploaded_files/ttt_doc");
-	
+						if(action.equals("edit"))
+						{
+							//delete the old file before making another file
+							File deleteFilePath=new File(PREDEFINED_FILE_PATH+"/"+fb.getFileNameGenerated());
+							if(!isUnLocked(deleteFilePath)) 
+								throw new Exception("The file to delete before replacing ("+fb.getFileNameGenerated()+") is currently in use");
+							else deleteFilePath.delete();//This will remove the old one before new one
+						}
+						
+						if(item.getFieldName().equals("docFile")) fb.setFileNameSubmitted(item.getName());
+						
+						File path=new File(PREDEFINED_FILE_PATH);
 						if(!path.exists()||!path.isDirectory()) path.mkdirs();
 						uploadFile=rename(new File(path+"/"+item.getName()), fb.getFileType()); //prefixing the file type in the file name such as video_2015020202.mp4
 						item.write(uploadFile);//write the coming file with the given name
 			
-						doc_file_link="uploaded_files/ttt_doc/"+uploadFile.getName();
+						String doc_file_link="uploaded_files/ttt_doc/"+uploadFile.getName();
+						
 						fb.setFileNameGenerated(uploadFile.getName());
 						fb.setFileLocationPath(doc_file_link);
 						fb.setFileSize(uploadFile.length());
@@ -148,7 +159,17 @@ public class FileUploadServlet extends HttpServlet implements Servlet
 				}
 				else if(action.equals("delete"))
 				{
-					
+					//1. delete from the dir if not in use
+					//2. delete the record from the db					
+					File deleteFilePath=new File(PREDEFINED_FILE_PATH+"/"+fb.getFileNameGenerated());
+					if(!isUnLocked(deleteFilePath)) 
+						throw new Exception("The file to delete ("+fb.getFileNameGenerated()+") is currently in use");
+					else
+					{	
+						deleteFilePath.delete();//This will remove one that is requested.
+						sqlDao.updateInsertGenericSqlCmd(fb.getDeleteStmt());
+					}
+					System.out.println("INFO (delete): "+fb);
 				}
 				retString=fb.toString();
 			}
@@ -195,5 +216,21 @@ public class FileUploadServlet extends HttpServlet implements Servlet
 		File temp = new File(fname);
 
 		return temp;
+	}
+	public boolean isUnLocked(File filePath)
+	{
+		boolean isFileUnlocked = false;
+		try 
+		{
+			//It creates a new file with size 0 or, if the file exists already, it is opened and closed without modifying it, but updating the file date and time
+		    org.apache.commons.io.FileUtils.touch(filePath);
+		    isFileUnlocked = true;
+		} 
+		catch (IOException e) 
+		{
+		    System.err.println("The touch is returned with an IO Exception");
+		}
+		
+		return isFileUnlocked;
 	}
 }
