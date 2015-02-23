@@ -24,7 +24,10 @@
 	
 		<tr>
 			<td colspan=4 style="font-size:10pt; font-family: arial; vertical-align: middle; word-wrap: break-word;">
-			 	
+			 	1. Create Hospitals <br/>
+			 	2. Create Accounts for each Hospital<br/>
+			 	3. Create Seminars and corresponding scheduling<br/>
+			 	4. Upload any required training files any time<br/>
 			</td>
 		</tr>
 		<tr><td colspan="4" height="10" ></td></tr>

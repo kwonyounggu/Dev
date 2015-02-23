@@ -782,7 +782,7 @@ public class SQLDao
 	    		{
 	    			cp.free(c);
 	    			c=null;
-	    			System.err.println("INFO: a connection freed, total connections="+cp.totalConnections()+" getCurriculumCurrentList() in SQLDao.java ");
+	    			System.err.println("INFO: a connection freed, total connections="+cp.totalConnections()+" getCountryList() in SQLDao.java ");
 	    		}
 	        }
 			catch (Exception e)
@@ -819,7 +819,7 @@ public class SQLDao
 	    		{
 	    			cp.free(c);
 	    			c=null;
-	    			System.err.println("INFO: a connection freed, total connections="+cp.totalConnections()+" getCurriculumCurrentList() in SQLDao.java ");
+	    			System.err.println("INFO: a connection freed, total connections="+cp.totalConnections()+" getCountryName() in SQLDao.java ");
 	    		}
 	        }
 			catch (Exception e)

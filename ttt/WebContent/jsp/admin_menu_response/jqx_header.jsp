@@ -21,14 +21,16 @@
 		
 		<li><a href="<%= MenuLink.menu_ttt_admin_manage_hospitals %>" onfocus="this.blur()">Hospital Management</a></li>	
 		<li><a href="<%= MenuLink.menu_ttt_admin_manage_accounts %>" onfocus="this.blur()">Login Management</a></li>	
-		<li><a href="<%= MenuLink.menu_ttt_admin_manage_training %>" onfocus="this.blur()">Session Management</a></li>
+		<li>Seminar Management
+			<ul style='width: 185px;'>
+				<li><a onfocus='this.blur()' href='<%=MenuLink.menu_ttt_admin_manage_course_registration%>'>Seminar Registration</a></li>
+				<li><a onfocus='this.blur()' href='<%=MenuLink.menu_ttt_admin_manage_course_scheduling%>'>Seminar Scheduling</a></li>
+			</ul>
+		</li>
+		
 		<li>Data Library
 			<ul style='width: 185px;'>
 				<li><a onfocus='this.blur()' href='<%=MenuLink.menu_ttt_admin_manage_fileupload%>'>File Management</a></li>
-				<li><a onfocus='this.blur()' href='/carm/carm_controller?op=menu_carm_central_admin_update_login_account&sm=0'>NA</a></li>
-				<li><a onfocus='this.blur()' href='/carm/carm_controller?op=menu_carm_central_admin_group_management&sm=0'>NA</a></li>
-				<li><a onfocus='this.blur()' href='/carm/carm_controller?op=menu_carm_central_admin_map_event_group_reviewer&sm=0'>NA</a></li>
-				<li><a onfocus='this.blur()' href='/carm/carm_controller?op=menu_carm_central_admin_clinical_summary&sm=0'>NA</a></li>
 			</ul>
 		</li>	
 		

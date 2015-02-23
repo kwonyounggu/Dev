@@ -48,6 +48,12 @@ File Freelance Programmer- the story of Dame Stephanie Shirley.mp4 is successful
 
 )
 
-WED:
-EDIT WITH A NEW FILE: INFO (edit): fileId=10, fileNameFormal=text file file name field new, description=text file file name field desc nnnnnn, fileType=image, fileLocationPath=uploaded_files/ttt_doc/image_20150218163128.png, fileVersion=1, fileNameSubmitted=ttt_mock.png, fileNameGenerated=image_20150218163128.png, submitterId=younggu.kwon.00, submissionTime=2015-02-18 16:31:28.359, fileSize=556440, remarks=edit by younggu.kwon.00 at 2015-02-18 16:31:28.356, valid=true
-EDIT WITHOUT A NEW FILE: INFO (edit): fileId=10, fileNameFormal=text file file name field new, description=text file file name field desc nnnnnn, fileType=image, fileLocationPath=, fileVersion=1, fileNameSubmitted=, fileNameGenerated=, submitterId=younggu.kwon.00, submissionTime=2015-02-18 16:33:34.95, fileSize=0, remarks=edit by younggu.kwon.00 at 2015-02-18 16:33:34.95, valid=true
+#Flex appliaction screen recording
+http://stackoverflow.com/questions/5809413/how-to-record-the-screen-application-in-flex-fms
+Ah, yeah, render the stage to a bitmap, save the bitmap! var bd:BitmapData = new BitmapData(stage.stageWidth,stage.stageHeight); bd.draw(stage); var screenshot:Bitmap = new Bitmap(bd); –  JTtheGeek Apr 29 '11 at 17:02 
+
+#google
+flex stage into flv
+https://www.google.ca/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=flex+stage+into+flv
+  	 	
+There is an alchemy lib that generates FLV with bitmapdata. This tutorial explains it better zeropointnine.com/blog/updated-flv-encoder-alchem –  Lelis718 Jan 6 '12 at 13:45
