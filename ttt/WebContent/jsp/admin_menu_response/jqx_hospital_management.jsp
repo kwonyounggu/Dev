@@ -272,6 +272,7 @@
 		log("getAdminHospitalActionResponse("+strResponse+")");
 		
 		$("#spinner_img").hide();
+
 		if(strResponse.indexOf('session_timeout')==0) 
 		{
 			alert("Your session is expired. Please login again.");
@@ -414,7 +415,7 @@
 			                        	<input style="margin-right: 5px;" type="button" id="popupWindowSubmit" value="Submit" />
 			                        	<input id="popupWindowCancel" type="button" value="Cancel" /></td>
 			                    </tr>
-			                    <tr><td colspan='2' align='left' id='errorMsg'></td></tr>
+			                    <tr><td colspan='2' align='center' id='errorMsg'></td></tr>
 			                    <tr height='15'><td colspan='2'></td></tr>
 			                </table>
 			                </form>

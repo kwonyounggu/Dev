@@ -2,6 +2,10 @@ package com.sickkids.caliper.dao;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.commons.lang.StringEscapeUtils;
 
 import com.sickkids.caliper.common.ParticipantType;
 
@@ -187,5 +191,78 @@ public class CurriculumCurrentBean implements Serializable
 		else if(id.equals(onewaySiteViewer5Id)) return ParticipantType.ONEWAY_VIEWER5;
 		else if(id.equals(onewaySiteViewer6Id)) return ParticipantType.ONEWAY_VIEWER6;
 		else return ParticipantType.NONE;
+	}
+	public String toString()
+	{
+		return 
+		"courseNumber="+courseNumber+", "+
+		"courseName="+courseName+", "+
+		"lecturerId="+lecturerId+", "+
+		"taId="+taId+", "+
+		"interactiveSiteViewer1Id="+interactiveSiteViewer1Id+", "+
+		"interactiveSiteViewer2Id="+interactiveSiteViewer2Id+", "+
+		"onewaySiteViewer1Id="+onewaySiteViewer1Id+", "+
+		"onewaySiteViewer2Id="+onewaySiteViewer2Id+", "+
+		"onewaySiteViewer3Id="+onewaySiteViewer3Id+", "+
+		"onewaySiteViewer4Id="+onewaySiteViewer4Id+", "+
+		"onewaySiteViewer5Id="+onewaySiteViewer5Id+", "+
+		"onewaySiteViewer6Id="+onewaySiteViewer6Id+", "+
+		"courseDataFileNumber="+courseDataFileNumber+", "+
+		"courseTimeTableNumber="+courseTimeTableNumber+", "+
+		"creatorId="+creatorId+", "+
+		"creationTime="+creationTime+", "+
+		"remarks="+remarks+", "+
+		"valid="+valid;
+	}
+
+	public String getInsertStmt()
+	{
+		return "insert into curriculum_current values("+courseNumber+", "+
+				   "'"+StringEscapeUtils.escapeSql(courseName)+"', "+
+				   "'"+lecturerId+"', "+
+				   "'"+taId+"', "+
+				   "'"+interactiveSiteViewer1Id+"', "+
+				   "'"+interactiveSiteViewer2Id+"', "+
+				   "'"+onewaySiteViewer1Id+"', "+
+				   "'"+onewaySiteViewer2Id+"', "+
+				   "'"+onewaySiteViewer3Id+"', "+
+				   "'"+onewaySiteViewer4Id+"', "+
+				   "'"+onewaySiteViewer5Id+"', "+
+				   "'"+onewaySiteViewer6Id+"', "+
+				   "'"+courseDataFileNumber+"', "+
+				   "'"+courseTimeTableNumber+"', "+
+				   "'"+creatorId+"', "+
+				   "'"+creationTime+"', "+
+				   "'"+remarks+"', "+
+				   ""+valid+")";
+	}
+	public String getUpdateSomeFieldsStmt()
+	{
+		return "";
+		/*
+		return "update file_library set "+
+					"file_name_formal='"+fileNameFormal+"', "+
+					"description='"+description+"', "+
+					"file_type='"+fileType+"', "+									
+					"remarks='"+remarks+"', "+
+					"valid="+valid+" "+
+					"where file_id='"+fileId+"'";		
+		*/
+	}
+	public boolean isDuplicatedIds()
+	{
+		Set<String> set=new HashSet<String>();
+		String[] list={lecturerId, taId, interactiveSiteViewer1Id, interactiveSiteViewer2Id,
+						onewaySiteViewer1Id, onewaySiteViewer2Id, onewaySiteViewer3Id, onewaySiteViewer4Id, onewaySiteViewer5Id, onewaySiteViewer6Id
+					  };
+		//for(String s : list) System.out.println(s+" ");
+		for(String s : list)
+			if(!s.equals(""))
+			{
+				if(set.contains(s)) { set.clear(); return true;}
+				else set.add(s);
+			}
+		set.clear();
+		return false;
 	}
 }

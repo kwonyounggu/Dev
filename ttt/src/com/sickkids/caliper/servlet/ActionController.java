@@ -392,6 +392,62 @@ public class ActionController extends HttpServlet implements Servlet
 									response.getWriter().write("ajax_action_account_management:Error: "+e.getMessage()+"<br/>"+Message.inform_to_admin_about_exception+"<br/>E-Mail: "+Utils.csr_email_address);
 								}
 							}
+							else if(op.equals("ajax_action_course_registration")) //COMMON
+							{
+								try
+								{
+									String action=(String)request.getParameter("action");//add, edit, delete
+									CurriculumCurrentBean cb=new CurriculumCurrentBean();
+									
+									
+									cb.setCourseName(request.getParameter("courseName"));
+									cb.setLecturerId(request.getParameter("lecturerId"));
+									cb.setTaId(request.getParameter("taId"));
+									cb.setInteractiveSiteViewer1Id(request.getParameter("interactiveSiteViewer1Id"));
+									cb.setInteractiveSiteViewer2Id(request.getParameter("interactiveSiteViewer2Id"));
+									cb.setOnewaySiteViewer1Id(request.getParameter("onewaySiteViewer1Id"));
+									cb.setOnewaySiteViewer2Id(request.getParameter("onewaySiteViewer2Id"));
+									cb.setOnewaySiteViewer3Id(request.getParameter("onewaySiteViewer3Id"));
+									cb.setOnewaySiteViewer4Id(request.getParameter("onewaySiteViewer4Id"));
+									cb.setOnewaySiteViewer5Id(request.getParameter("onewaySiteViewer5Id"));
+									cb.setOnewaySiteViewer6Id(request.getParameter("onewaySiteViewer6Id"));
+									
+									cb.setRemarks(action+" by "+trb.getUserId()+" at "+Utils.currentTimestamp());
+									cb.setValid(request.getParameter("valid").equals("true")? true: false);
+
+									
+									
+									//Utils.delay(5);
+
+									if(action.equals("add"))
+									{
+										if(cb.isDuplicatedIds()) throw new Exception("id_duplication");
+										cb.setCreationTime(Utils.currentTimestamp());
+										cb.setCreatorId(trb.getUserId());
+										cb.setCourseNumber((int) (tttsqlDao.getGenericLong("select max(course_number) from curriculum_current")+1));
+										
+										System.out.println("INFO: add ajax_action_course_registration is called here");
+										System.out.println(cb.toString());
+										
+										tttsqlDao.updateInsertGenericSqlCmd(cb.getInsertStmt());
+										response.getWriter().write("true:add[À]"+cb);
+									}
+									else if(action.equals("edit"))
+									{
+										//if an account is replace while being used, then it can go ahead but not able to be used for the same seminar next time.
+										
+										//System.out.println("INFO: edit account_management is called here");
+										//tttsqlDao.updateInsertGenericSqlCmd(rb.getUpdateStmt());
+										//response.getWriter().write("true:edit[À]hospitalId="+rb.getHospitalId()+"&userId="+rb.getUserId());	
+									}
+									
+								}
+								catch(Exception e)
+								{
+									Utils.logger.severe("(op="+op+" for ajax request): msg="+e+" from ActionController.java");
+									response.getWriter().write("ajax_action_course_registration:Error: "+e.getMessage()+"<br/>"+Message.inform_to_admin_about_exception+"<br/>E-Mail: "+Utils.csr_email_address);
+								}
+							}
 						}
 					}
 					else
