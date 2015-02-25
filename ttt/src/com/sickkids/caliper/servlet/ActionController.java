@@ -267,7 +267,46 @@ public class ActionController extends HttpServlet implements Servlet
 				response.sendRedirect(response.encodeRedirectURL(MenuLink.TTT_CONTEXT));
 			}
 			//****** LOGIN SESSION AVAILABLE ********** from here, trb is not null and op=null or op!=null
-			else //trb is not NULL but wants to take some action
+			//This area is for a common purpose without administration works or seminar room participants
+			else if(op!=null && op.equals("ajax_ttt_reset_password")) //COMMON
+			{
+				try
+				{
+					String login_password1=(String)request.getParameter("login_password1");
+					String login_password2=(String)request.getParameter("login_password2");
+					String login_id=(String)session.getAttribute("login_id");							
+
+					trb=(AllRegisteredUserBean)session.getAttribute("trb");
+					if(!login_password1.equals(login_password2)) response.getWriter().write("false:Two passwords are not identical.\nPlease type again!");
+					else
+					{
+						String sqlCmd="update all_registered_user set password='"+login_password1+"', reset_password=0 where app_id="+trb.getAppId()+" and user_id='"+login_id+"';";
+
+						tttsqlDao.updateRegisteredUserTable(sqlCmd);
+						
+						//update login_hist table
+						AllLoginHistoryBean lb=new AllLoginHistoryBean(0L,trb.getAppId(), login_id, Utils.currentTimestamp(), request.getRemoteAddr());
+						lb=tttloginHistoryDao.create(lb);
+
+						session.setAttribute("all_login_hist_bean", lb);//use this when the session is expired
+
+						//email
+						AllRegisteredUserBean tempRegisteredUserBean=trb.copy();
+						tempRegisteredUserBean.setPassword(login_password1);
+
+						EmailText.emailCreateOrUpdatedPassword("TTT", tempRegisteredUserBean, request.getScheme()+"://"+request.getServerName()+":"+Integer.toString(request.getServerPort()), MenuLink.TTT_CONTEXT, false );
+
+						response.getWriter().write("true:"+MenuLink.TTT_CONTEXT);
+					}
+
+				}
+				catch(Exception e)
+				{
+					Utils.logger.severe("(op="+op+" for ajax request): msg="+e+" from ActionController.java");
+					response.getWriter().write("false:an error has been occurred\n\n"+e+"\n\n"+Message.inform_to_admin_about_exception+"\nE-Mail: "+Utils.csr_email_address);
+				}
+			}
+			else //trb is not NULL but wants to take some action such as 'Administration Only'
 			{
 				CurriculumCurrentBean curriculumBean=(CurriculumCurrentBean)session.getAttribute("curriculum_bean");
 				if(curriculumBean==null)
@@ -369,7 +408,7 @@ public class ActionController extends HttpServlet implements Servlet
 									rb.setValid(request.getParameter("validRecord").equals("true")? true: false);
 
 									System.out.println(rb.toString());
-									Utils.delay(5);
+									//Utils.delay(5);
 
 									if(action.equals("add"))
 									{
@@ -427,18 +466,18 @@ public class ActionController extends HttpServlet implements Servlet
 										cb.setCourseNumber((int) (tttsqlDao.getGenericLong("select max(course_number) from curriculum_current")+1));
 										
 										System.out.println("INFO: add ajax_action_course_registration is called here");
-										System.out.println(cb.toString());
+										//System.out.println(cb.toString());
 										
 										tttsqlDao.updateInsertGenericSqlCmd(cb.getInsertStmt());
-										response.getWriter().write("true:add[À]"+cb);
+										response.getWriter().write(cb.toString());
 									}
 									else if(action.equals("edit"))
 									{
-										//if an account is replace while being used, then it can go ahead but not able to be used for the same seminar next time.
-										
-										//System.out.println("INFO: edit account_management is called here");
-										//tttsqlDao.updateInsertGenericSqlCmd(rb.getUpdateStmt());
-										//response.getWriter().write("true:edit[À]hospitalId="+rb.getHospitalId()+"&userId="+rb.getUserId());	
+										if(cb.isDuplicatedIds()) throw new Exception("id_duplication");
+										cb.setCourseNumber(Integer.parseInt(request.getParameter("courseNumber")));
+										System.out.println("INFO: edit ajax_action_course_registration is called here");
+										tttsqlDao.updateInsertGenericSqlCmd(cb.getUpdateSomeFieldsStmt());
+										response.getWriter().write(cb.toString());	
 									}
 									
 								}
@@ -456,7 +495,7 @@ public class ActionController extends HttpServlet implements Servlet
 						throw new Exception("No curriclum assigned, but logged in now and login level is not in Admin level (1)");
 					}
 				}
-				else
+				else //Seminar Room Participants
 				{
 					ParticipantType pt=curriculumBean.getParticipantType(trb.getUserId());
 					switch(pt)

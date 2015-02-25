@@ -238,16 +238,26 @@ public class CurriculumCurrentBean implements Serializable
 	}
 	public String getUpdateSomeFieldsStmt()
 	{
-		return "";
-		/*
-		return "update file_library set "+
-					"file_name_formal='"+fileNameFormal+"', "+
-					"description='"+description+"', "+
-					"file_type='"+fileType+"', "+									
+		return "update curriculum_current set "+
+					"course_name='"+StringEscapeUtils.escapeSql(courseName)+"', "+
+					"lecturer_id='"+lecturerId+"', "+
+					"ta_id='"+taId+"', "+	
+					"interactive_site_viewer1_id='"+interactiveSiteViewer1Id+"', "+
+					"interactive_site_viewer2_id='"+interactiveSiteViewer2Id+"', "+
+					"oneway_site_viewer1_id='"+onewaySiteViewer1Id+"', "+	
+					"oneway_site_viewer2_id='"+onewaySiteViewer2Id+"', "+
+					"oneway_site_viewer3_id='"+onewaySiteViewer3Id+"', "+
+					"oneway_site_viewer4_id='"+onewaySiteViewer4Id+"', "+	
+					"oneway_site_viewer5_id='"+onewaySiteViewer5Id+"', "+
+					"oneway_site_viewer6_id='"+onewaySiteViewer6Id+"', "+
+					//"course_data_file_number='"+courseDataFileNumber+"', "+	
+					//"course_time_table_number='"+courseTimeTableNumber+"', "+
+					//"creator_id='"+creatorId+"', "+
+					//"creation_time='"+creationTime+"', "+		
 					"remarks='"+remarks+"', "+
 					"valid="+valid+" "+
-					"where file_id='"+fileId+"'";		
-		*/
+					"where course_number='"+courseNumber+"'";		
+		
 	}
 	public boolean isDuplicatedIds()
 	{
