@@ -10,106 +10,110 @@ public class CourseTimeTableBean implements Serializable
 	 */
 	private static final long serialVersionUID = 4824252711860121888L;
 	
-	private int time_table_id=-1;
-	private int course_number=-1;
-	private Timestamp start_time=null;
-	private Timestamp end_time=null;
-	private int duration=-1;
-	private String email_alert_to="";
-	private String hist_record_path="";
-	private String course_status="";
-	private String subcontents="";
-	private String submitter_id="";
-	private Timestamp submission_time=null;
+	private int timeTableId=-1;
+	private int courseNumber=-1;
+	private Timestamp startTime=null;
+	private Timestamp endTime=null;
+	private String duration="";//0.5, 1, 1.5
+	private String emailAlertTo="";//younggu.kwon@sickkids.ca at 2012-12-12 00:00:00
+	private String histRecordPath="";
+	private String sessionStatus="";
+	private String sessionDescription="";
+	private String submitterId="";
+	private Timestamp submissionTime=null;
 	private String remarks="";
 	private boolean valid=true;
-	public int getTime_table_id()
+	private String fileIds="";//multiple file ids, commma by comma...
+	
+	private String courseName="";
+	
+	public int getTimeTableId()
 	{
-		return time_table_id;
+		return timeTableId;
 	}
-	public void setTime_table_id(int time_table_id)
+	public void setTimeTableId(int timeTableId)
 	{
-		this.time_table_id = time_table_id;
+		this.timeTableId = timeTableId;
 	}
-	public int getCourse_number()
+	public int getCourseNumber()
 	{
-		return course_number;
+		return courseNumber;
 	}
-	public void setCourse_number(int course_number)
+	public void setCourseNumber(int courseNumber)
 	{
-		this.course_number = course_number;
+		this.courseNumber = courseNumber;
 	}
-	public Timestamp getStart_time()
+	public Timestamp getStartTime()
 	{
-		return start_time;
+		return startTime;
 	}
-	public void setStart_time(Timestamp start_time)
+	public void setStartTime(Timestamp startTime)
 	{
-		this.start_time = start_time;
+		this.startTime = startTime;
 	}
-	public Timestamp getEnd_time()
+	public Timestamp getEndTime()
 	{
-		return end_time;
+		return endTime;
 	}
-	public void setEnd_time(Timestamp end_time)
+	public void setEndTime(Timestamp endTime)
 	{
-		this.end_time = end_time;
+		this.endTime = endTime;
 	}
-	public int getDuration()
+	public String getDuration()
 	{
 		return duration;
 	}
-	public void setDuration(int duration)
+	public void setDuration(String duration)
 	{
 		this.duration = duration;
 	}
-	public String getEmail_alert_to()
+	public String getEmailAlertTo()
 	{
-		return email_alert_to;
+		return emailAlertTo;
 	}
-	public void setEmail_alert_to(String email_alert_to)
+	public void setEmailAlertTo(String emailAlertTo)
 	{
-		this.email_alert_to = email_alert_to;
+		this.emailAlertTo = emailAlertTo;
 	}
-	public String getHist_record_path()
+	public String getHistRecordPath()
 	{
-		return hist_record_path;
+		return histRecordPath;
 	}
-	public void setHist_record_path(String hist_record_path)
+	public void setHistRecordPath(String histRecordPath)
 	{
-		this.hist_record_path = hist_record_path;
+		this.histRecordPath = histRecordPath;
 	}
-	public String getCourse_status()
+	public String getSessionStatus()
 	{
-		return course_status;
+		return sessionStatus;
 	}
-	public void setCourse_status(String course_status)
+	public void setSessionStatus(String sessionStatus)
 	{
-		this.course_status = course_status;
+		this.sessionStatus = sessionStatus;
 	}
-	public String getSubcontents()
+	public String getSessionDescription()
 	{
-		return subcontents;
+		return sessionDescription;
 	}
-	public void setSubcontents(String subcontents)
+	public void setSessionDescription(String sessionDescription)
 	{
-		this.subcontents = subcontents;
+		this.sessionDescription = sessionDescription;
 	}
-	public String getSubmitter_id()
+	public String getSubmitterId()
 	{
-		return submitter_id;
+		return submitterId;
 	}
-	public void setSubmitter_id(String submitter_id)
+	public void setSubmitterId(String submitterId)
 	{
-		this.submitter_id = submitter_id;
+		this.submitterId = submitterId;
 	}
-	public Timestamp getSubmission_time()
+	public Timestamp getSubmissionTime()
 	{
-		return submission_time;
+		return submissionTime;
 	}
-	public void setSubmission_time(Timestamp submission_time)
+	public void setSubmissionTime(Timestamp submissionTime)
 	{
-		this.submission_time = submission_time;
+		this.submissionTime = submissionTime;
 	}
 	public String getRemarks()
 	{
@@ -127,4 +131,23 @@ public class CourseTimeTableBean implements Serializable
 	{
 		this.valid = valid;
 	}
+	public String getFileIds()
+	{
+		return fileIds;
+	}
+	public void setFileIds(String fileIds)
+	{
+		this.fileIds = fileIds;
+	}
+	public String getCourseName()
+	{
+		return courseName;
+	}
+	public void setCourseName(String courseName)
+	{
+		this.courseName = courseName;
+	}
+	
+	
+
 }

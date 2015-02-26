@@ -335,8 +335,8 @@ public class ActionController extends HttpServlet implements Servlet
 						}
 						else if(op.equals("menu_ttt_admin_manage_course_scheduling"))
 						{
-							//request.setAttribute("body_panel", "jqx_account_management.jsp");
-							//((RequestDispatcher)request.getRequestDispatcher("jsp/admin_menu_response/jqx_page_template.jsp")).forward(request,response);
+							request.setAttribute("body_panel", "jqx_course_scheduling.jsp");
+							((RequestDispatcher)request.getRequestDispatcher("jsp/admin_menu_response/jqx_page_template.jsp")).forward(request,response);
 						}
 						else if(op.equals("menu_ttt_admin_manage_fileupload"))
 						{

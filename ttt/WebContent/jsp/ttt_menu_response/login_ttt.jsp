@@ -178,7 +178,7 @@
 										<td width="50%" valign="top" align="left">
 											<div id='login_body'>
 												<table  id='login_table' cellpadding='2' cellspacing="4" width='100%' style="padding: 20px 0px 20px 60px;"> 
-											 		<tr><td colspan=4>Online Seminar Name <span style="font-size: .95em;"></span></td></tr> 		
+											 		<tr><td colspan=4>Online Training Courses <span style="font-size: .95em;"></span></td></tr> 		
 																								
 								 					<tr> 
 														<td colspan=4 align="left"> 

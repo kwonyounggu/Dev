@@ -7,10 +7,12 @@
 
 <%@ page import="java.util.*" %>
 <%@ page isELIgnored ="false" %> 
+
 <%
 	SQLDao sqlDao=(SQLDao)application.getAttribute("tttsqlDao");
-	List<CurriculumCurrentBean> courseList=sqlDao.getCurriculumCurrentList("order by course_name asc");
-	List<AllRegisteredUserBean> userList=sqlDao.getListUserTableAndHospital();
+	List<CourseTimeTableBean> sessionList=sqlDao.getCourseTimeTableList("select a.time_table_id, a.course_number, a.start_time, a.end_time, a.duration, a.email_alert_to, a.hist_record_path, a.session_status, a.session_description, a.submitter_id, a.submission_time, a.remarks, a.valid, a.file_ids, b.course_name from course_time_table as a, curriculum_current as b where a.course_number=b.course_number order by b.course_name, a.start_time asc");
+	List<FileLibraryBean> fileList=sqlDao.getFileList("order by file_name_formal asc");
+	List<CurriculumCurrentBean> courseList=sqlDao.getCurriculumCurrentList("where valid=true order by course_name asc");
  %>
 <script language="Javascript" type="text/javascript">
 	$(document).ready(function () 
@@ -21,36 +23,29 @@
 		var action_command;//add, edit, delete
 		var data=[
 			 		<%	
-			 			for(int i=0;i<courseList.size();i++)
+			 			for(int i=0;i<sessionList.size();i++)
 			 			{
-			 				CurriculumCurrentBean cb=courseList.get(i);
+			 				CourseTimeTableBean tb=sessionList.get(i);
 			 				out.print("{"); 
 			 				
 			 				//Visible
-			 				out.print("\"courseName\": \""+cb.getCourseName()+"\","); 
-			 				out.print("\"lecturerId\": \""+cb.getLecturerId()+"\","); 
-			 				out.print("\"taId\": \""+cb.getTaId()+"\","); 
-			 				out.print("\"interactiveSiteViewer1Id\": \""+cb.getInteractiveSiteViewer1Id()+"\","); 
-			 				out.print("\"interactiveSiteViewer2Id\": \""+cb.getInteractiveSiteViewer2Id()+"\","); 
-			 				out.print("\"onewaySiteViewer1Id\": \""+cb.getOnewaySiteViewer1Id()+"\","); 
-			 				out.print("\"onewaySiteViewer2Id\": \""+cb.getOnewaySiteViewer2Id()+"\","); 
-			 				out.print("\"onewaySiteViewer3Id\": \""+cb.getOnewaySiteViewer3Id()+"\","); 
-			 				out.print("\"onewaySiteViewer4Id\": \""+cb.getOnewaySiteViewer4Id()+"\","); 
-			 				out.print("\"onewaySiteViewer5Id\": \""+cb.getOnewaySiteViewer5Id()+"\","); 
-			 				out.print("\"onewaySiteViewer6Id\": \""+cb.getOnewaySiteViewer6Id()+"\","); 			 				
+			 				out.print("\"timeTableId\": \""+tb.getTimeTableId()+"\","); 
+			 				out.print("\"courseNumber\": \""+tb.getCourseNumber()+"\","); 
+			 				out.print("\"startTime\": \""+tb.getStartTime()+"\","); 
+			 				out.print("\"endTime\": \""+tb.getEndTime()+"\","); 
+			 				out.print("\"duration\": \""+tb.getDuration()+"\","); 
+			 				out.print("\"emailAlertTo\": \""+tb.getEmailAlertTo()+"\","); 
+			 				out.print("\"histRecordPath\": \""+tb.getHistRecordPath()+"\","); 
+			 				out.print("\"sessionStatus\": \""+tb.getSessionStatus()+"\","); 
+			 				out.print("\"sessionDescription\": \""+tb.getSessionDescription()+"\","); 
+			 				out.print("\"submitterId\": \""+tb.getSubmitterId()+"\","); 
+			 				out.print("\"submissionTime\": \""+tb.getSubmissionTime()+"\","); 			 				
+			 				out.print("\"remarks\": \""+tb.getRemarks()+"\","); 
+							out.print("\"valid\": \""+tb.isValid()+"\"");
+		 					out.print("\"fileIds\": \""+tb.getFileIds()+"\",");
+		 					out.print("\"courseName\": \""+tb.getCourseName()+"\",");
 			 				
-			 				//Invisible
-			 				out.print("\"courseDataFileNumber\": \""+cb.getCourseDataFileNumber()+"\",");	
-			 				out.print("\"courseTimeTableNumber\": \""+cb.getCourseTimeTableNumber()+"\","); 
-			 				out.print("\"creatorId\": \""+cb.getCreatorId()+"\","); 
-			 				out.print("\"creationTime\": \""+cb.getCreationTime()+"\","); 
-			 				out.print("\"remarks\": \""+cb.getRemarks()+"\","); 
-			 				out.print("\"courseNumber\": \""+cb.getCourseNumber()+"\","); 
-			 				
-			 				//Visible
-		 					out.print("\"valid\": \""+cb.isValid()+"\"");
-			 				
-							out.print(((i+1)==courseList.size() ? "}" : "},"));				
+							out.print(((i+1)==sessionList.size() ? "}" : "},"));				
 			 			}
 	
 			 		%>
@@ -62,24 +57,21 @@
             datatype: "array",
             datafields:
             [
-                { name: "courseName", type: "string" },
-                { name: "lecturerId", type: "string" },
-                { name: "taId", type: "string" },
-                { name: "interactiveSiteViewer1Id", type: "string"},
-                { name: "interactiveSiteViewer2Id", type: "string"},
-                { name: "onewaySiteViewer1Id", type: "string" },
-                { name: "onewaySiteViewer2Id", type: "string" },
-                { name: "onewaySiteViewer3Id", type: "string" },
-                { name: "onewaySiteViewer4Id", type: "string" },
-                { name: "onewaySiteViewer5Id", type: "string" },
-                { name: "onewaySiteViewer6Id", type: "string" },
-                { name: "courseDataFileNumber", type: "number"},
-                { name: "courseTimeTableNumber", type: "number"},
-                { name: "creatorId", type: "string" },
-                { name: "creationTime", type: "string", format: 'MM/dd/yyyy'},
-                { name: "remarks", type: "string" },
+                { name: "timeTableId", type: "number" },
                 { name: "courseNumber", type: "number" },
-                { name: "valid", type: "bool" }             
+                { name: "startTime", type: "string", format: 'MM/dd/yyyy'},
+                { name: "endTime", type: "string", format: 'MM/dd/yyyy'},
+                { name: "duration", type: "string"},
+                { name: "emailAlertTo", type: "string" },
+                { name: "histRecordPath", type: "string" },
+                { name: "sessionStatus", type: "string" },
+                { name: "sessionDescription", type: "string" },
+                { name: "submitterId", type: "string" },
+                { name: "submissionTime", type: "string", format: 'MM/dd/yyyy'},
+                { name: "remarks", type: "string" },               
+                { name: "valid", type: "bool" },
+                { name: "fileIds", type: "number" },
+                { name: "courseName", type: "string" } 
             ],
             addrow: function (rowid, rowdata, position, commit) {commit(true);},
             deleterow: function (rowid, commit) {commit(true); },
@@ -141,7 +133,7 @@
                     $("#popupWindow").jqxWindow({title: 'add', position: { x: parseInt(offset.left) + 200, y: parseInt(offset.top) + 65 } });
                     $("#popupHeader").html("<img src='images/common/plus_16.png' width=16 height=16 valign='middle' style='margin-right: 15px;'/>Add");
                     
-                    $("#jqxgrid").jqxGrid('clearselection');
+                    /*$("#jqxgrid").jqxGrid('clearselection');
                     $("#courseName").val("");
                     $("#lecturerId").val("");
                     $("#taId").val(""); 
@@ -154,7 +146,7 @@
                     $("#onewaySiteViewer5Id").val("");
                     $("#onewaySiteViewer6Id").val(""); 
                     $('#validBox').jqxCheckBox('check');
-                    
+                    */
                     $("#popupWindow").jqxWindow('open');
                 });
                 editButton.click(function (event) 
@@ -200,43 +192,34 @@
             },
             columns: 
             [
+              { text: 'TimeTableId', dataField: 'timeTableId', align: 'center', width: '0%' },
+              { text: 'CourseNumber', dataField: 'courseNumber', align: 'center', width: '0%' },
               { text: 'Course Name', dataField: 'courseName', align: 'center', width: '25%' },
-              { text: 'Conductor', dataField: 'lecturerId', align: 'center', width: '14%' },
-              { text: 'Assistance Conductor', dataField: 'taId', align: 'center', width: '14%' },
-              { text: 'Active Audience#1', dataField: 'interactiveSiteViewer1Id', align: 'center', width: '14%' },
-              { text: 'Active Audience#2', dataField: 'interactiveSiteViewer2Id', align: 'center', width: '14%'},
-              { text: 'Passive Audience#1', dataField: 'onewaySiteViewer1Id', align: 'center', width: '14%' },
-              
-              { text: 'Passive Audience#2', dataField: 'onewaySiteViewer2Id', align: 'center', width: '0%'},
-              { text: 'Passive Audience#3', dataField: 'onewaySiteViewer3Id', align: 'center', width: '0%' },
-              
-              { text: 'Passive Audience#4', dataField: 'onewaySiteViewer4Id', align: 'center', width: '0%'},
-              { text: 'Passive Audience#5', dataField: 'onewaySiteViewer5Id', align: 'center', width: '0%' },
-              { text: 'Passive Audience#6', dataField: 'onewaySiteViewer6Id', align: 'center', width: '0%'},
-              
-              { text: 'Data File', dataField: 'courseDataFileNumber', align: 'center', width: '0%' },
-              { text: 'Time Table ID', dataField: 'courseTimeTableNumber', align: 'center', width: '0%' },
-              { text: 'Creator ID', dataField: 'creatorId', align: 'center', width: '0%'},
-              { text: 'Creation Time', dataField: 'creationTime', align: 'center', cellsformat: 'd', width: '0%' },
-              { text: 'Remarks', dataField: 'remarks', align: 'center', width: '0%' },
-              { text: 'Course Number', dataField: 'courseNumber', align: 'center', width: '0%' },
-
-              { text: 'Valid', dataField: 'valid', align: 'center', columntype: 'checkbox', width: '5%' }
+              { text: 'Session Description', dataField: 'sessionDescription', align: 'center', width: '30%'},
+              { text: 'Start Date Time', dataField: 'startTime', align: 'center', width: '20%', cellsformat: 'd'},
+              { text: 'EndTime', dataField: 'endTime', align: 'center', width: '0%' },
+              { text: 'Duration', dataField: 'duration', align: 'center', width: '10%'},
+              { text: 'EmailAlertTo', dataField: 'emailAlertTo', align: 'center', width: '0%' },             
+              { text: 'HistRecordPath', dataField: 'histRecordPath', align: 'center', width: '0%'},
+              { text: 'Status', dataField: 'sessionStatus', align: 'center', width: '10%' },
+              { text: 'SubmitterId', dataField: 'submitterId', align: 'center', width: '0%'},
+              { text: 'SubmissionTime', dataField: 'submissionTime', align: 'center', cellsformat: 'd', width: '0%' },
+              { text: 'Remarks', dataField: 'remarks', align: 'center', width: '0%' },             
+              { text: 'Valid', dataField: 'valid', align: 'center', columntype: 'checkbox', width: '5%' },
+              { text: 'FileIds', dataField: 'fileIds', align: 'center', width: '0%' }
             ]
         });
    
         //Invisible columns
-        $("#jqxgrid").jqxGrid('hidecolumn', 'onewaySiteViewer2Id');
-        $("#jqxgrid").jqxGrid('hidecolumn', 'onewaySiteViewer3Id');
-        $("#jqxgrid").jqxGrid('hidecolumn', 'onewaySiteViewer4Id');
-        $("#jqxgrid").jqxGrid('hidecolumn', 'onewaySiteViewer5Id');
-        $("#jqxgrid").jqxGrid('hidecolumn', 'onewaySiteViewer6Id');
-        $("#jqxgrid").jqxGrid('hidecolumn', 'courseDataFileNumber');
-        $("#jqxgrid").jqxGrid('hidecolumn', 'courseTimeTableNumber');
-        $("#jqxgrid").jqxGrid('hidecolumn', 'creatorId');
-        $("#jqxgrid").jqxGrid('hidecolumn', 'creationTime');
-        $("#jqxgrid").jqxGrid('hidecolumn', 'remarks');
+        $("#jqxgrid").jqxGrid('hidecolumn', 'timeTableId');
         $("#jqxgrid").jqxGrid('hidecolumn', 'courseNumber');
+        $("#jqxgrid").jqxGrid('hidecolumn', 'endTime');
+        $("#jqxgrid").jqxGrid('hidecolumn', 'emailAlertTo');
+        $("#jqxgrid").jqxGrid('hidecolumn', 'histRecordPath');
+        $("#jqxgrid").jqxGrid('hidecolumn', 'submitterId');
+        $("#jqxgrid").jqxGrid('hidecolumn', 'submissionTime');
+        $("#jqxgrid").jqxGrid('hidecolumn', 'remarks');
+        $("#jqxgrid").jqxGrid('hidecolumn', 'fileIds');
         
         // initialize the popup window and buttons.
         $("#popupWindow").jqxWindow({width: 480, resizable: true,  isModal: true, autoOpen: false, showCloseButton: true, cancelButton: $("#popupWindowCancel"), modalOpacity: 0.01});
@@ -310,7 +293,7 @@
         /**********************************************************************************/
         $("#spinner_img").hide();
         $("#validBox").jqxCheckBox({ width: 120, height: 25, checked: true });
-        
+        $("#startDate").jqxDateTimeInput({width: '200px', height: '20px', formatString: 'MMM dd yyyy hh:mm tt', value: new Date(<%=Utils.login_access_limit_date.getTime()%>), min: new Date(), allowKeyboardDelete: false});
         /*Validate the given form*/
 		$("#application_form").jqxValidator
 		(
@@ -555,7 +538,7 @@
 					<table height="40" width="100%">
 						<tr><td align="left" valign="middle" style="padding-left: 5px; font-size:13pt;">
 								<img src='images/common/blue_circle.gif' width=16 height=17 valign="middle"/>
-								<span style="color: #32344B font-weight:bold; font-size:12pt; font-family: arial;">&nbsp;&nbsp;Course Registration</span>
+								<span style="color: #32344B font-weight:bold; font-size:12pt; font-family: arial;">&nbsp;&nbsp;Course Session Scheduling</span>
 							</td>
 							<td align="right" valign="middle" style="padding-right: 20px; font-size:10pt; font-family: arial; color: #32344B;">
 								
@@ -574,21 +557,13 @@
 			            	<form id='application_form' action='./'>
 			                <table style='padding-top: 20px; padding-right: 10px; padding-bottom: 30px; padding-left: 10px;'>
 			                	<tr>
-			                        <td align="right" width="40%">Course Name:</td>
-			                        <td align="left">			                  
-										 <input type='text' id="courseName" size='30' maxlength="80" class=input_text style='padding-left: 2px;imemode:inactive'/>
-			                        </td>
-			                    </tr>
-			                    <tr height='3'><td colspan='2'></td></tr>
-			                    <tr>
-			                        <td align="right" width="40%">Conductor:</td>
-			                        <td align="left">
-			                        	<select id="lecturerId" onchange="onUserSelect(this);" style="width: 250px;">	
+			                        <td align="left" colspan='2'>Course Name:			                  
+										 <select id="courseName" style="width: 320px;">	
 			                        		<option value="NA" selected></option>														 
 											<%
-												for(AllRegisteredUserBean ub : userList)	
+												for(CurriculumCurrentBean cb : courseList)	
 												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
+													out.print("<option value='"+cb.getCourseNumber()+"'>"+cb.getCourseName()+"</option>");																
 												}
 											%>
 										</select>
@@ -596,142 +571,52 @@
 			                    </tr>
 			                    <tr height='3'><td colspan='2'></td></tr>
 			                    <tr>
-			                        <td align="right" width="40%">Assistance Condutor:</td>
-			                        <td align="left">
-			                        	<select id="taId" onchange="onUserSelect(this);" style="width: 250px;">																 
-											<option value="NA" selected></option>														 
-											<%
-												for(AllRegisteredUserBean ub : userList)	
-												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
-												}
-											%>
+			                        <td align="left" colspan='2'>Session Description:
+			                        	<input type='text' id="sessionDescription" size='38' maxlength="80" class=input_text style='padding-left: 2px;imemode:inactive'/>
+			                        	
+			                        </td>
+			                    </tr>
+			                    <tr height='3'><td colspan='2'></td></tr>
+			                    <tr>
+			                        <td align="left" colspan='2'><div id='startDate'></div>									
+			                        </td>
+			                    </tr>
+			                    <tr height='3'><td colspan='2'></td></tr>
+			                    <tr>
+			                        <td align="left" colspan='2'>Duration (hr):
+			                        	<select id="duration">											
+											<option value="0.5" >0.5</option>
+											<option value="1" >1</option>
+											<option value="1.5" >1.5</option>
+											<option value="2" >2</option>
+											<option value="2.5" >2.5</option>	
+											<option value="3" >3</option>
+											<option value="3.5" >3.5</option>
+											<option value="4" >4</option>
+											<option value="4.5" >4.5</option>
+											<option value="5" >5</option>							
 										</select>
 			                        </td>
 			                    </tr>
 			                    <tr height='3'><td colspan='2'></td></tr>
 			                    <tr>
-			                        <td align="right" width="40%">Active #1 Audience:</td>
-			                        <td align="left">
-			                        	<select id="interactiveSiteViewer1Id" onchange="onUserSelect(this);" style="width: 250px;">																 
-											<option value="NA" selected></option>														 
-											<%
-												for(AllRegisteredUserBean ub : userList)	
-												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
-												}
-											%>
-										</select>
-			                        </td>
+			                        <td align="right" width='50%'>Available Files&nbsp;<input id="moveright"  type="button" value="  &gt  " style='padding-left: 5px;'/></td>
+			                        <td align="left" valign="top"><input id="moveleft"  type="button" value="  &lt  "/>&nbsp;Files for the session</td>
 			                    </tr>
-			                    <tr height='3'><td colspan='2'></td></tr>
 			                    <tr>
-			                        <td align="right" width="40%">Active #2 Audience:</td>
-			                        <td align="left">
-			                        	<select id="interactiveSiteViewer2Id" onchange="onUserSelect(this);" style="width: 250px;">																 
-											<option value="NA" selected></option>														 
-											<%
-												for(AllRegisteredUserBean ub : userList)	
-												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
-												}
-											%>
-										</select>
+			                        <td align="right" width='50%'>
+			                        	<select id="filesFrom" name="filesFrom" multiple="multiple" style='height: 100%; width: 180px;' size='10'>
+									    </select>
+			                        </td>
+			                        <td align="left" valign="top">
+			                        	<select id="filesTo" multiple="multiple" name="filesTo"  style='height: 100%; width: 180px;' size='10'>
+									    </select>
 			                        </td>
 			                    </tr>
-			                    <tr height='3'><td colspan='2'></td></tr>
-			                    <tr>
-			                        <td align="right" width="40%">Passive #1 Audience:</td>
-			                        <td align="left">
-			                        	<select id="onewaySiteViewer1Id" onchange="onUserSelect(this);" style="width: 250px;">																 
-											<option value="NA" selected></option>														 
-											<%
-												for(AllRegisteredUserBean ub : userList)	
-												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
-												}
-											%>
-										</select>
-			                        </td>
-			                    </tr>
-			                    <tr height='3'><td colspan='2'></td></tr>
-			                    <tr>
-			                        <td align="right" width="40%">Passive #2 Audience:</td>
-			                        <td align="left">
-			                        	<select id="onewaySiteViewer2Id" onchange="onUserSelect(this);" style="width: 250px;">																 
-											<option value="NA" selected></option>														 
-											<%
-												for(AllRegisteredUserBean ub : userList)	
-												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
-												}
-											%>
-										</select>
-			                        </td>
-			                    </tr>
-			                    <tr height='3'><td colspan='2'></td></tr>
-			                    <tr>
-			                        <td align="right" width="40%">Passive #3 Audience:</td>
-			                        <td align="left">
-			                        	<select id="onewaySiteViewer3Id" onchange="onUserSelect(this);" style="width: 250px;">																 
-											<option value="NA" selected></option>														 
-											<%
-												for(AllRegisteredUserBean ub : userList)	
-												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
-												}
-											%>
-										</select>
-			                        </td>
-			                    </tr>
-			                    <tr height='3'><td colspan='2'></td></tr>
-			                    <tr>
-			                        <td align="right" width="40%">Passive #4 Audience:</td>
-			                        <td align="left">
-			                        	<select id="onewaySiteViewer4Id" onchange="onUserSelect(this);" style="width: 250px;">																 
-											<option value="NA" selected></option>														 
-											<%
-												for(AllRegisteredUserBean ub : userList)	
-												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
-												}
-											%>
-										</select>
-			                        </td>
-			                    </tr>
-			                    <tr height='3'><td colspan='2'></td></tr>
-			                    <tr>
-			                        <td align="right" width="40%">Passive #5 Audience:</td>
-			                        <td align="left">
-			                        	<select id="onewaySiteViewer5Id" onchange="onUserSelect(this);" style="width: 250px;">																 
-											<option value="NA" selected></option>														 
-											<%
-												for(AllRegisteredUserBean ub : userList)	
-												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
-												}
-											%>
-										</select>
-			                        </td>
-			                    </tr>
-			                    <tr height='3'><td colspan='2'></td></tr>
-			                    <tr>
-			                        <td align="right" width="40%">Passive #6 Audience:</td>
-			                        <td align="left">
-			                        	<select id="onewaySiteViewer6Id" onchange="onUserSelect(this);" style="width: 250px;">																 
-											<option value="NA" selected></option>														 
-											<%
-												for(AllRegisteredUserBean ub : userList)	
-												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
-												}
-											%>
-										</select>
-			                        </td>
-			                    </tr>
+
 			                    <tr height='3'><td colspan='2'></td></tr>
 			                    <tr style='vertical-align: top;'>
-			                        <td align="right" width="40%">Valid:</td>
+			                        <td align="right" width="50%">Valid:</td>
 			                        <td align="left"><div id='validBox'></div>
 			                        </td>
 			                    </tr>
@@ -742,7 +627,8 @@
 			                    <tr>
 			                        <td colspan='2' style="padding-top: 10px; padding-bottom: 10px;" align="center">
 			                        	<input style="margin-right: 5px;" type="button" id="popupWindowSubmit" value="Submit" />
-			                        	<input id="popupWindowCancel" type="button" value="Cancel" /></td>
+			                        	<input id="popupWindowCancel" type="button" value="Cancel" />
+			                        </td>
 			                    </tr>
 			                    <tr><td colspan='2' align='center' id='errorMsg'></td></tr>
 			                    <tr height='15'><td colspan='2'></td></tr>

@@ -21,10 +21,10 @@
 		
 		<li><a href="<%= MenuLink.menu_ttt_admin_manage_hospitals %>" onfocus="this.blur()">Hospital Management</a></li>	
 		<li><a href="<%= MenuLink.menu_ttt_admin_manage_accounts %>" onfocus="this.blur()">Login Management</a></li>	
-		<li>Seminar Management
+		<li>Training Management
 			<ul style='width: 185px;'>
-				<li><a onfocus='this.blur()' href='<%=MenuLink.menu_ttt_admin_manage_course_registration%>'>Seminar Registration</a></li>
-				<li><a onfocus='this.blur()' href='<%=MenuLink.menu_ttt_admin_manage_course_scheduling%>'>Seminar Scheduling</a></li>
+				<li><a onfocus='this.blur()' href='<%=MenuLink.menu_ttt_admin_manage_course_registration%>'>Course Registration</a></li>
+				<li><a onfocus='this.blur()' href='<%=MenuLink.menu_ttt_admin_manage_course_scheduling%>'>Session Scheduling</a></li>
 			</ul>
 		</li>
 		

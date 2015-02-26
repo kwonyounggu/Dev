@@ -746,6 +746,68 @@ public class SQLDao
 		return list;
 	}
 	/*************************************************************************************
+	 * Table: curriculum_current
+	 *************************************************************************************/
+	public List<CourseTimeTableBean> getCourseTimeTableList(String sql_statement) throws DAOException
+	{
+		Utils.logger.info("getCourseTimeTableList() of SQLDao.java is called...");
+
+		List<CourseTimeTableBean> list = new ArrayList<CourseTimeTableBean>();
+		Connection c = null;
+
+		try
+		{
+			c = cp.getConnection();
+			Statement s = c.createStatement();
+			ResultSet rs = s.executeQuery(sql_statement+";");
+			while (rs.next())
+			{
+				CourseTimeTableBean tb=new CourseTimeTableBean();
+				
+				tb.setTimeTableId(rs.getInt(1));
+				tb.setCourseNumber(rs.getInt(2));
+				tb.setStartTime(rs.getTimestamp(3));
+				tb.setEndTime(rs.getTimestamp(4));
+				tb.setDuration(rs.getString(5));
+				tb.setEmailAlertTo(rs.getString(6));
+				tb.setHistRecordPath(rs.getString(7));
+				tb.setSessionStatus(rs.getString(8));
+				tb.setSessionDescription(rs.getString(9));
+				tb.setSubmitterId(rs.getString(10));
+				tb.setSubmissionTime(rs.getTimestamp(11));
+				tb.setRemarks(rs.getString(12));
+				tb.setValid(rs.getBoolean(13));
+				tb.setFileIds(rs.getString(14));
+				tb.setCourseName(rs.getString(15));
+
+				list.add(tb);
+			}
+		}
+		catch (SQLException e)
+		{
+			Utils.logger.severe(e.getMessage()+" getCourseTimeTableList() in SQLDao.java");
+			throw new DAOException(e+", getCourseTimeTableList() in SQLDao.java");
+		}
+		finally
+		{
+			try
+	        {
+				if (c!= null) 
+	    		{
+	    			cp.free(c);
+	    			c=null;
+	    			System.err.println("INFO: a connection freed, total connections="+cp.totalConnections()+" getCourseTimeTableList() in SQLDao.java ");
+	    		}
+	        }
+			catch (Exception e)
+			{
+				Utils.logger.severe(e.getMessage());
+			}
+		}
+		Utils.logger.info("getCourseTimeTableList() of SQLDao.java is ending with "+list.size());
+		return list;
+	}
+	/*************************************************************************************
 	 * Table: country
 	 *************************************************************************************/
 	public List<CountryBean> getCountryList() throws DAOException
