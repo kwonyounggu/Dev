@@ -32,6 +32,7 @@ import com.sickkids.caliper.dao.AllApplicationHistBean;
 import com.sickkids.caliper.dao.AllLoginHistoryBean;
 import com.sickkids.caliper.dao.AllLoginHistoryDao;
 import com.sickkids.caliper.dao.AllRegisteredUserBean;
+import com.sickkids.caliper.dao.CourseTimeTableBean;
 import com.sickkids.caliper.dao.CurriculumCurrentBean;
 import com.sickkids.caliper.dao.HospitalBean;
 import com.sickkids.caliper.dao.SQLDao;
@@ -485,6 +486,57 @@ public class ActionController extends HttpServlet implements Servlet
 								{
 									Utils.logger.severe("(op="+op+" for ajax request): msg="+e+" from ActionController.java");
 									response.getWriter().write("ajax_action_course_registration:Error: "+e.getMessage()+"<br/>"+Message.inform_to_admin_about_exception+"<br/>E-Mail: "+Utils.csr_email_address);
+								}
+							}
+							else if(op.equals("ajax_action_course_scheduling")) //COMMON
+							{
+								try
+								{
+									String action=(String)request.getParameter("action");//add, edit, delete
+									CourseTimeTableBean cb=new CourseTimeTableBean();
+									
+									cb.setCourseNumber(Integer.parseInt(request.getParameter("courseNumber")));
+									cb.setStartTime(new Timestamp(Long.parseLong(request.getParameter("startTime"))));
+									cb.setDuration(request.getParameter("duration"));
+									cb.setSessionStatus(request.getParameter("sessionStatus"));
+									cb.setSessionDescription(request.getParameter("sessionDescription"));
+									cb.setRemarks(action+" by "+trb.getUserId()+" at "+Utils.currentTimestamp());
+									cb.setValid(request.getParameter("valid").equals("true")? true: false);
+									cb.setFileIds(request.getParameter("fileIds"));
+																		
+									//Utils.delay(5);
+
+									if(action.equals("add"))
+									{
+										//if(cb.isDuplicatedIds()) throw new Exception("id_duplication");
+										//cb.setCreationTime(Utils.currentTimestamp());
+										//cb.setCreatorId(trb.getUserId());
+										//cb.setCourseNumber((int) (tttsqlDao.getGenericLong("select max(course_number) from curriculum_current")+1));
+										//1. submitter id
+										//2. submission time
+										//3. time table id
+										//4. think about sesstion status in this add stage
+										//5. insertion statement
+										System.out.println("INFO: add ajax_action_course_scheduling is called here");
+										System.out.println(cb.toString());
+										
+										//tttsqlDao.updateInsertGenericSqlCmd(cb.getInsertStmt());
+										response.getWriter().write(cb.toString());
+									}
+									else if(action.equals("edit"))
+									{
+										//if(cb.isDuplicatedIds()) throw new Exception("id_duplication");
+										//cb.setCourseNumber(Integer.parseInt(request.getParameter("courseNumber")));
+										//System.out.println("INFO: edit ajax_action_course_scheduling is called here");
+										//tttsqlDao.updateInsertGenericSqlCmd(cb.getUpdateSomeFieldsStmt());
+										response.getWriter().write(cb.toString());	
+									}
+									
+								}
+								catch(Exception e)
+								{
+									Utils.logger.severe("(op="+op+" for ajax request): msg="+e+" from ActionController.java");
+									response.getWriter().write("ajax_action_course_scheduling:Error: "+e.getMessage()+"<br/>"+Message.inform_to_admin_about_exception+"<br/>E-Mail: "+Utils.csr_email_address);
 								}
 							}
 						}

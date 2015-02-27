@@ -233,7 +233,7 @@
             else
             {
             	//double check
-            	//disableComponents(false);
+            	disableComponents(false);
             }
         });
         $("#popupWindow").on('close', function () 

@@ -133,20 +133,22 @@
                     $("#popupWindow").jqxWindow({title: 'add', position: { x: parseInt(offset.left) + 200, y: parseInt(offset.top) + 65 } });
                     $("#popupHeader").html("<img src='images/common/plus_16.png' width=16 height=16 valign='middle' style='margin-right: 15px;'/>Add");
                     
-                    /*$("#jqxgrid").jqxGrid('clearselection');
+                    $("#jqxgrid").jqxGrid('clearselection');
                     $("#courseName").val("");
-                    $("#lecturerId").val("");
-                    $("#taId").val(""); 
-                    $("#interactiveSiteViewer1Id").val("");
-                    $("#interactiveSiteViewer2Id").val("");
-                    $("#onewaySiteViewer1Id").val(""); 
-                    $("#onewaySiteViewer2Id").val("");
-                    $("#onewaySiteViewer3Id").val("");
-                    $("#onewaySiteViewer4Id").val(""); 
-                    $("#onewaySiteViewer5Id").val("");
-                    $("#onewaySiteViewer6Id").val(""); 
+                    $("#sessionDescription").val("");
+                    <%
+                    	String options="";
+                    	for(FileLibraryBean fb : fileList)
+                    	{
+                    		options+="<option value='"+fb.getFileId()+"'>"+fb.getFileNameFormal()+"</option>";
+                    	}
+                    	//out.print("$('#filesFrom').html(\""+options+"\");");
+                    %>
+                    $('#filesFrom').empty();
+                    $('#filesFrom').html("<%=options%>");//OK
+                    $('#filesTo').empty();
                     $('#validBox').jqxCheckBox('check');
-                    */
+                                       
                     $("#popupWindow").jqxWindow('open');
                 });
                 editButton.click(function (event) 
@@ -195,7 +197,7 @@
               { text: 'TimeTableId', dataField: 'timeTableId', align: 'center', width: '0%' },
               { text: 'CourseNumber', dataField: 'courseNumber', align: 'center', width: '0%' },
               { text: 'Course Name', dataField: 'courseName', align: 'center', width: '25%' },
-              { text: 'Session Description', dataField: 'sessionDescription', align: 'center', width: '30%'},
+              { text: 'About Session', dataField: 'sessionDescription', align: 'center', width: '30%'},
               { text: 'Start Date Time', dataField: 'startTime', align: 'center', width: '20%', cellsformat: 'd'},
               { text: 'EndTime', dataField: 'endTime', align: 'center', width: '0%' },
               { text: 'Duration', dataField: 'duration', align: 'center', width: '10%'},
@@ -246,33 +248,29 @@
    
         //Add, Edit, Delete
         $("#popupWindowSubmit").click(function () 
-        {	//log($("#onewaySiteViewer2Id")[0].selectedIndex);
+        {	log($("select#filesTo option").map(function() {return $(this).val();}).get().join());
         	action_command=$("#popupWindow").jqxWindow('title');//add, edit, delete
         	var onsuccess=$("#application_form").jqxValidator('validate');
 			if(!onsuccess) return;
-								
+				
+
 			$.ajax
 		     ({
 		         type: "post",
 		         dataType: "",
-		         url: "/ttt/controller?op=ajax_action_course_registration",
+		         url: "/ttt/controller?op=ajax_action_course_scheduling",
 		         data: 
 		         {
 		    	 		
 		    	 		action: 					action_command,
-		    	 		courseNumber:				$("#courseNumber").val(),
-		    	 		courseName:					$("#courseName").val(),
-		    	 		lecturerId:					$("#lecturerId").val().split(":")[0],
-		    	 		taId:						$("#taId").val().split(":")[0],
-		    	 		interactiveSiteViewer1Id:	$("#interactiveSiteViewer1Id").val().split(":")[0],
-		    	 		interactiveSiteViewer2Id:	$("#interactiveSiteViewer2Id").val().split(":")[0],
-		    	 		onewaySiteViewer1Id:		$("#onewaySiteViewer1Id")[0].selectedIndex<1 ? "":$("#onewaySiteViewer1Id").val().split(":")[0],
-		    	 		onewaySiteViewer2Id:		$("#onewaySiteViewer2Id")[0].selectedIndex<1 ? "":$("#onewaySiteViewer2Id").val().split(":")[0],
-		    	 		onewaySiteViewer3Id:		$("#onewaySiteViewer3Id")[0].selectedIndex<1 ? "":$("#onewaySiteViewer3Id").val().split(":")[0],
-		    	 		onewaySiteViewer4Id:		$("#onewaySiteViewer4Id")[0].selectedIndex<1 ? "":$("#onewaySiteViewer4Id").val().split(":")[0],
-		    	 		onewaySiteViewer5Id:		$("#onewaySiteViewer5Id")[0].selectedIndex<1 ? "":$("#onewaySiteViewer5Id").val().split(":")[0],
-		    	 		onewaySiteViewer6Id:		$("#onewaySiteViewer6Id")[0].selectedIndex<1 ? "":$("#onewaySiteViewer6Id").val().split(":")[0],
-		    	 		valid: 						$("#validBox").jqxCheckBox('checked')
+		    	 		timeTableId:				$("#timeTableId").val(),
+		    	 		courseNumber:				$("#courseName").val(),
+		    	 		startTime:					Date.parse($("#startTime").jqxDateTimeInput('getText')),
+		    	 		duration:					$("#duration").val(),
+		    	 		sessionStatus:				$("#sessionStatus").val(),
+		    	 		sessionDescription:			$("#sessionDescription").val(),
+		    	 		valid: 						$("#validBox").jqxCheckBox('checked'),
+		    	 		fileIds:					$("select#filesTo option").map(function() {return $(this).val();}).get().join()
 		     	 },
 		     	 beforeSend: function()
 		     	 {
@@ -285,7 +283,7 @@
 		        	 alert("Error: the requested resouce is not available");
 		        	 $("#spinner_img").hide();
 		         }
-		      }); 			   	
+		      }); 	 	
         });     
         
         /**********************************************************************************/
@@ -293,7 +291,7 @@
         /**********************************************************************************/
         $("#spinner_img").hide();
         $("#validBox").jqxCheckBox({ width: 120, height: 25, checked: true });
-        $("#startDate").jqxDateTimeInput({width: '200px', height: '20px', formatString: 'MMM dd yyyy hh:mm tt', value: new Date(<%=Utils.login_access_limit_date.getTime()%>), min: new Date(), allowKeyboardDelete: false});
+        $("#startTime").jqxDateTimeInput({width: '200px', height: '20px', formatString: 'MMM dd yyyy hh:mm tt', value: new Date(<%=Utils.login_access_limit_date.getTime()%>), min: new Date(), allowKeyboardDelete: false});
         /*Validate the given form*/
 		$("#application_form").jqxValidator
 		(
@@ -304,65 +302,52 @@
 				},
 				rules:
 				[	
-					{ input: '#courseName', message: 'Seminar Name is required!', action: 'keyup, blur', rule: 'required' },
-					{ input: '#courseName', message: 'Seminar Name must contain only letters, number, space and apostrophe!', action: 'keyup', 
+					{ input: '#sessionDescription', message: 'Please briefly describe about the session!', action: 'keyup, blur', rule: 'required' },
+					{ input: '#sessionDescription', message: 'Session must contain only letters, number, space and apostrophe!', action: 'keyup', 
 						 rule: function(input, commit)
 						 {
-							 return checkAlphanumericSpaceApostrophe(document.getElementById('courseName').value);
+							 return checkAlphanumericSpaceApostrophe(document.getElementById('sessionDescription').value);
 						 } 
 					},
 					{
-						 input: '#lecturerId',
-						 message: 'Previleged person for the position is required !',
+						 input: '#courseName',
+						 message: 'Course Name is required!',
 						 rule: function(input, commit)
 						 {	
 							 if(input.val()==null || input.val()=="NA") return false
-							 else 
-							 {
-								 return (Number(input.val().split(":")[1])<3 ? true : false);	
-							 }
+							 else return true;						 
 						 }
 				    },
-				    {
-						 input: '#taId',
-						 message: 'Previleged person for the position is required !',
+					{
+						 input: '#filesTo',
+						 message: 'Training session files are required!',
 						 rule: function(input, commit)
 						 {	
-							 if(input.val()==null || input.val()=="NA") return false
-							 else 
-							 {
-								 return (Number(input.val().split(":")[1])<3 ? true : false);	
-							 }
-						 }
-				    },
-				    {
-						 input: '#interactiveSiteViewer1Id',
-						 message: 'Previleged person for the position is required !',
-						 rule: function(input, commit)
-						 {	
-							 if(input.val()==null || input.val()=="NA") return false
-							 else 
-							 {
-								 return (Number(input.val().split(":")[1])<3 ? true : false);	
-							 }
-						 }
-				    },
-				    {
-						 input: '#interactiveSiteViewer2Id',
-						 message: 'Previleged person for the position is required !',
-						 rule: function(input, commit)
-						 {	
-							 if(input.val()==null || input.val()=="NA") return false
-							 else 
-							 {
-								 return (Number(input.val().split(":")[1])<3 ? true : false);	
-							 }
+							 return input.children('option').length>0;					 
 						 }
 				    }
                     
 				]
 			}
-		);		
+		);	
+		$("#moveright").on('click' , function()
+		{
+		    var obj = ($("#filesFrom option:selected"));
+		    $.each(obj, function(index , item)
+		    { 
+		         $("#filesTo").append($(this));
+		    });
+		   
+		});
+
+		$("#moveleft").on('click' , function()
+		{		    
+		    var obj = ($("#filesTo option:selected"));    
+		    $.each(obj, function(index , item)
+		    { 
+		         $("#filesFrom").append($(this));
+		    });
+		});
 	});//$(document).ready
 	/*function disableComponents(doIt)
 	{
@@ -436,13 +421,14 @@
 			alert("Your session is expired. Please login again.");
 			location.reload();			
 		}
-		else if(strResponse.indexOf('ajax_action_course_registration:')==-1)//not found
+		else if(strResponse.indexOf('ajax_action_course_scheduling:')==-1)//not found
 		{
 			var action_command=$("#popupWindow").jqxWindow('title');
 
 			if(action_command=="add")
 			{		  
 				var eachField=strResponse.split(", ");
+				/*
 				var aRow={
 						"courseNumber": eachField[0].split("=")[1],
 						"courseName": eachField[1].split("=")[1],
@@ -466,6 +452,7 @@
 				$('#jqxgrid').jqxGrid('addrow', null, aRow);
 				
 				$("#popupWindow").jqxWindow('close');
+				*/
 			}
 			else if(action_command=="edit")
 			{
@@ -557,59 +544,67 @@
 			            	<form id='application_form' action='./'>
 			                <table style='padding-top: 20px; padding-right: 10px; padding-bottom: 30px; padding-left: 10px;'>
 			                	<tr>
-			                        <td align="left" colspan='2'>Course Name:			                  
-										 <select id="courseName" style="width: 320px;">	
-			                        		<option value="NA" selected></option>														 
-											<%
-												for(CurriculumCurrentBean cb : courseList)	
-												{
-													out.print("<option value='"+cb.getCourseNumber()+"'>"+cb.getCourseName()+"</option>");																
-												}
-											%>
-										</select>
-			                        </td>
-			                    </tr>
+			                		<td colspan='2'>
+			                			<table style='padding-top: 20px; padding-right: 10px; padding-bottom: 30px; padding-left: 10px;'>
+			                				<tr>
+			                					<td width='40%' align='right'>Course Name:</td>
+			                					<td align='left'>
+			                						<select id="courseName" style="width: 300px;">	
+						                        		<option value="NA" selected></option>														 
+														<%
+															for(CurriculumCurrentBean cb : courseList)	
+															{
+																out.print("<option value='"+cb.getCourseNumber()+"'>"+cb.getCourseName()+"</option>");																
+															}
+														%>
+													</select>
+			                					</td>
+			                				</tr>
+			                				<tr>
+			                					<td width='40%' align='right'>About Session:</td>
+			                					<td align='left'>
+			                						<input type='text' id="sessionDescription" size='38' maxlength="80" class=input_text style='padding-left: 2px;imemode:inactive'/>
+			                					</td>
+			                				</tr>
+			                				<tr>
+			                					<td width='40%' align='right'>Start Time:</td>
+			                					<td align='left'>
+			                						<div id='startTime'></div>
+			                					</td>
+			                				</tr>
+			                				<tr>
+			                					<td width='40%' align='right'>Duration (hr):</td>
+			                					<td align='left'>
+			                						<select id="duration">											
+														<option value="0.5" >0.5</option>
+														<option value="1" >1</option>
+														<option value="1.5" >1.5</option>
+														<option value="2" >2</option>
+														<option value="2.5" >2.5</option>	
+														<option value="3" >3</option>
+														<option value="3.5" >3.5</option>
+														<option value="4" >4</option>
+														<option value="4.5" >4.5</option>
+														<option value="5" >5</option>							
+													</select>
+			                					</td>
+			                				</tr>
+			                			</table>
+			                		</td>
+			                	</tr>
 			                    <tr height='3'><td colspan='2'></td></tr>
-			                    <tr>
-			                        <td align="left" colspan='2'>Session Description:
-			                        	<input type='text' id="sessionDescription" size='38' maxlength="80" class=input_text style='padding-left: 2px;imemode:inactive'/>
-			                        	
-			                        </td>
-			                    </tr>
-			                    <tr height='3'><td colspan='2'></td></tr>
-			                    <tr>
-			                        <td align="left" colspan='2'><div id='startDate'></div>									
-			                        </td>
-			                    </tr>
-			                    <tr height='3'><td colspan='2'></td></tr>
-			                    <tr>
-			                        <td align="left" colspan='2'>Duration (hr):
-			                        	<select id="duration">											
-											<option value="0.5" >0.5</option>
-											<option value="1" >1</option>
-											<option value="1.5" >1.5</option>
-											<option value="2" >2</option>
-											<option value="2.5" >2.5</option>	
-											<option value="3" >3</option>
-											<option value="3.5" >3.5</option>
-											<option value="4" >4</option>
-											<option value="4.5" >4.5</option>
-											<option value="5" >5</option>							
-										</select>
-			                        </td>
-			                    </tr>
-			                    <tr height='3'><td colspan='2'></td></tr>
+			                    <tr><td colspan='2' align='center' style='color: #A17B79;'>Move files from left to right vs</td></tr>
 			                    <tr>
 			                        <td align="right" width='50%'>Available Files&nbsp;<input id="moveright"  type="button" value="  &gt  " style='padding-left: 5px;'/></td>
 			                        <td align="left" valign="top"><input id="moveleft"  type="button" value="  &lt  "/>&nbsp;Files for the session</td>
 			                    </tr>
 			                    <tr>
 			                        <td align="right" width='50%'>
-			                        	<select id="filesFrom" name="filesFrom" multiple="multiple" style='height: 100%; width: 180px;' size='10'>
+			                        	<select id="filesFrom" name="filesFrom" multiple="multiple" style='height: 150px; width: 180px;' size='10'>
 									    </select>
 			                        </td>
 			                        <td align="left" valign="top">
-			                        	<select id="filesTo" multiple="multiple" name="filesTo"  style='height: 100%; width: 180px;' size='10'>
+			                        	<select id="filesTo" multiple="multiple" name="filesTo"  style='height: 150px; width: 180px;' size='10'>
 									    </select>
 			                        </td>
 			                    </tr>
@@ -623,7 +618,12 @@
 
 			                    <tr height='3'><td colspan='2'></td></tr>
 			                    
-			                    <tr><td colspan='2' align='center'><img id='spinner_img' src='images/common/spinner.gif' width=32 height=32 /><input type='hidden' id='courseNumber' value='0'/></td></tr>
+			                    <tr><td colspan='2' align='center'>
+			                    		<img id='spinner_img' src='images/common/spinner.gif' width=32 height=32 />
+			                    		<input type='hidden' id='timeTableId' value='0'/>
+			                    		<input type='hidden' id='sessionStatus' value='0'/>
+			                    	</td>
+			                    </tr>
 			                    <tr>
 			                        <td colspan='2' style="padding-top: 10px; padding-bottom: 10px;" align="center">
 			                        	<input style="margin-right: 5px;" type="button" id="popupWindowSubmit" value="Submit" />

@@ -192,7 +192,7 @@
 									                        			out.print("<option value='"+tb.getCourseNumber()+"' >"+tb.getCourseName()+"</option>");
 																	}							 
 																%>		
-																<option value='-10000' >Administration Only</option>		 												 
+																<option value='-10000' style="background-color: red;">Administration Only</option>		 												 
 															</select>														
 														</td> 
 													</tr> 

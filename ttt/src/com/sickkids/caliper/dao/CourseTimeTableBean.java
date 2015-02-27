@@ -147,7 +147,24 @@ public class CourseTimeTableBean implements Serializable
 	{
 		this.courseName = courseName;
 	}
-	
+	public String toString()
+	{
+		return 
+		"timeTableId="+timeTableId+", "+
+		"courseNumber="+courseNumber+", "+
+		"startTime="+startTime+", "+
+		"endTime="+endTime+", "+
+		"duration="+duration+", "+
+		"emailAlertTo="+emailAlertTo+", "+
+		"histRecordPath="+histRecordPath+", "+
+		"sessionStatus="+sessionStatus+", "+ 
+		"sessionDescription="+sessionDescription+", "+
+		"submitterId="+submitterId+", "+
+		"submissionTime="+submissionTime+", "+
+		"remarks="+remarks+", "+
+		"valid="+valid+", "+
+		"fileIds="+fileIds;
+	}
 	
 
 }
