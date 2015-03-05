@@ -41,9 +41,9 @@
 			 				out.print("\"submitterId\": \""+tb.getSubmitterId()+"\","); 
 			 				out.print("\"submissionTime\": \""+tb.getSubmissionTime()+"\","); 			 				
 			 				out.print("\"remarks\": \""+tb.getRemarks()+"\","); 
-							out.print("\"valid\": \""+tb.isValid()+"\"");
+							out.print("\"valid\": \""+tb.isValid()+"\",");
 		 					out.print("\"fileIds\": \""+tb.getFileIds()+"\",");
-		 					out.print("\"courseName\": \""+tb.getCourseName()+"\",");
+		 					out.print("\"courseName\": \""+tb.getCourseName()+"\"");
 			 				
 							out.print(((i+1)==sessionList.size() ? "}" : "},"));				
 			 			}
@@ -70,7 +70,7 @@
                 { name: "submissionTime", type: "string", format: 'MM/dd/yyyy'},
                 { name: "remarks", type: "string" },               
                 { name: "valid", type: "bool" },
-                { name: "fileIds", type: "number" },
+                { name: "fileIds", type: "string" },
                 { name: "courseName", type: "string" } 
             ],
             addrow: function (rowid, rowdata, position, commit) {commit(true);},
@@ -159,36 +159,75 @@
                 	{
                 		alert('You should select a row to edit!');
                 	}
-                	else
+                	else //check if it is only in scheduled status otherwise no edit allowed
                 	{                	
 	                    // get the clicked row's data and initialize the input fields.
 	                    selectedDataRecord = $("#jqxgrid").jqxGrid('getrowdata', $('#jqxgrid').jqxGrid('getrowid', selectedRowIndex));
-	                    $("#courseName").val(selectedDataRecord.courseName);
-	                    setSelectByValue("lecturerId", selectedDataRecord.lecturerId);
-	                    setSelectByValue("taId", selectedDataRecord.taId); 
-	                    setSelectByValue("interactiveSiteViewer1Id", selectedDataRecord.interactiveSiteViewer1Id);
-	                    setSelectByValue("interactiveSiteViewer2Id", selectedDataRecord.interactiveSiteViewer2Id);
-	                    setSelectByValue("onewaySiteViewer1Id", selectedDataRecord.onewaySiteViewer1Id); 
-	                    setSelectByValue("onewaySiteViewer2Id", selectedDataRecord.onewaySiteViewer2Id);
-	                    setSelectByValue("onewaySiteViewer3Id", selectedDataRecord.onewaySiteViewer3Id);
-	                    setSelectByValue("onewaySiteViewer4Id", selectedDataRecord.onewaySiteViewer4Id); 
-	                    setSelectByValue("onewaySiteViewer5Id", selectedDataRecord.onewaySiteViewer5Id);
-	                    setSelectByValue("onewaySiteViewer6Id", selectedDataRecord.onewaySiteViewer6Id); 
-	                    $("#validBox").jqxCheckBox('val', selectedDataRecord.valid);
-	                    $("#courseNumber").val(selectedDataRecord.courseNumber);//hidden
+	                    if(selectedDataRecord.sessionStatus!="SCHEDULED")
+	                    {
+	                    	alert("The record is not in the editable status (only 'SCHEDULED' editable)");
+	                    	return;
+	                    }
+	                    $("#courseName").val(selectedDataRecord.courseNumber);
+	                    $("#sessionDescription").val(selectedDataRecord.sessionDescription);
+	                    $('#startTime').jqxDateTimeInput('val', parseDate(selectedDataRecord.startTime));
+	                    $("#duration").val(selectedDataRecord.duration);
+	                    
+	                    $('#filesFrom').empty();
+	                    $('#filesFrom').html("<%=options%>");
+	                    $('#filesFrom').val(selectedDataRecord.fileIds.split(","));
+	                    $('#filesTo').empty();
+	                    $("#moveright").trigger("click");
+	                    
+	                    $("#timeTableId").val(selectedDataRecord.timeTableId);
+	                    $("#sessionStatus").val(selectedDataRecord.sessionStatus);
+	                    
+	                    $("#validBox").jqxCheckBox('val', selectedDataRecord.valid);	                   
 	                    
 	                    $("#popupHeader").html("<img src='images/common/edit_16.png' width=16 height=16 valign='middle' style='margin-right: 15px;'/>Edit <span style='color: #2D73BB; font-size: 11px;'>(Note: your update may interrupt the current operation if in use!)</span>");
 	                    var offset = $("#jqxgrid").offset();
 	                    $("#popupWindow").jqxWindow({ title: 'edit', position: { x: parseInt(offset.left) + 200, y: parseInt(offset.top) + 65 } });
 	                    $("#popupWindow").jqxWindow('open');
-	                    
-	                    //disableComponents(true);
                 	}
                 });
                 
                 deleteButton.click(function (event) 
-                {
-                	alert("Deleting a record is not allowed!");
+                {     
+                	selectedRowIndex=$("#jqxgrid").jqxGrid('getselectedrowindex');
+                	log("selectedRowIndex in editButton="+selectedRowIndex);
+                	if(selectedRowIndex<0)
+                	{
+                		alert('You should select a row to edit!');
+                	}
+                	else //check if it is only in scheduled status otherwise no edit allowed
+                	{                	
+	                    selectedDataRecord = $("#jqxgrid").jqxGrid('getrowdata', $('#jqxgrid').jqxGrid('getrowid', selectedRowIndex));
+	                    if(selectedDataRecord.sessionStatus!="SCHEDULED")
+	                    {
+	                    	alert("The record is not in the removable status (only 'SCHEDULED' removable)");
+	                    	return;
+	                    }
+	                    $("#courseName").val(selectedDataRecord.courseNumber);
+	                    $("#sessionDescription").val(selectedDataRecord.sessionDescription);
+	                    $('#startTime').jqxDateTimeInput('val', parseDate(selectedDataRecord.startTime));
+	                    $("#duration").val(selectedDataRecord.duration);
+	                    
+	                    $('#filesFrom').empty();
+	                    $('#filesFrom').html("<%=options%>");
+	                    $('#filesFrom').val(selectedDataRecord.fileIds.split(","));
+	                    $('#filesTo').empty();
+	                    $("#moveright").trigger("click");
+	                    
+	                    $("#timeTableId").val(selectedDataRecord.timeTableId);
+	                    $("#sessionStatus").val(selectedDataRecord.sessionStatus);
+	                    
+	                    $("#validBox").jqxCheckBox('val', selectedDataRecord.valid);	                   
+	                    
+	                    $("#popupHeader").html("<img src='images/common/trash_16.png' width=16 height=16 valign='middle' style='margin-right: 15px;'/>Delete <span style='color: #2D73BB; font-size: 11px;'>(Note: your delete may interrupt the current operation if in use!)</span>");
+	                    var offset = $("#jqxgrid").offset();
+	                    $("#popupWindow").jqxWindow({ title: 'delete', position: { x: parseInt(offset.left) + 200, y: parseInt(offset.top) + 65 } });
+	                    $("#popupWindow").jqxWindow('open');
+                	}
                 });
                            	
             },
@@ -228,22 +267,18 @@
         $("#popupWindow").on('open', function () 
         {
             $('#errorMsg').html("");
-            if($("#popupWindow").jqxWindow('title')=="edit")
-            {            	
+            if($("#popupWindow").jqxWindow('title')=="delete")
+            {       
+            	disableComponents(true);
             }
             else
             {
+            	disableComponents(false);
             }
         });
         $("#popupWindow").on('close', function () 
         {
-            if($("#popupWindow").jqxWindow('title')=="edit")
-            {
-            	//disableComponents(false);
-            }
-            else
-            {           	
-            }
+        	disableComponents(false);
         });
    
         //Add, Edit, Delete
@@ -349,20 +384,26 @@
 		    });
 		});
 	});//$(document).ready
-	/*function disableComponents(doIt)
+	function disableComponents(doIt)
 	{
-		$("#hospitalId").prop('disabled', doIt);
-		$("#firstName").prop('disabled', doIt);
-		$("#lastName").prop('disabled', doIt);
-	}*/
+		$("#timeTableId").prop('disabled', doIt);
+		$("#courseName").prop('disabled', doIt);
+		
+		$('#startTime').jqxDateTimeInput({disabled: doIt});
+		
+		$("#duration").prop('disabled', doIt);
+		$("#sessionDescription").prop('disabled', doIt);
+		$("#moveright").prop('disabled', doIt);
+		$("#moveleft").prop('disabled', doIt);
+	}
 	function parseDate(d)
 	{
-		//log(d.toString()+"|"+isNaN(Date.parse(d)));
+		log(d.toString()+"|"+isNaN(Date.parse(d)));
 		if(isNaN(Date.parse(d)))//ie, firefox
 		{	
-			var sDate=d.match(/(\d+)-(\d+)-(\d+)/);
+			var sDate=d.match(/(\d+)-(\d+)-(\d+) (\d+):(\d+)/);
 			//log(sDate);
-			return new Date(sDate[1]+"/"+sDate[2]+"/"+sDate[3]);
+			return new Date(sDate[1]+"/"+sDate[2]+"/"+sDate[3]+" "+sDate[4]+":"+sDate[5]);
 		}
 		return new Date(Date.parse(d));//chrome
 	}
@@ -428,31 +469,26 @@
 			if(action_command=="add")
 			{		  
 				var eachField=strResponse.split(", ");
-				/*
 				var aRow={
-						"courseNumber": eachField[0].split("=")[1],
-						"courseName": eachField[1].split("=")[1],
-						"lecturerId": eachField[2].split("=")[1],
-						"taId": eachField[3].split("=")[1],
-						"interactiveSiteViewer1Id": eachField[4].split("=")[1],
-						"interactiveSiteViewer2Id": eachField[5].split("=")[1],
-						"onewaySiteViewer1Id": eachField[6].split("=")[1],
-						"onewaySiteViewer2Id": eachField[7].split("=")[1],
-						"onewaySiteViewer3Id": eachField[8].split("=")[1],
-						"onewaySiteViewer4Id": eachField[9].split("=")[1],
-						"onewaySiteViewer5Id": eachField[10].split("=")[1],
-						"onewaySiteViewer6Id": eachField[11].split("=")[1],
-						"courseDataFileNumber": eachField[12].split("=")[1],
-						"courseTimeTableNumber": eachField[13].split("=")[1],
-						"creatorId": eachField[14].split("=")[1],
-						"creationTime": new Date(),
-						"remarks": eachField[16].split("=")[1],						
-						"valid": $("#validBox").jqxCheckBox('checked')
+						"timeTableId": eachField[0].split("=")[1],
+						"courseNumber": eachField[1].split("=")[1],
+						"startTime": eachField[2].split("=")[1],
+						"endTime": eachField[3].split("=")[1],
+						"duration": eachField[4].split("=")[1],
+						"emailAlertTo": eachField[5].split("=")[1],
+						"histRecordPath": eachField[6].split("=")[1],
+						"sessionStatus": eachField[7].split("=")[1],
+						"sessionDescription": eachField[8].split("=")[1],
+						"submitterId": eachField[9].split("=")[1],
+						"submissionTime": new Date(),
+						"remarks": eachField[11].split("=")[1],						
+						"valid": $("#validBox").jqxCheckBox('checked'),
+						"fileIds": eachField[13].split("=")[1],	
+						"courseName": $('#courseName option:selected').text()
 						 };
 				$('#jqxgrid').jqxGrid('addrow', null, aRow);
 				
 				$("#popupWindow").jqxWindow('close');
-				*/
 			}
 			else if(action_command=="edit")
 			{
@@ -460,24 +496,21 @@
 				selectedDataRecord = $("#jqxgrid").jqxGrid('getrowdata', $('#jqxgrid').jqxGrid('getrowid', selectedRowIndex));
 				var eachField=strResponse.split(", ");
 				var aRow={
-						"courseNumber": eachField[0].split("=")[1],
-						"courseName": eachField[1].split("=")[1],
-						"lecturerId": eachField[2].split("=")[1],
-						"taId": eachField[3].split("=")[1],
-						"interactiveSiteViewer1Id": eachField[4].split("=")[1],
-						"interactiveSiteViewer2Id": eachField[5].split("=")[1],
-						"onewaySiteViewer1Id": eachField[6].split("=")[1],
-						"onewaySiteViewer2Id": eachField[7].split("=")[1],
-						"onewaySiteViewer3Id": eachField[8].split("=")[1],
-						"onewaySiteViewer4Id": eachField[9].split("=")[1],
-						"onewaySiteViewer5Id": eachField[10].split("=")[1],
-						"onewaySiteViewer6Id": eachField[11].split("=")[1],
-						"courseDataFileNumber": selectedDataRecord.courseDataFileNumber,
-						"courseTimeTableNumber": selectedDataRecord.courseTimeTableNumber,
-						"creatorId": selectedDataRecord.creatorId,
-						"creationTime": selectedDataRecord.creationTime,
-						"remarks": eachField[16].split("=")[1],						
-						"valid": $("#validBox").jqxCheckBox('checked')
+						"timeTableId": eachField[0].split("=")[1],
+						"courseNumber": eachField[1].split("=")[1],
+						"startTime": eachField[2].split("=")[1],
+						"endTime": eachField[3].split("=")[1],
+						"duration": eachField[4].split("=")[1],
+						"emailAlertTo": eachField[5].split("=")[1],
+						"histRecordPath": eachField[6].split("=")[1],
+						"sessionStatus": selectedDataRecord.sessionStatus,
+						"sessionDescription": eachField[8].split("=")[1],
+						"submitterId": selectedDataRecord.submitterId,
+						"submissionTime": selectedDataRecord.submissionTime,
+						"remarks": eachField[11].split("=")[1],						
+						"valid": $("#validBox").jqxCheckBox('checked'),
+						"fileIds": eachField[13].split("=")[1],	
+						"courseName": $('#courseName option:selected').text()
 						 };
 				$('#jqxgrid').jqxGrid('updaterow', $('#jqxgrid').jqxGrid('getrowid', selectedRowIndex), aRow);
 				
@@ -485,26 +518,12 @@
 			}
 			else if(action_command=="delete")
 			{
-				//not working with incorrect index value
-				//selectedRowIndex=$("#jqxgrid").jqxGrid('getselectedrowindex'); log("rowid="+ $('#jqxgrid').jqxGrid('getrowid', selectedRowIndex));
-				//$('#jqxgrid').jqxGrid('deleterow', $('#jqxgrid').jqxGrid('getrowid', selectedRowIndex));
-				//$("#popupWindow").jqxWindow('close');
-				//$("#jqxgrid").jqxGrid('clearselection');
-				//$("#jqxgrid").jqxGrid('refreshdata');
 				location.reload();
 			}					
 		}
-		else if(strResponse.indexOf('id_duplication')>0)//found
-		{
-			$('#errorMsg').html("<span style='color:red;'>Users registered for the seminar should be unique for each position!</span>");
-		}
-		else if(strResponse.indexOf('duplicate key value')>0)//found
-		{
-			$('#errorMsg').html("<span style='color:red;'>There already exists the same semiar name!</span>");
-		}
 		else 
 		{
-			$('#errorMsg').html("<span style='color:red;'>"+strResponse.substring("ajax_action_account_management:".length)+"</span>");
+			$('#errorMsg').html("<span style='color:red;'>"+strResponse.substring("ajax_action_course_scheduling:".length)+"</span>");
 		}
 	}
 	function onUserSelect(o)

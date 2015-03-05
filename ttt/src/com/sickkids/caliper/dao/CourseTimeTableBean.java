@@ -3,6 +3,8 @@ package com.sickkids.caliper.dao;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 public class CourseTimeTableBean implements Serializable
 {
 	/**
@@ -165,6 +167,40 @@ public class CourseTimeTableBean implements Serializable
 		"valid="+valid+", "+
 		"fileIds="+fileIds;
 	}
-	
+	public String getInsertStmt()
+	{
+		
+		return "insert into course_time_table values("+timeTableId+", "+
+				   "'"+courseNumber+"', "+				   
+				   "'"+startTime+"', "+
+				   "'"+endTime+"', "+
+				   "'"+duration+"', "+
+				   "'"+emailAlertTo+"', "+
+				   "'"+histRecordPath+"', "+
+				   "'"+sessionStatus+"', "+
+				   "'"+StringEscapeUtils.escapeSql(sessionDescription)+"', "+
+				   "'"+submitterId+"', "+
+				   "'"+submissionTime+"', "+
+				   "'"+remarks+"', "+
+				   ""+valid+", "+
+				   "'"+fileIds+"')";
+	}
+	public String getUpdateStmt()
+	{
+		return "update course_time_table set "+
+					"course_number='"+courseNumber+"', "+
+					"start_time='"+startTime+"', "+	
+					"end_time='"+endTime+"', "+
+					"duration='"+duration+"', "+
+					"session_description='"+StringEscapeUtils.escapeSql(sessionDescription)+"', "+									
+					"remarks='"+remarks+"', "+
+					"valid="+valid+", "+
+					"file_ids='"+fileIds+"' "+
+					"where time_table_id='"+timeTableId+"'";		
+	}
+	public String getDeleteStmt()
+	{
+		return "delete from course_time_table where time_table_id='"+timeTableId+"'";					
+	}
 
 }

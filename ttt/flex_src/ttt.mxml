@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="940" minHeight="528" horizontalCenter="0" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="940" minHeight="528" width="940" height="528" horizontalCenter="0" xmlns:ttt="com.sickkids.caliper.view.ttt.*" 
 			   >
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -10,43 +10,30 @@
 	<s:HGroup horizontalCenter="0" paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0" width="100%" height="100%" gap="4">	
 		<s:VGroup horizontalCenter="0" paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0" width="33.3%" height="100%" gap="4">
 			<s:HGroup horizontalCenter="0" paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0" width="100%" height="40%" gap="4">
-				<s:BorderContainer width="50%" height="100%">
-					<s:layout>
-						<s:VerticalLayout paddingTop="20" paddingRight="10" paddingBottom="10" paddingLeft="10" horizontalAlign="center"/>
-					</s:layout>
-				</s:BorderContainer>
-				<s:BorderContainer width="50%" height="100%">
-					<s:layout>
-						<s:VerticalLayout paddingTop="20" paddingRight="10" paddingBottom="10" paddingLeft="10" horizontalAlign="center"/>
-					</s:layout>
-				</s:BorderContainer>
+				<ttt:ConductorPanel width="50%" height="100%"/>
+				<ttt:ConductorPanel width="50%" height="100%"/>
 			</s:HGroup>
 			<s:Group horizontalCenter="0" width="100%" height="55%">
-				<s:BorderContainer width="100%" height="100%">
-					<s:layout>
-						<s:VerticalLayout paddingTop="20" paddingRight="10" paddingBottom="10" paddingLeft="10" horizontalAlign="center"/>
-					</s:layout>
-				</s:BorderContainer>
+				<ttt:TextPanel width="100%" height="100%"/>
 			</s:Group>
 			<s:Group horizontalCenter="0" width="100%" height="5%">
-				<s:BorderContainer width="100%" height="100%">
-					<s:layout>
-						<s:VerticalLayout paddingTop="20" paddingRight="10" paddingBottom="10" paddingLeft="10" horizontalAlign="center"/>
-					</s:layout>
-				</s:BorderContainer>
+				<ttt:ControlBorderContainer width="100%" height="100%"/>
 			</s:Group>
 		</s:VGroup>
-		<s:VGroup horizontalCenter="0" paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0" width="66.6%" height="100%" gap="4">
-			<s:BorderContainer width="100%" height="50%">
-				<s:layout>
-					<s:VerticalLayout paddingTop="20" paddingRight="10" paddingBottom="10" paddingLeft="10" horizontalAlign="center"/>
-				</s:layout>
-			</s:BorderContainer>
-			<s:BorderContainer width="100%" height="50%">
-				<s:layout>
-					<s:VerticalLayout paddingTop="20" paddingRight="10" paddingBottom="10" paddingLeft="10" horizontalAlign="center"/>
-				</s:layout>
-			</s:BorderContainer>
+		<s:VGroup horizontalCenter="0" paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0" width="66.6%" height="100%" gap="0">
+			<s:VGroup horizontalCenter="0" width="100%" height="100%" includeInLayout="true" visible="true" gap="4">
+				<ttt:VideoSwfPanel  width="100%" height="50%" title="top"/>
+				<ttt:VideoSwfPanel  width="100%" height="50%" title="bottom"/>
+			</s:VGroup>
+			<!-- The following group will be used for setting on the top, and display errors and other information on the bottom-->
+			<s:VGroup horizontalCenter="0" width="100%" height="100%" includeInLayout="false" visible="false" gap="4">
+				<s:BorderContainer width="100%" height="50%">
+					<!-- settings -->
+				</s:BorderContainer>
+				<s:BorderContainer width="100%" height="50%">
+					<!-- errors -->
+				</s:BorderContainer>
+			</s:VGroup>
 		</s:VGroup>
 	</s:HGroup>
 </s:Application>

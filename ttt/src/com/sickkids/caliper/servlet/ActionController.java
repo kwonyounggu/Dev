@@ -235,6 +235,20 @@ public class ActionController extends HttpServlet implements Servlet
 							response.getWriter().write("false:an error has been occurred\n\n"+e+"\n\n"+Message.inform_to_admin_about_exception+"\nE-Mail: "+Utils.csr_email_address);
 						}
 					}
+					//Dr. Chris does not want to implement this on March-04-2015
+					/*else if(op.equals("ajax_ttt_get_session_scheduling_data"))
+					{
+						try
+						{
+							//go-on here
+							response.getWriter().write("true: testing");
+						}
+						catch(Exception e)
+						{
+							Utils.logger.severe("(op="+op+" for ajax request): msg="+e+" from ActionController.java");
+							response.getWriter().write("false:an error has been occurred\n\n"+e+"\n\n"+Message.inform_to_admin_about_exception+"\nE-Mail: "+Utils.csr_email_address);
+						}
+					}*/
 					else //op=ajax_... but no login session available, then session_timeout
 					{
 						response.getWriter().write("session_timeout");//goback to where it calls
@@ -498,6 +512,7 @@ public class ActionController extends HttpServlet implements Servlet
 									cb.setCourseNumber(Integer.parseInt(request.getParameter("courseNumber")));
 									cb.setStartTime(new Timestamp(Long.parseLong(request.getParameter("startTime"))));
 									cb.setDuration(request.getParameter("duration"));
+									cb.setEndTime(Utils.getAddHHMMTimestamp(cb.getStartTime(), cb.getDuration()));
 									cb.setSessionStatus(request.getParameter("sessionStatus"));
 									cb.setSessionDescription(request.getParameter("sessionDescription"));
 									cb.setRemarks(action+" by "+trb.getUserId()+" at "+Utils.currentTimestamp());
@@ -508,27 +523,28 @@ public class ActionController extends HttpServlet implements Servlet
 
 									if(action.equals("add"))
 									{
-										//if(cb.isDuplicatedIds()) throw new Exception("id_duplication");
-										//cb.setCreationTime(Utils.currentTimestamp());
-										//cb.setCreatorId(trb.getUserId());
-										//cb.setCourseNumber((int) (tttsqlDao.getGenericLong("select max(course_number) from curriculum_current")+1));
-										//1. submitter id
-										//2. submission time
-										//3. time table id
-										//4. think about sesstion status in this add stage
-										//5. insertion statement
+										cb.setSubmitterId(trb.getUserId());
+										cb.setSubmissionTime(Utils.currentTimestamp());
+										cb.setTimeTableId((int) (tttsqlDao.getGenericLong("select max(time_table_id) from course_time_table")+1));
+										cb.setSessionStatus("SCHEDULED");
 										System.out.println("INFO: add ajax_action_course_scheduling is called here");
 										System.out.println(cb.toString());
 										
-										//tttsqlDao.updateInsertGenericSqlCmd(cb.getInsertStmt());
+										tttsqlDao.updateInsertGenericSqlCmd(cb.getInsertStmt());
 										response.getWriter().write(cb.toString());
 									}
 									else if(action.equals("edit"))
 									{
-										//if(cb.isDuplicatedIds()) throw new Exception("id_duplication");
-										//cb.setCourseNumber(Integer.parseInt(request.getParameter("courseNumber")));
-										//System.out.println("INFO: edit ajax_action_course_scheduling is called here");
-										//tttsqlDao.updateInsertGenericSqlCmd(cb.getUpdateSomeFieldsStmt());
+										System.out.println("INFO: edit ajax_action_course_scheduling is called here");
+										cb.setTimeTableId(Integer.parseInt(request.getParameter("timeTableId")));
+										tttsqlDao.updateInsertGenericSqlCmd(cb.getUpdateStmt());
+										response.getWriter().write(cb.toString());	
+									}
+									else if(action.equals("delete"))
+									{
+										System.out.println("INFO: delete ajax_action_course_scheduling is called here by "+trb.getUserId());
+										cb.setTimeTableId(Integer.parseInt(request.getParameter("timeTableId")));
+										tttsqlDao.updateInsertGenericSqlCmd(cb.getDeleteStmt());
 										response.getWriter().write(cb.toString());	
 									}
 									

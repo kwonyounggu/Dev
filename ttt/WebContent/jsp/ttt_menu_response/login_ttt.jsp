@@ -127,6 +127,32 @@
 			location.replace(strResponse.substring(5));//remove true: prefix
 		}
 	}
+	//Dr. Chris does not want to implement this on March-04-2015
+	//get update scheduled session every 5 minuteenb
+	/*
+	(function poll() {
+		   setTimeout(function() {
+			   $.ajax({
+			    	url: "/ttt/controller?op=ajax_ttt_get_session_scheduling_data",
+			    	type: "post",
+			        success: function(data) {
+			            console.log("polling");
+			        },
+			        beforeSend: function()
+			     	 {
+			     		console.log("beforeSend");
+		            },
+		            error: function(response) //called for 404 error, etc
+			         {
+		            	console.log("error");
+			         },
+			        //dataType: "json",
+			        complete: poll,
+			        timeout: 2000
+			    });
+		    }, 300000);//every 5 min
+		})();
+		*/
 </script>
 <%
  	//TTTSQLDao csqlDao=(TTTSQLDao)application.getAttribute("csqlDao");

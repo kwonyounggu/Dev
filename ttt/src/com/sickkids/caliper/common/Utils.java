@@ -166,6 +166,15 @@ public class Utils
 	        cal.add(Calendar.DAY_OF_WEEK, wk*7);
 	        return new Timestamp(cal.getTimeInMillis());
 	    }
+		public static synchronized Timestamp getAddHHMMTimestamp(Timestamp ts, String hm)
+		{ 
+			Calendar cal = Calendar.getInstance();
+	        cal.setTime(ts);
+	        String[] hhmm=hm.split("\\.");
+	        cal.add(Calendar.HOUR, Integer.parseInt(hhmm[0]));
+	        cal.add(Calendar.MINUTE, (hhmm.length>1? Integer.parseInt(hhmm[1])*6 : 0));
+	        return new Timestamp(cal.getTimeInMillis());
+	    }
 
 		public static String getDateTime(Timestamp ts)
 		{
