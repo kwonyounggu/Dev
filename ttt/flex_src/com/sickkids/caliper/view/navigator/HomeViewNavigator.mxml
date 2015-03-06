@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ViewNavigator xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				 xmlns:s="library://ns.adobe.com/flex/spark" width="100%" height="100%" xmlns:caliper="com.sickkids.caliper.*">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<!--<caliper:HomeContext contextView="{this}" />-->
+	</fx:Declarations>
+	<s:icon>
+		<s:MultiDPIBitmapSource source160dpi="@Embed('assets/images/common/home.png')"/>
+	</s:icon>
+	<s:navigationContent>
+		<s:HGroup paddingLeft="5">
+			<s:Image source="@Embed('assets/images/common/laboratory.png')"/>
+		</s:HGroup>		
+	</s:navigationContent>	
+	<s:actionContent>
+		<s:Button icon="@Embed('assets/images/common/setting25.png')" click="" />
+	</s:actionContent>
+</s:ViewNavigator>

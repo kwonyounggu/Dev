@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="SettingsView" viewActivate="view1_viewActivateHandler(event)">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import com.sickkids.caliper.view.navigator.CapViewNavigator;
+			
+			import spark.events.ViewNavigatorEvent;
+			// ************************* NOTE **************************
+			//1. when you set,
+			//2. if you want to get freshly a new item list, then remove its shared object and logout so that it will get the new item list again.
+			//3. 	- Look at the AppCommon.as file in order to manipulate
+			protected function view1_viewActivateHandler(event:ViewNavigatorEvent):void
+			{
+				// TODO Auto-generated method stub
+				this.tabBarVisible=false;
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:titleContent>
+		<s:VGroup>
+			<s:Label text="CAP - Settings" color="#ffffff"/>
+			<s:Label text="Cardiac Arrest Preventability" fontSize="12" color="#000000"/>
+		</s:VGroup>
+	</s:titleContent>
+</s:View>

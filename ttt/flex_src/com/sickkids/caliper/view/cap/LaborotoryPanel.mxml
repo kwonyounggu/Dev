@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:components="com.sickkids.caliper.components.*"
+		 skinClass="com.sickkids.caliper.skins.CustomPanelSkin"
+		 currentState="downIcon"
+		 >
+	<s:layout>
+		<s:VerticalLayout paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0"/>
+	</s:layout>
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace components "com.sickkids.caliper.components.*";
+		/*See for more details, http://help.adobe.com/en_US/flex/using/WS2db454920e96a9e51e63e3d11c0bf60d65-7ff6.html*/
+		/*Not used*/
+		.errorTip 
+		{ 
+			color: #000000; 
+			fontSize: 14; 
+			fontWeight: "bold"; 
+			borderColor: #CE2929; 
+			borderStyle: null; 
+			paddingBottom: 2; 
+			paddingLeft: 2; 
+			paddingRight: 2; 
+			paddingTop: 2; 
+		}
+	</fx:Style>
+	<fx:Script>
+		<![CDATA[
+			import com.sickkids.caliper.skins.CustomPanelSkin;
+			import com.sickkids.caliper.vo.CarmO_DE5Bean;
+			
+			[Bindable] public var lab48Bean:CarmO_DE5Bean=null;
+			[Bindable] public var lab24Bean:CarmO_DE5Bean=null;
+			[Bindable] public var lab12Bean:CarmO_DE5Bean=null;
+			[Bindable] public var lab1dBean:CarmO_DE5Bean=null;
+			[Bindable] public var labLowerBean:CarmO_DE5Bean=null;
+			[Bindable] public var labUpperBean:CarmO_DE5Bean=null;
+			
+			/*private var toolTipS:ToolTip;
+			protected function rollOverHandler(event:MouseEvent):void
+			{
+				if(event.currentTarget.myLabel.text.length>0)
+				{	
+					toolTipS=ToolTipManager.createToolTip(event.currentTarget.myLabel.text, FlexGlobals.topLevelApplication.mouseX + event.currentTarget.width, FlexGlobals.topLevelApplication.mouseY, null, IUIComponent(event.currentTarget)) as ToolTip;
+				}
+				
+			}
+			protected function rollOutHandler(event:MouseEvent):void
+			{
+				if(toolTipS)
+				{
+					ToolTipManager.destroyToolTip(toolTipS);
+					toolTipS=null;
+				}
+			}
+			*/
+		]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="upIcon"/>
+		<s:State name="downIcon"/>                 
+	</s:states>
+	<fx:Declarations>
+		<s:Rotate id="screenRotation" target="{this}" autoCenterTransform="true"/>
+	</fx:Declarations>
+	<s:controlBarContent>
+		<s:HGroup width="100%" verticalAlign="middle" id="controlBar" buttonMode="true">					
+			<s:Label text="{this.title}" id="titleId" left="10" right="10" verticalCenter="0" color="0xffffff"/>
+			<s:Spacer width="100%" />
+			<s:Image id="itemIcon" source="@Embed(source='assets/images/common/item_icon.png')" visible="{parentDocument.itemNumber>0 ? true: false}" includeInLayout="{parentDocument.itemNumber>0 ? true: false}"/>
+			<s:Label id="itemLabel" paddingRight="20" fontSize="11" text="{parentDocument.itemNumber}" visible="{parentDocument.itemNumber>0 ? true: false}" includeInLayout="{parentDocument.itemNumber>0 ? true: false}"/>
+			<s:Image id="downIcon" source="@Embed(source='assets/images/common/down_icon16.png')" visible="{parentDocument.itemNumber>0 ? true: false}" includeInLayout="{parentDocument.itemNumber>0 ? true: false}" visible.upIcon="false" includeInLayout.upIcon="false"/>
+			<s:Image id="upIcon" source="@Embed(source='assets/images/common/up_icon16.png')" visible="{parentDocument.itemNumber>0 ? true: false}" includeInLayout="{parentDocument.itemNumber>0 ? true: false}" visible.downIcon="false" includeInLayout.downIcon="false"/>
+		</s:HGroup>
+	</s:controlBarContent>  
+	<s:BorderContainer id="alertContainerBorderContainer" width="100%" borderWeight="0" visible="false" includeInLayout="false">
+		<s:layout>
+			<s:VerticalLayout paddingTop="5" paddingRight="5" paddingBottom="5" paddingLeft="5"/>
+		</s:layout>
+		<s:RichText id="alertMessage" width="100%" fontSize="11" color="#F72609"/>
+	</s:BorderContainer>
+	
+	<!-- Must include layout and width="100%" inorder to have display all data in streached manner-->
+	<s:BorderContainer width="100%" visible.downIcon="false" includeInLayout.downIcon="false" borderWeight="0" borderVisible="false" >
+		<s:layout>
+			<s:VerticalLayout paddingTop="5" paddingRight="2" paddingBottom="5" paddingLeft="2" gap="1"/>
+		</s:layout>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell  width="20%" height="60" bg="0xE8E8E8" fontSize="12"/>
+			<components:TCell cellText="closest to 48 hrs before,{'\n'}≤48h&amp;&gt;24h before event" width="13%" height="60" bg="0xE8E8E8" fontSize="12" />
+			<components:TCell cellText="closest to 12 hrs before,{'\n'}≤24h&amp;≥12h before event" width="13%" height="60" bg="0xE8E8E8" fontSize="12" />
+			<components:TCell cellText="closest to{'\n'}one hr before,{'\n'}&lt;12h&amp;≥1h before event" width="13%" height="60" bg="0xE8E8E8" fontSize="12" />
+			<components:TCell cellText="number of{'\n'}tests{'\n'}between{'\n'}≤24h&amp;&gt;1h" width="13%" height="60" bg="0xE8E8E8" fontSize="12" />
+			<components:TCell cellText="lower{'\n'}limit of{'\n'}normal" width="9%" height="60" bg="0xE8E8E8" fontSize="12" />
+			<components:TCell cellText="upper{'\n'}limit of{'\n'}normal" width="9%" height="60" bg="0xE8E8E8" fontSize="12" />
+			<components:TCell cellText="units" width="10%" height="60" bg="0xE8E8E8" fontSize="12" />		
+		</s:HGroup>	
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Haematologic" width="20%" height="15" bg="0xEAEAFF" fontSize="12" fontWeight="bold" />
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="9%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="9%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="10%" height="15" bg="0xEAEAFF" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Haemoglobin" width="20%" height="15" fontSize="12" />
+			<components:TCell cellText="{lab48Bean.getHaemoglobin()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getHaemoglobin()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getHaemoglobin()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getHaemoglobin()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getHaemoglobin()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getHaemoglobin()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.haeHaemoglobinUnit}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="White Cell #" width="20%" height="15" fontSize="12" />
+			<components:TCell cellText="{lab48Bean.getWhiteCellCount()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getWhiteCellCount()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getWhiteCellCount()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getWhiteCellCount()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getWhiteCellCount()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getWhiteCellCount()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.getWhiteCellCountUnit()}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Bands" width="20%" height="15" fontSize="12" />
+			<components:TCell cellText="{lab48Bean.getBands()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getBands()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getBands()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getBands()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getBands()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getBands()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.getBandsUnit()}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Platelet Count" width="20%" height="15" fontSize="12" />
+			<components:TCell cellText="{lab48Bean.getPlatgettCount()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getPlatgettCount()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getPlatgettCount()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getPlatgettCount()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getPlatgettCount()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getPlatgettCount()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.getPlateletCountUnit()}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Electrolyte" width="20%" height="15" bg="0xEAEAFF" fontSize="12" fontWeight="bold" />
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="9%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="9%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="10%" height="15" bg="0xEAEAFF" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Sodium" width="20%" height="15" fontSize="12" />
+			<components:TCell cellText="{lab48Bean.getSodium()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getSodium()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getSodium()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getSodium()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getSodium()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getSodium()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.eleSodiumUnit}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Potassium" width="20%" height="15" fontSize="12" />
+			<components:TCell cellText="{lab48Bean.getPotassium()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getPotassium()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getPotassium()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getPotassium()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getPotassium()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getPotassium()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.elePotassiumUnit}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Calcium (total)" width="20%" height="15" fontSize="12" />
+			<components:TCell cellText="{lab48Bean.getCalciumTotal()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getCalciumTotal()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getCalciumTotal()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getCalciumTotal()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getCalciumTotal()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getCalciumTotal()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.eleCalciumTotalUnit}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Calcium Ionized" width="20%" height="15" fontSize="12" />
+			<components:TCell cellText="{lab48Bean.getCalciumIonized()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getCalciumIonized()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getCalciumIonized()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getCalciumIonized()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getCalciumIonized()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getCalciumIonized()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.eleCalciumIonizedUnit}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Magnesium" width="20%" height="15" fontSize="12" />
+			<components:TCell cellText="{lab48Bean.getMagnesium()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getMagnesium()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getMagnesium()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getMagnesium()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getMagnesium()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getMagnesium()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.eleMagnesiumUnit}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Blood Gas Arterial" width="20%" height="15" bg="0xEAEAFF" fontSize="12" fontWeight="bold" />
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="9%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="9%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="10%" height="15" bg="0xEAEAFF" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="PaO2" width="20%" height="15" fontSize="12" />
+			<components:TCell cellText="{lab48Bean.getPaO2()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getPaO2()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getPaO2()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getPaO2()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getPaO2()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getPaO2()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.bloPaO2Unit}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="PaCO2" width="20%" height="15" fontSize="12" />
+			<components:TCell cellText="{lab48Bean.getPaCO2()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getPaCO2()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getPaCO2()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getPaCO2()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getPaCO2()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getPaCO2()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.bloPaCO2Unit}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="HCO3" width="20%" height="15" fontSize="12" />
+			<components:TCell cellText="{lab48Bean.getBloHCO3()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getBloHCO3()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getBloHCO3()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getBloHCO3()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getBloHCO3()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getBloHCO3()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.bloHCO3Unit}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="pH" width="20%" height="15" fontSize="12" />
+			<components:TCell cellText="{lab48Bean.getPh()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getPh()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getPh()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getPh()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getPh()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getPh()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.bloPhUnit}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Blood Gas Mixed Venous" width="20%" height="15" bg="0xEAEAFF" fontSize="10" fontWeight="bold" />
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="9%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="9%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="10%" height="15" bg="0xEAEAFF" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="PmvO2" width="20%" height="15" fontSize="12" />
+			<components:TCell cellText="{lab48Bean.getPmvO2()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getPmvO2()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getPmvO2()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getPmvO2()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getPmvO2()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getPmvO2()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.venPmvO2Unit}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="HCO3" width="20%" height="15" fontSize="12" />
+			<components:TCell cellText="{lab48Bean.getVenHCO3()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getVenHCO3()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getVenHCO3()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getVenHCO3()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getVenHCO3()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getVenHCO3()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.venHCO3Unit}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Metabolic" width="20%" height="15" bg="0xEAEAFF" fontSize="12" fontWeight="bold"/>
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="9%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="9%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="10%" height="15" bg="0xEAEAFF" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Ammonia" width="20%" height="15" fontSize="12" />
+			<components:TCell cellText="{lab48Bean.getAmmonia()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getAmmonia()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getAmmonia()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getAmmonia()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getAmmonia()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getAmmonia()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.getAmmoniaUnit()}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Lactate" width="20%" height="15" fontSize="12" />
+			<components:TCell cellText="{lab48Bean.getLactate()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getLactate()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getLactate()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getLactate()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getLactate()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getLactate()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.metLactateUnit}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Glucose" width="20%" height="15" fontSize="12" />
+			<components:TCell cellText="{lab48Bean.getGlucose()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getGlucose()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getGlucose()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getGlucose()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getGlucose()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getGlucose()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.metGlucoseUnit}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Liver" width="20%" height="15" bg="0xEAEAFF" fontSize="12" fontWeight="bold" />
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="13%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="9%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="9%" height="15" bg="0xEAEAFF" fontSize="12"/>
+			<components:TCell cellText="" width="10%" height="15" bg="0xEAEAFF" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Aspartate Aminotransferase" width="20%" height="15" fontSize="11" />
+			<components:TCell cellText="{lab48Bean.getAST()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getAST()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getAST()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getAST()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getAST()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getAST()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.liverASTUnit}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Alanine Aminotransferase" width="20%" height="15" fontSize="11" />
+			<components:TCell cellText="{lab48Bean.getALT()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getALT()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getALT()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getALT()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getALT()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getALT()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.liverALTUnit}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Bilirubin conjugated" width="20%" height="15" fontSize="11" />
+			<components:TCell cellText="{lab48Bean.getBilirubinCon()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getBilirubinCon()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getBilirubinCon()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getBilirubinCon()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getBilirubinCon()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getBilirubinCon()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.getBilirubinConUnit()}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Bilirubin unconjugated" width="20%" height="15" fontSize="11" />
+			<components:TCell cellText="{lab48Bean.getBilirubinUncon()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getBilirubinUncon()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getBilirubinUncon()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getBilirubinUncon()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getBilirubinUncon()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getBilirubinUncon()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.getBilirubinUnconUnit()}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Lactate (LDH)" width="20%" height="15" fontSize="11" />
+			<components:TCell cellText="{lab48Bean.getLDH()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getLDH()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getLDH()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getLDH()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getLDH()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getLDH()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.getLDHUnit()}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="International Norm Ratio(INR)" width="20%" height="15" fontSize="8" />
+			<components:TCell cellText="{lab48Bean.getINR()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getINR()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getINR()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getINR()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getINR()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getINR()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.liverINRUnit}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" gap="1">
+			<components:TCell cellText="Time of Partial Prothrombin" width="20%" height="15" fontSize="8" />
+			<components:TCell cellText="{lab48Bean.getPTT()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab24Bean.getPTT()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab12Bean.getPTT()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab1dBean.getPTT()}" width="13%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labLowerBean.getPTT()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{labUpperBean.getPTT()}" width="9%" height="15" fontSize="12"/>
+			<components:TCell cellText="{lab48Bean.liverPTTUnit}" width="10%" height="15" fontSize="12"/>		
+		</s:HGroup>
+	</s:BorderContainer>
+	
+</s:Panel>

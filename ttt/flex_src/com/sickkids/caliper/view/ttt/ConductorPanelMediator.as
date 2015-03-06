@@ -1,8 +1,8 @@
 package com.sickkids.caliper.view.ttt
 {
-	import com.sickkids.caliper.model.CaliperCustomReferenceIntervalModel;
+
 	import com.sickkids.caliper.model.TttModel;
-	import com.sickkids.caliper.view.CustomReferenceIntervalsView;
+
 	
 	import flash.media.Camera;
 	
@@ -14,18 +14,18 @@ package com.sickkids.caliper.view.ttt
 	import org.osmf.net.StreamType;
 	import org.robotlegs.mvcs.Mediator;
 	
-	public class ConductorPanelViewMediator extends Mediator
+	public class ConductorPanelMediator extends Mediator
 	{
 		[Inject] public var view:ConductorPanel;
 		[Inject] public var model:TttModel;
 		
-		public function ConductorPanelViewMediator()
+		public function ConductorPanelMediator()
 		{
 			super();
 		}
 		override public function onRegister():void
 		{
-			trace("INFO: onRegister() is called in ConductorPanelViewMediator.as");
+			trace("INFO: onRegister() is called in ConductorPanelMediator.as");
 			
 			view.localVideoDisplay.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompleteOfVideoDisplay);
 
@@ -83,7 +83,7 @@ package com.sickkids.caliper.view.ttt
 		}
 		override public function onRemove():void
 		{
-			trace("INFO: onRemove() is called in ConductorPanelViewMediator.as");
+			trace("INFO: onRemove() is called in ConductorPanelMediator.as");
 			
 			/*capModel.resetReviewViewData();
 			

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+         xmlns:s="library://ns.adobe.com/flex/spark"  
+		 width="100%"
+         height="50" height.selected="100%" 
+         autoDrawBackground="false"
+		
+		 >
+    
+    <fx:Script>
+        <![CDATA[
+			import com.sickkids.caliper.effects.IntegerInterpolator;
+			
+			import spark.components.Button;
+            
+            override public function set data(value:Object):void
+            {
+                super.data = value;
+				songsDisplay.text = value.label;
+                //songsDisplay.text = value.label+", "+value.songs;
+				//trace("label="+value.label+", songs="+value.songs);
+				//this.setElementIndex(value.panel, 1);
+				//this.addChildAt(new SummaryPanel(), 1);
+				trace("item index="+itemIndex);
+				this.addElement(new Button());
+            }
+            
+        ]]>
+    </fx:Script>
+    
+    <fx:Style>
+        @namespace s "library://ns.adobe.com/flex/spark";
+        
+        .headerStyle
+        {
+            fontFamily : "Myriad Pro Black";
+            color : white;
+            fontSize : 20;
+        }
+    </fx:Style>
+    
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="selected"/>                 
+    </s:states>
+    
+    <s:transitions>
+        <s:Transition fromState="*" toState="selected">
+            <s:Parallel>
+                <s:Fade target="{songsDisplay}" duration="300"/>
+                <s:Resize target="{this}" duration="300" interpolator="{IntegerInterpolator.getInstance()}"
+                          effectStart="dispatchEvent(new Event('expandEffectStart'));" 
+                          effectEnd="dispatchEvent(new Event('expandEffectEnd'));"/>
+            </s:Parallel>
+            
+        </s:Transition>
+        <s:Transition fromState="selected" toState="*">
+            <s:Parallel>
+                <s:Fade target="{songsDisplay}" duration="300"/>
+                <s:Resize target="{this}" duration="300" interpolator="{IntegerInterpolator.getInstance()}"/>
+            </s:Parallel>
+            
+        </s:Transition>
+    </s:transitions>
+    
+    <s:Group top="0" height="38" left="0" right="0" id="groupOne">
+        <s:Rect top="0" bottom="0" left="0" right="0">
+            <s:fill>
+                <s:SolidColor color="0x000000"/>
+            </s:fill>
+        </s:Rect>
+        
+        <s:Group top="5" bottom="5" left="0" right="0">
+            <s:Rect top="0" height="3" left="0" right="0">
+                <s:fill>
+                    <s:SolidColor color="white" />
+                </s:fill>
+            </s:Rect>
+            
+            <s:Label id="labelDisplay" left="10" right="10" verticalCenter="2" styleName="headerStyle"/>
+            
+            <s:Rect bottom="0" height="3" left="0" right="0">
+                <s:fill>
+                    <s:SolidColor color="white" />
+                </s:fill>
+            </s:Rect>
+        </s:Group>
+    </s:Group>
+    
+    <s:Label id="songsDisplay" top="46" left="10" right="10" bottom="0" visible.normal="false" visible.selected="true"/>
+    
+</s:ItemRenderer> 

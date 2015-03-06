@@ -17,7 +17,10 @@
 		width: 100%;
 	}
 </style>
-<% AllRegisteredUserBean crb=(AllRegisteredUserBean)session.getAttribute("crb"); %>
+<% 
+	AllRegisteredUserBean trb=(AllRegisteredUserBean)session.getAttribute("trb"); 
+	CurriculumCurrentBean curriculumBean=(CurriculumCurrentBean)session.getAttribute("curriculum_bean");
+%>
 
  
 <table border=0 cellpadding=0 cellspacing=0 bgcolor='#ffffff' width="100%" > 
@@ -40,7 +43,19 @@
 						swfobject.embedSWF("bin/tttClient.swf", "myContent", "940", "640", "9.0.0", "bin/expressInstall.swf", flashvars, params);//FLEX3.0, 940Wx640H
 						*/
 						var params={allowfullscreen : "true"};						
-						var flashvars = {roomId : "TTT00", roomName : "BPEWS", hospitalId : "${trb.hospitalId}",  central: "true", userId: "${trb.userId}", loginLevel: "2"};
+						var flashvars = 
+						{	
+								userId : 			"${trb.userId}",
+								firstName : 		"${trb.firstName}",  
+								lastName : 			"${trb.lastName}",
+								loginLevel : 		"${trb.loginLevel}",  
+								hospitalId : 		"${trb.hospitalId}",  
+								email : 			"${trb.email}",
+								hopitalName : 		"${trb.hopitalName}",  
+								courseNumber : 		"${curriculum_bean.courseNumber}",
+								courseName : 		"${curriculum_bean.courseName}",  
+								participantType : 	"<%=curriculumBean.getParticipantType(trb.getUserId())%>"
+						};
 						swfobject.embedSWF("ttt.swf", "myContent", "940", "528", "10.0.0", "playerProductInstall.swf", flashvars, params);
 						
 					</script>

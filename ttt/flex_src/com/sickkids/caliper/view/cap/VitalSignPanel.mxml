@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 skinClass="com.sickkids.caliper.skins.CustomPanelSkin"
+		 currentState="downIcon" xmlns:components="com.sickkids.caliper.components.*"
+		 >
+	<s:layout>
+		<s:VerticalLayout paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0"/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import com.sickkids.caliper.skins.CustomPanelSkin;		
+			private function intLabel(item:Object, column:GridColumn):String
+			{
+				if(column.dataField=="hrPreevent")
+					return (item.hrPreevent==-10000 ? "" : item.hrPreevent);
+				else //if(column.dataField=="capillaryRefill")
+					return (item.capillaryRefill==-10000 ? "" : item.capillaryRefill);
+			}
+			private function floatLabel(item:Object, column:GridColumn):String
+			{
+				if(column.dataField=="heartRate")
+					return (item.heartRate==-10000 ? "" : item.heartRate);
+				else if(column.dataField=="respRate")
+					return (item.respRate==-10000 ? "" : item.respRate);
+				else if(column.dataField=="saturation")
+					return (item.saturation==-10000 ? "" : item.saturation);
+				else if(column.dataField=="systolicBp")
+					return (item.systolicBp==-10000 ? "" : item.systolicBp);
+				else if(column.dataField=="diastolicBp")
+					return (item.diastolicBp==-10000 ? "" : item.diastolicBp);
+				else if(column.dataField=="temperature")
+					return (item.temperature==-10000 ? "" : numberFormatter.format(item.temperature));
+				else if(column.dataField=="consciousnessGcs")
+					return (item.consciousnessGcs==-10000 ? "" : item.consciousnessGcs);
+				else if(column.dataField=="o2Amount")
+					return (item.o2Amount==-10000 ? "" : numberFormatter.format(item.o2Amount));
+				else if(column.dataField=="totalIvFluid")
+					return (item.totalIvFluid==-10000 ? "" : numberFormatter.format(item.totalIvFluid));
+				else //if(column.dataField=="urineOutput")
+					return (item.urineOutput==-10000 ? "" : numberFormatter.format(item.urineOutput));
+			}
+			private function stringLabel(item:Object, column:GridColumn):String
+			{ 
+				return item[column.dataField].slice(0,3);
+			}
+		]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="upIcon"/>
+		<s:State name="downIcon"/>                 
+	</s:states>
+	<fx:Declarations>
+		<s:Rotate id="screenRotation" target="{this}" autoCenterTransform="true"/>
+		<s:NumberFormatter id="numberFormatter"
+						   fractionalDigits="1" 
+						   decimalSeparator="."
+						   groupingSeparator=","
+						   useGrouping="true"
+						   />
+	</fx:Declarations>
+	<s:controlBarContent>
+		<s:HGroup width="100%" verticalAlign="middle" id="controlBar" buttonMode="true">					
+			<s:Label text="{this.title}" id="titleId" left="10" right="10" verticalCenter="0" color="0xffffff"/>
+			<s:Spacer width="100%" />
+			<s:Image id="itemIcon" source="@Embed(source='assets/images/common/item_icon.png')" visible="{parentDocument.itemNumber>0 ? true: false}" includeInLayout="{parentDocument.itemNumber>0 ? true: false}"/>
+			<s:Label id="itemLabel" paddingRight="20" fontSize="11" text="{parentDocument.itemNumber}" visible="{parentDocument.itemNumber>0 ? true: false}" includeInLayout="{parentDocument.itemNumber>0 ? true: false}"/>
+			<s:Image id="downIcon" source="@Embed(source='assets/images/common/down_icon16.png')" visible="{parentDocument.itemNumber>0 ? true: false}" includeInLayout="{parentDocument.itemNumber>0 ? true: false}" visible.upIcon="false" includeInLayout.upIcon="false"/>
+			<s:Image id="upIcon" source="@Embed(source='assets/images/common/up_icon16.png')" visible="{parentDocument.itemNumber>0 ? true: false}" includeInLayout="{parentDocument.itemNumber>0 ? true: false}" visible.downIcon="false" includeInLayout.downIcon="false"/>
+		</s:HGroup>
+	</s:controlBarContent>  
+	<s:BorderContainer id="alertContainerBorderContainer" width="100%" borderWeight="0" visible="false" includeInLayout="false">
+		<s:layout>
+			<s:VerticalLayout paddingTop="5" paddingRight="5" paddingBottom="5" paddingLeft="5"/>
+		</s:layout>
+		<s:RichText id="alertMessage" width="100%" fontSize="11" color="#F72609"/>
+	</s:BorderContainer>
+	
+	<!-- Must include layout and width="100%" inorder to have display all data in streached manner-->
+	<s:BorderContainer width="100%" visible.downIcon="false" includeInLayout.downIcon="false" borderWeight="0" borderVisible="false">
+		<s:layout>
+			<s:VerticalLayout paddingTop="1" paddingRight="1" paddingBottom="1" paddingLeft="1" />
+		</s:layout>
+		<s:DataGrid id="vitalSignDg" skinClass="com.sickkids.caliper.skins.VitalSignGridSkin" width="100%" selectionMode="none" resizableColumns="false" sortableColumns="false">
+			<s:columns>
+				<s:ArrayList>
+					<s:GridColumn dataField="hrPreevent"  		headerText="Hours Pre-event" labelFunction="intLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="heartRate"   		headerText="Heart Rate" labelFunction="floatLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="compression" 		headerText="Compressions" labelFunction="stringLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="respRate"    		headerText="Resp Rate" labelFunction="floatLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="saturation"  		headerText="Saturation" labelFunction="floatLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="systolicBp"  		headerText="Systolic BP" labelFunction="floatLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="diastolicBp" 		headerText="Diastolic BP" labelFunction="floatLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="capillaryRefill" 	headerText="Capillary Refill" labelFunction="intLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="temperature" width="27" headerText="Temperature in C" labelFunction="floatLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="consciousnessAvpu" 	headerText="Consciousness AVPU" labelFunction="stringLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="consciousnessGcs" 	headerText="Consciousness GCS" labelFunction="floatLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="pupils" 		headerText="Pupils" labelFunction="stringLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="o2Method" 		headerText="O2 Method" labelFunction="stringLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="o2AmountUnit" 		headerText="O2 Amount Units" labelFunction="stringLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="o2Amount" 		width="27" headerText="O2 Amount" labelFunction="floatLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="respEffort" 		headerText="Respiratory Effort" labelFunction="stringLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="stridor" 		headerText="Stridor" labelFunction="stringLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="totalIvFluid" 	width="27" headerText="Total IV fluids ml/kg" labelFunction="floatLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="urineOutput" 	width="27" headerText="Urine output vol/kg" labelFunction="floatLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="urineYesNo" 		headerText="Urine ml/kg Yes-No" labelFunction="stringLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="narcoticInfusion" 	headerText="Narcotic Infusion" labelFunction="stringLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="physicianReview" 	headerText="Physician Review" labelFunction="stringLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="statCall" 		headerText="Stat Call" labelFunction="stringLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="nursePatientRatio" 	headerText="Nurse Patient Ratio" labelFunction="stringLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+					<s:GridColumn dataField="parentPresent" 	headerText="Parent Present" labelFunction="stringLabel" itemRenderer="com.sickkids.caliper.renderers.VitalSignGridItemRenderer"/>
+				</s:ArrayList>
+			</s:columns>
+		</s:DataGrid>
+		<s:HGroup width="100%" gap="5" paddingTop="2" paddingLeft="3">
+			<components:TCell cellText="Abs: Absent, BIP: BIPAP, CPA: CPAP, MIL: MILD, NOR: NORM, Rea: Reactive, Sel: Self Test, Ven: Ventilate " width="100%" height="30" bg="0xEAEAFF" fontSize="12" fontWeight="normal"/>
+		</s:HGroup>
+	</s:BorderContainer>
+	
+</s:Panel>

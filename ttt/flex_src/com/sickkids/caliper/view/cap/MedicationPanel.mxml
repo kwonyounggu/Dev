@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 skinClass="com.sickkids.caliper.skins.CustomPanelSkin"
+		 currentState="downIcon"
+		 >
+	<s:layout>
+		<s:VerticalLayout paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0"/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import com.sickkids.caliper.skins.CustomPanelSkin;		
+		]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="upIcon"/>
+		<s:State name="downIcon"/>                 
+	</s:states>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:controlBarContent>
+		<s:HGroup width="100%" verticalAlign="middle" id="controlBar" buttonMode="true">					
+			<s:Label text="{this.title}" id="titleId" left="10" right="10" verticalCenter="0" color="0xffffff"/>
+			<s:Spacer width="100%" />
+			<s:Image id="itemIcon" source="@Embed(source='assets/images/common/item_icon.png')" visible="{parentDocument.itemNumber>0 ? true: false}" includeInLayout="{parentDocument.itemNumber>0 ? true: false}"/>
+			<s:Label id="itemLabel" paddingRight="20" fontSize="11" text="{parentDocument.itemNumber}" visible="{parentDocument.itemNumber>0 ? true: false}" includeInLayout="{parentDocument.itemNumber>0 ? true: false}"/>
+			<s:Image id="downIcon" source="@Embed(source='assets/images/common/down_icon16.png')" visible="{parentDocument.itemNumber>0 ? true: false}" includeInLayout="{parentDocument.itemNumber>0 ? true: false}" visible.upIcon="false" includeInLayout.upIcon="false"/>
+			<s:Image id="upIcon" source="@Embed(source='assets/images/common/up_icon16.png')" visible="{parentDocument.itemNumber>0 ? true: false}" includeInLayout="{parentDocument.itemNumber>0 ? true: false}" visible.downIcon="false" includeInLayout.downIcon="false"/>
+		</s:HGroup>
+	</s:controlBarContent>  
+	<s:BorderContainer id="alertContainerBorderContainer" width="100%" borderWeight="0" visible="false" includeInLayout="false">
+		<s:layout>
+			<s:VerticalLayout paddingTop="5" paddingRight="5" paddingBottom="5" paddingLeft="5"/>
+		</s:layout>
+		<s:RichText id="alertMessage" width="100%" fontSize="11" color="#F72609"/>
+	</s:BorderContainer>
+	
+	<!-- Must include layout and width="100%" inorder to have display all data in streached manner-->
+	<s:BorderContainer width="100%" visible.downIcon="false" includeInLayout.downIcon="false" borderWeight="0" borderVisible="false">
+		<s:layout>
+			<s:VerticalLayout paddingTop="5" paddingRight="5" paddingBottom="5" paddingLeft="5" />
+		</s:layout>
+		<s:DataGrid id="medicationDg" width="100%" selectionMode="none" resizableColumns="false" sortableColumns="false">
+			<s:columns>
+				<s:ArrayList>
+					<s:GridColumn dataField="hour"  width="40" headerText="Hr"/>
+					<s:GridColumn dataField="route"  width="60" 		headerText="Route"/>
+					<s:GridColumn dataField="medication" 		headerText="Medication"/>
+				</s:ArrayList>
+			</s:columns>
+		</s:DataGrid>
+	</s:BorderContainer>
+	
+</s:Panel>

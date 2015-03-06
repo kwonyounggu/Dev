@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="940" minHeight="528" width="940" height="528" horizontalCenter="0" xmlns:ttt="com.sickkids.caliper.view.ttt.*" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   minWidth="940" minHeight="528" width="940" height="528" 
+			   horizontalCenter="0" 
+			   xmlns:ttt="com.sickkids.caliper.view.ttt.*" 
+			   preinitialize="applicationPreinitializeHandler(event)" 
+			   xmlns:caliper="com.sickkids.caliper.*"
 			   >
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			protected function applicationPreinitializeHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				Security.allowDomain("*");
+			}
+			
+		]]>
+	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<caliper:TttContext contextView="{this}" />
 	</fx:Declarations>
 	
 	<s:HGroup horizontalCenter="0" paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0" width="100%" height="100%" gap="4">	
@@ -21,19 +39,13 @@
 			</s:Group>
 		</s:VGroup>
 		<s:VGroup horizontalCenter="0" paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0" width="66.6%" height="100%" gap="0">
-			<s:VGroup horizontalCenter="0" width="100%" height="100%" includeInLayout="true" visible="true" gap="4">
+			<s:VGroup id="videoSwfGroup" horizontalCenter="0" width="100%" height="100%" includeInLayout="true" visible="true" gap="4">
 				<ttt:VideoSwfPanel  width="100%" height="50%" title="top"/>
 				<ttt:VideoSwfPanel  width="100%" height="50%" title="bottom"/>
 			</s:VGroup>
 			<!-- The following group will be used for setting on the top, and display errors and other information on the bottom-->
-			<s:VGroup horizontalCenter="0" width="100%" height="100%" includeInLayout="false" visible="false" gap="4">
-				<s:BorderContainer width="100%" height="50%">
-					<!-- settings -->
-				</s:BorderContainer>
-				<s:BorderContainer width="100%" height="50%">
-					<!-- errors -->
-				</s:BorderContainer>
-			</s:VGroup>
+			<ttt:AdminPanelView  id="adminPanelView" width="100%" height="100%" includeInLayout="false" visible="false"/>
+			
 		</s:VGroup>
 	</s:HGroup>
 </s:Application>

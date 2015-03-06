@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Abbott" xmlns:components="com.sickkids.caliper.components.*">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Scroller width="100%" height="100%" left="0" right="0" bottom="0" top="0">
+		<s:VGroup  width="100%" horizontalCenter="0" paddingTop="2" paddingRight="2" paddingBottom="2" paddingLeft="2">	
+			<s:BorderContainer id="alertContainerBorderContainer" width="100%" visible="false" includeInLayout="false">
+				<s:layout>
+					<s:VerticalLayout paddingTop="5" paddingRight="5" paddingBottom="5" paddingLeft="5"/>
+				</s:layout>
+				<s:RichText id="alertMessage" width="100%" fontSize="11" color="#F72609" />
+			</s:BorderContainer>
+			<s:BorderContainer width="100%"  borderWeight="0" >
+				<s:layout>
+					<s:VerticalLayout paddingTop="5" paddingRight="5" paddingBottom="5" paddingLeft="5" gap="1"/>
+				</s:layout>
+				<s:List id="list" width="100%" borderVisible="false" visible="false"
+						itemRenderer="spark.skins.spark.DefaultComplexItemRenderer"
+						horizontalCenter="0"
+						verticalCenter="0">
+					<s:layout>
+						<s:TileLayout requestedColumnCount="3"
+									  requestedRowCount="2"
+									  horizontalGap="0"
+									  verticalGap="0" />
+					</s:layout>
+					<!--<s:dataProvider>
+						<s:ArrayList>
+							<s:BitmapImage source="@Embed('assets/images/pics/amy_jones.jpg')" />
+							<s:BitmapImage source="@Embed('assets/images/pics/amy_jones.jpg')" />
+							<s:BitmapImage source="@Embed('assets/images/pics/amy_jones.jpg')" />
+							<s:BitmapImage source="@Embed('assets/images/pics/amy_jones.jpg')" />
+							<s:BitmapImage source="@Embed('assets/images/pics/amy_jones.jpg')" />
+							<s:BitmapImage source="@Embed('assets/images/pics/amy_jones.jpg')" />
+							<s:BitmapImage source="@Embed('assets/images/pics/amy_jones.jpg')" />
+						</s:ArrayList>
+					</s:dataProvider>-->
+				</s:List>
+
+				<s:Group left="10" right="10" top="10" bottom="10" visible="false">
+					<s:Label x="0" y="0" height="75" width="75">
+						<s:text>This is a Label control.</s:text>
+					</s:Label>
+					
+					<s:Group x="100" y="0">
+						<s:Label height="100" width="75" paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5">
+							<s:text>This is a Spark Label control with a border drawn by a Rect.</s:text>
+						</s:Label>
+						<s:Rect width="100%" height="100%">
+							<s:stroke>
+								<s:SolidColorStroke color="red"/>
+							</s:stroke>
+						</s:Rect>
+					</s:Group>
+				</s:Group>
+				
+				<s:Graphic visible="false">
+					<s:Rect width="100%" height="100%">
+						<s:stroke>
+							<s:SolidColorStroke color="red"/>
+						</s:stroke>
+					</s:Rect>
+					<s:RichText text="Hello FXG!" paddingTop="5" paddingRight="5" paddingBottom="5" paddingLeft="5"/>
+				</s:Graphic>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell  width="20%" height="60" bg="0xE8E8E8" fontSize="8"/>
+					<components:TCell cellText="closest to 48 hrs{'\n'}before,{'\n'}≤48h&amp;&gt;24h before event" width="13%" height="60" bg="0xE8E8E8" fontSize="8"/>
+					<components:TCell cellText="closest to 12 hrs{'\n'}before,{'\n'}≤24h&amp;≥12h before event" width="13%" height="60" bg="0xE8E8E8" fontSize="8"/>
+					<components:TCell cellText="closest to{'\n'}one hr{'\n'}before,{'\n'}&lt;12h&amp;≥1h{'\n'}before event" width="13%" height="60" bg="0xE8E8E8" fontSize="8"/>
+					<components:TCell cellText="number of{'\n'}tests{'\n'}between{'\n'}≤24h&amp;&gt;1h" width="13%" height="60" bg="0xE8E8E8" fontSize="8"/>
+					<components:TCell cellText="lower{'\n'}limit of{'\n'}normal" width="10%" height="60" bg="0xE8E8E8" fontSize="8"/>
+					<components:TCell cellText="upper{'\n'}limit of{'\n'}normal" width="10%" height="60" bg="0xE8E8E8" fontSize="8"/>
+					<components:TCell cellText="units" width="8%" height="60" bg="0xE8E8E8" fontSize="8"/>		
+				</s:HGroup>	
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Haematologic" width="20%" height="12" bg="0xEAEAFF" fontSize="8" fontWeight="bold"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" bg="0xEAEAFF" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Haemoglobin" width="20%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="White Cell #" width="20%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Bands" width="20%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Platelet Count" width="20%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Electrolyte" width="20%" height="12" bg="0xEAEAFF" fontSize="8" fontWeight="bold"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" bg="0xEAEAFF" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Sodium" width="20%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Potassium" width="20%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Calcium (total)" width="20%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Calcium Ionized" width="20%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Magnesium" width="20%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="&lt;font size='5'&gt;Blood Gas &lt;/font&gt;Arterial" width="20%" height="12" bg="0xEAEAFF" fontSize="8" fontWeight="bold"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" bg="0xEAEAFF" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="PaO2" width="20%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="PaCO2" width="20%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="HCO3" width="20%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="pH" width="20%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="&lt;font size='3'&gt;Blood Gas &lt;/font&gt;MixedVenous" width="20%" height="12" bg="0xEAEAFF" fontSize="6" fontWeight="bold"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" bg="0xEAEAFF" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="PmvO2" width="20%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="HCO3" width="20%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Metabolic" width="20%" height="12" bg="0xEAEAFF" fontSize="8" fontWeight="bold"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" bg="0xEAEAFF" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Ammonia" width="20%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Lactate" width="20%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Glucose" width="20%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Liver" width="20%" height="12" bg="0xEAEAFF" fontSize="8" fontWeight="bold"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="12" bg="0xEAEAFF" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="12" bg="0xEAEAFF" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Aspartate{'\n'}Aminotransferase" width="20%" height="18" fontSize="7"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="18" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Alanine{'\n'}AAminotransferase" width="20%" height="18" fontSize="7"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="18" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Bilirubin{'\n'}conjugated" width="20%" height="18" fontSize="7"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="18" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Bilirubin{'\n'}unconjugated" width="20%" height="18" fontSize="7"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="18" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Lactate{'\n'}Dehydrogenase" width="20%" height="18" fontSize="7"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="18" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="International{'\n'}Norm Ratio(INR)" width="20%" height="18" fontSize="7"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="18" fontSize="8"/>		
+				</s:HGroup>
+				<s:HGroup width="100%" gap="1">
+					<components:TCell cellText="Time of Partial{'\n'}Prothrombin" width="20%" height="18" fontSize="7"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="13%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="10%" height="18" fontSize="8"/>
+					<components:TCell cellText="" width="8%" height="18" fontSize="8"/>		
+				</s:HGroup>
+				
+
+				
+				<s:HGroup width="100%" gap="1">
+					<components:TBox cellText="&lt;br&gt;&lt;br&gt;abcdefghijklmn&lt;br&gt;&lt;br&gt;" width="22%" height="50" display="false" bg="0xE8E8E8"/>
+					<components:TBox cellText="closest to 48&lt;br&gt;hrs before AND&lt;br&gt;≤48 h &amp; &gt;24 h&lt;br&gt;before event" width="13%" height="50" bg="0xE8E8E8"/>
+					<components:TBox cellText="closest to 12&lt;br&gt;hrs before AND&lt;br&gt;≤24 h &amp; ≥12 hr&lt;br&gt;before event" width="13%" height="50" bg="0xE8E8E8"/>
+					<components:TBox cellText="closest to one&lt;br&gt; hr before AND&lt;br&gt;&lt;12h &amp; ≥1 hr&lt;br&gt;before event" width="13%" height="50" bg="0xE8E8E8"/>
+					<components:TBox cellText="number of tests&lt;br&gt;between&lt;br&gt;≤24 hr and &gt;1&lt;br&gt;hr" width="13%" height="50" bg="0xE8E8E8"/>
+					<components:TBox cellText="lower&lt;br&gt;limit of&lt;br&gt;normal&lt;br&gt;" width="10%" height="50" bg="0xE8E8E8"/>
+					<components:TBox cellText="upper&lt;br&gt;limit of&lt;br&gt;normal&lt;br&gt;" width="10%" height="50" bg="0xE8E8E8"/>
+					<components:TBox cellText="&lt;br&gt;&lt;br&gt;units&lt;br&gt;" width="6%" height="50" bg="0xE8E8E8"/>			
+				</s:HGroup>	
+				<s:Label text="Haematologic" fontSize="12"/>
+				<s:HGroup width="100%" gap="1">
+					<components:TBox cellText="Haemoglobin" width="22%" height="20" bg="0xE8E8E8" fontSize="11"/>
+					<components:TBox cellText="   12" width="13%" height="20" bg="0xE8E8E8" fontSize="11"/>
+					<components:TBox cellText="   12" width="13%" height="20" bg="0xE8E8E8" fontSize="11"/>
+					<components:TBox cellText="12" width="13%" height="20" bg="0xE8E8E8" fontSize="11"/>
+					<components:TBox cellText="12" width="13%" height="20" bg="0xE8E8E8" fontSize="11"/>
+					<components:TBox cellText="12" width="10%" height="20" bg="0xE8E8E8" fontSize="11"/>
+					<components:TBox cellText="12" width="10%" height="20" bg="0xE8E8E8" fontSize="11"/>
+					<components:TBox cellText="" width="6%" height="20" bg="0xE8E8E8" fontSize="11"/>		
+				</s:HGroup>	
+				
+				<s:DataGrid id="dg" width="100%" variableRowHeight="true">
+					<!--<s:typicalItem>
+						<s:DataItem key="9999999" name="Typical name length" 
+									price="1234.56" call="false"/>
+					</s:typicalItem>
+					<s:ArrayCollection id="items">
+						<s:DataItem key="1000" name="Abrasive" price="100.11" call="false"/>
+						<s:DataItem key="1001" name="Brush" price="110.01" call="true"/>
+						<s:DataItem key="1002" name="Clamp" price="120.02" call="false"/>
+						<s:DataItem key="1003" name="Drill" price="130.03" call="true"/>
+						<s:DataItem key="1004" name="Epoxy" price="140.04" call="false"/>
+						<s:DataItem key="1005" name="File" price="150.05" call="true"/>
+					</s:ArrayCollection>-->
+					<s:columns>
+						<s:ArrayList>
+							<s:GridColumn dataField="analyteName" headerText="" />
+							<s:GridColumn dataField="48Hrs" headerText="closest to 48hrs before AND≤48 h &amp; &gt;24 hbefore event"/>
+							<s:GridColumn dataField="24Hrs" headerText="closest to 48hrs before AND≤48 h &amp; &gt;24 hbefore event"/>
+							<s:GridColumn dataField="12Hr" headerText="closest to 48hrs before AND≤48 h &amp; &gt;24 hbefore event"/>
+							<s:GridColumn dataField="aDay" headerText="closest to 48hrs before AND≤48 h &amp; &gt;24 hbefore event"/>
+							<s:GridColumn dataField="lowerLimit" headerText="lower limt of normal"/>
+							<s:GridColumn dataField="upperLimit" headerText="upper limit of normal"/>
+							<s:GridColumn dataField="units" headerText="units"/>
+						</s:ArrayList>
+						</s:columns>
+				</s:DataGrid>
+			</s:BorderContainer>
+			
+		</s:VGroup>
+	</s:Scroller>
+	
+</s:View>
