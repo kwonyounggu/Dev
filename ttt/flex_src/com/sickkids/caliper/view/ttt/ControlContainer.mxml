@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" xmlns:skins="com.sickkids.caliper.skins.*">
 	<s:layout>
 		<s:VerticalLayout paddingBottom="0" paddingLeft="0" paddingRight="0" paddingTop="0"/>
 	</s:layout>
@@ -9,15 +9,23 @@
 		<s:State name="upIcon"/>
 		<s:State name="downIcon"/>                 
 	</s:states>
+	<fx:Style>
+		
+		.toggleSwitch
+		{
+			skinClass:ClassReference("com.sickkids.caliper.skins.ToggleSwitchSkin");
+		}
+	</fx:Style>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<mx:HBox width="100%" paddingLeft="3" paddingTop="1" paddingRight="3" visible="true" includeInLayout="true">
+	<mx:HBox width="100%" paddingLeft="3" paddingTop="2" paddingRight="0" visible="true" includeInLayout="true" verticalAlign="middle" verticalCenter="0">
 		<!-- later see ReviewPanel.mxml to use upIcon and downIcon-->
 		<s:Image id="upIcon" source="@Embed(source='assets/images/controls/fullscreen25.png')" buttonMode="true"/>
 		<s:Spacer width="100%"/>
 		<s:Image id="settings" source="@Embed(source='assets/images/controls/setting25.png')" buttonMode="true"/>
-		<s:Image source="@Embed(source='assets/images/controls/into25.png')" buttonMode="true"/>
+		<!-- Once it is switched then make the control off (eg: fullscreen, setttings, etc until it receives on again from the server -->
+		<skins:ToggleSwitch id="controlSwitch" selected="true" selectedLabel="Ctrl ON" deselectedLabel="Ctrl OFF" styleName="toggleSwitch"/>
 	</mx:HBox>
 	<mx:HBox width="100%" paddingLeft="3" paddingTop="1" paddingRight="3" visible="false" includeInLayout="false">
 		<!-- This hbox will be used to display login information -->

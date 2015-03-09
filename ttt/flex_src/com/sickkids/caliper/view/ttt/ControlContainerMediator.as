@@ -9,7 +9,7 @@ package com.sickkids.caliper.view.ttt
 	public class ControlContainerMediator extends Mediator
 	{
 		//[Inject] public var condutorPanel:ConductorPanel;
-		[Inject] public var controlContainer:ControlBorderContainer;
+		[Inject] public var controlContainer:ControlContainer;
 		[Inject] public var model:TttModel;
 		public function ControlContainerMediator()
 		{
@@ -29,6 +29,14 @@ package com.sickkids.caliper.view.ttt
 		private function onSettingsClick(event:MouseEvent):void
 		{
 			trace("INFO: onSettingsClick() is clicked in ControlContainerMediator.as");
+			if(model.userInfo.bTokenPossesed)
+			{
+				this.controlContainer.parentDocument.toggleAdminPanelView();
+			}
+			else
+			{
+				//no event will be produced but ignored
+			}
 		}
 	}
 }

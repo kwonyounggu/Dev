@@ -38,7 +38,8 @@ package com.sickkids.caliper.model
 		public static const MAX_COMMENTS_LENGTH:int=2500;
 
 		public function TttModel()
-		{			
+		{		
+			trace("INFO: TttModel() is called in TttModel.as");
 			super();
 			initialize();
 		}

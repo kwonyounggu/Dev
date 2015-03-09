@@ -17,7 +17,19 @@
 				// TODO Auto-generated method stub
 				Security.allowDomain("*");
 			}
-			
+			public function toggleAdminPanelView():void
+			{
+				if(videoSwfView.visible)
+				{
+					videoSwfView.visible=videoSwfView.includeInLayout=false;
+					adminPanel.visible=adminPanel.includeInLayout=true;
+				}
+				else
+				{
+					videoSwfView.visible=videoSwfView.includeInLayout=true;
+					adminPanel.visible=adminPanel.includeInLayout=false;
+				}	
+			}
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -35,16 +47,16 @@
 				<ttt:TextPanel width="100%" height="100%"/>
 			</s:Group>
 			<s:Group horizontalCenter="0" width="100%" height="5%">
-				<ttt:ControlBorderContainer width="100%" height="100%"/>
+				<ttt:ControlContainer width="100%" height="100%"/>
 			</s:Group>
 		</s:VGroup>
 		<s:VGroup horizontalCenter="0" paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0" width="66.6%" height="100%" gap="0">
-			<s:VGroup id="videoSwfGroup" horizontalCenter="0" width="100%" height="100%" includeInLayout="true" visible="true" gap="4">
+			<s:VGroup id="videoSwfView" horizontalCenter="0" width="100%" height="100%" includeInLayout="true" visible="true" gap="4">
 				<ttt:VideoSwfPanel  width="100%" height="50%" title="top"/>
 				<ttt:VideoSwfPanel  width="100%" height="50%" title="bottom"/>
 			</s:VGroup>
 			<!-- The following group will be used for setting on the top, and display errors and other information on the bottom-->
-			<ttt:AdminPanelView  id="adminPanelView" width="100%" height="100%" includeInLayout="false" visible="false"/>
+			<ttt:AdminPanel  id="adminPanel" width="100%" height="100%" includeInLayout="false" visible="false"/>
 			
 		</s:VGroup>
 	</s:HGroup>

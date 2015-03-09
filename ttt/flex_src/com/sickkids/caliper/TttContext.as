@@ -1,9 +1,15 @@
 package com.sickkids.caliper
 {	
+	import com.sickkids.caliper.controller.TttNetConnectionCommand;
+	import com.sickkids.caliper.events.TttNetConnectionEvent;
 	import com.sickkids.caliper.model.TttModel;
+	import com.sickkids.caliper.service.INetConnectionService;
+	import com.sickkids.caliper.service.NetConnectionService;
+	import com.sickkids.caliper.view.ttt.AdminPanel;
+	import com.sickkids.caliper.view.ttt.AdminPanelMediator;
 	import com.sickkids.caliper.view.ttt.ConductorPanel;
 	import com.sickkids.caliper.view.ttt.ConductorPanelMediator;
-	import com.sickkids.caliper.view.ttt.ControlBorderContainer;
+	import com.sickkids.caliper.view.ttt.ControlContainer;
 	import com.sickkids.caliper.view.ttt.ControlContainerMediator;
 	
 	import flash.display.DisplayObjectContainer;
@@ -23,7 +29,8 @@ package com.sickkids.caliper
 
 			injector.mapSingleton(TttModel);
 			mediatorMap.mapView(ConductorPanel, ConductorPanelMediator);
-			mediatorMap.mapView(ControlBorderContainer, ControlContainerMediator);
+			mediatorMap.mapView(ControlContainer, ControlContainerMediator);
+			mediatorMap.mapView(AdminPanel, AdminPanelMediator);
 			
 			//mediatorMap.mapView(ControlBorderContainer, ControlContainerMediator);
 			/*mediatorMap.mapView(com.sickkids.caliper.view.cap.LoginView, com.sickkids.caliper.view.cap.LoginViewMediator);
@@ -45,6 +52,9 @@ package com.sickkids.caliper
 			
 			injector.mapSingletonOf(ICapRemoteObjectService, CapRemoteObjectService);
 			*/
+			
+			commandMap.mapEvent(TttNetConnectionEvent.ROOM_CONNECT_EVENT, TttNetConnectionCommand, TttNetConnectionEvent);
+			injector.mapSingletonOf(INetConnectionService, NetConnectionService);
 
 		}
 		override public function shutdown():void

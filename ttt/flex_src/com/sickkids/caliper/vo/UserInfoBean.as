@@ -15,6 +15,10 @@ package com.sickkids.caliper.vo
 		public var courseNumber:int=6;
 		public var courseName:String="Brain Diease Advanced";
 		public var participantType:String="LECTURER";
+		
+		public var bTokenPossesed:Boolean=false;//it can be possesed to anyone by the lecturer so that the owner of the token can control all
+		//The token can only be possed to two people in the room (LECTURER and or other)
+		//It can be enabled by the LECTURER any time but LECTURER's event is in higher priority
 				
 		public function UserInfoBean()
 		{
@@ -22,6 +26,7 @@ package com.sickkids.caliper.vo
 		
 		public function setExternalVars():void
 		{
+			//bTokenPossesed=true;//remove later
 			if(FlexGlobals.topLevelApplication.parameters.userId!=null) //application is called from swfobject.embedSWF
 			{
 				userId=FlexGlobals.topLevelApplication.parameters.userId;
@@ -34,20 +39,23 @@ package com.sickkids.caliper.vo
 				courseNumber=Number(FlexGlobals.topLevelApplication.parameters.courseNumber);
 				courseName=FlexGlobals.topLevelApplication.parameters.courseName;
 				participantType=FlexGlobals.topLevelApplication.parameters.participantType;
+				if(participantType=="LECTURER") bTokenPossesed=true;
+				else bTokenPossesed=false;
 			}
 		}
 		public function toString():String
 		{
-			return	"userId="+userId+", "+
-					"firstName="+firstName+", "+
-					"lastName="+lastName+", "+
-					"loginLevel="+loginLevel+", "+
-					"hospitalId="+hospitalId+", "+
-					"email="+email+", "+
-					"hopitalName="+hopitalName+", "+
-					"courseNumber="+courseNumber+", "+
-					"courseName="+courseName+", "+
-					"participantType="+participantType;
+			return	"userId="+userId+", "+"\n"+
+					"firstName="+firstName+", "+"\n"+
+					"lastName="+lastName+", "+"\n"+
+					"loginLevel="+loginLevel+", "+"\n"+
+					"hospitalId="+hospitalId+", "+"\n"+
+					"email="+email+", "+"\n"+
+					"hopitalName="+hopitalName+", "+"\n"+
+					"courseNumber="+courseNumber+", "+"\n"+
+					"courseName="+courseName+", "+"\n"+
+					"participantType="+participantType+", "+"\n"+
+					"bTokenPossesed="+bTokenPossesed+"\n";
 		}
 	}
 }
