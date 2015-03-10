@@ -1,8 +1,6 @@
 package com.sickkids.caliper.service
 {
-	import com.ericfeminella.collections.HashMap;
 	import com.sickkids.caliper.components.AppCommon;
-	import com.sickkids.caliper.events.ApplicationRMIEvent;
 	import com.sickkids.caliper.model.TttModel;
 	import com.sickkids.caliper.vo.UserInfoBean;
 	
@@ -11,14 +9,10 @@ package com.sickkids.caliper.service
 	import flash.events.SecurityErrorEvent;
 	import flash.net.NetConnection;
 	import flash.net.Responder;
-	import flash.net.SharedObject;
 	
-	import mx.collections.ArrayCollection;
 	import mx.core.FlexGlobals;
-
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
-
 	
 	import org.robotlegs.mvcs.Actor;
 	
@@ -58,15 +52,22 @@ package com.sickkids.caliper.service
 			//nc.connect(strUrl, user.room_id, user.user_id, user.first_name, user.email);
 			//_netConnection.connect(_url+"/"+userInfo.courseNumber, user.room_id, user.user_id, user.email, user.is_owner, model.bw.kbitDown, model.bw.kbitUp, model.bw.latencyDown, model.bw.latencyUp);
 			_netConnection.connect(_url+"/"+userInfo.courseNumber,
+									userInfo.courseNumber, //roomNumber
+									userInfo.courseName, //roomName
 									userInfo.userId,
 									userInfo.email,
 									userInfo.hospitalId,
+									userInfo.hopitalName,
 									userInfo.participantType);
 			//trace("INFO:: *** BEGIN roomConnection called in NetConnectionDelegate.as ***");
 			//trace("INFO:: *** objectEncoding="+nc.objectEncoding);
 			//trace("INFO:: *** strUrl="+strUrl);	
 			//trace("INFO:: *** END roomConnection called in NetConnectionDelegate.as ***");
 		} 
+		public function netConnection():NetConnection
+		{
+			return _netConnection;
+		}
 		//Here, operation is a method defined by the given argument called method.
 		//public function callService(method:String, arg1:Object=null, arg2:Object=null, arg3:Object=null, arg4:Object=null, arg5:Object=null, arg6:Object=null) : void 
 		/*public function callService_org(... args) : void 
@@ -294,6 +295,20 @@ package com.sickkids.caliper.service
 		private function onAsyncError(e:AsyncErrorEvent):void 
 		{
 			trace("INFO: onAsyncError: " + e);
+		}
+		public function onBWCheck(...rest):Number
+		{ 
+			trace("INFO: onBWCheck: " + rest);
+			return 0; 
+		} 
+		
+		public function onBWDone(...rest):void
+		{ 
+			var p_bw:Number; 
+			if (rest.length > 0){
+				p_bw = rest[0]; 
+			}
+			trace("INFO: bandwidth = " + p_bw + " Kbps in onBWDone(...)."); 
 		}
 		public function onOperationResult(e:ResultEvent):void
 		{		

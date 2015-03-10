@@ -54,6 +54,7 @@ package com.sickkids.caliper
 			*/
 			
 			commandMap.mapEvent(TttNetConnectionEvent.ROOM_CONNECT_EVENT, TttNetConnectionCommand, TttNetConnectionEvent);
+			trace("INFO: injector.mapSingletonOf(INetConnectionService, NetConnectionService) is set in TttContext.as");
 			injector.mapSingletonOf(INetConnectionService, NetConnectionService);
 
 		}

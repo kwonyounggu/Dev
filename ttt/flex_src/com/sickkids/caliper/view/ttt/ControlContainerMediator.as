@@ -1,5 +1,6 @@
 package com.sickkids.caliper.view.ttt
 {
+	import com.sickkids.caliper.events.TttNetConnectionEvent;
 	import com.sickkids.caliper.model.TttModel;
 	
 	import flash.events.MouseEvent;
@@ -19,8 +20,10 @@ package com.sickkids.caliper.view.ttt
 		{
 			trace("INFO: onRegister() is called in ControlContainerMediator.as");
 			
-			//view.localVideoDisplay.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompleteOfVideoDisplay);
 			controlContainer.settings.addEventListener(MouseEvent.CLICK, onSettingsClick);
+			
+			trace("INFO: TttNetConnectionEvent.ROOM_CONNECT_EVENT onRegister() is called in ControlContainerMediator.as");
+			dispatch(new TttNetConnectionEvent(TttNetConnectionEvent.ROOM_CONNECT_EVENT, model.userInfo));
 		}
 		override public function onRemove():void
 		{

@@ -63,7 +63,7 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 	{	
 		appScope = app;
 		APP_SCOPE_NAME=app.getName();
-		log.info("------ appStart("+app.getName()+") is called in the level of "+APP_SCOPE_NAME+" ------");
+		log.info("TTT.appStart(app_scope_name="+app.getName()+") is called in the level of "+APP_SCOPE_NAME+" in MainApplication.java");
 		//The following statement is to call the ShutdownHook object when this object is being shutdown.
 		Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
 		log.info("createSharedObject("+appScope.getName()+", so_app_level"+")="+createSharedObject(appScope,"so_app_level",false));
@@ -74,7 +74,7 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 
 	@Override public void appStop(IScope scope)
 	{
-		log.info("------ appStop("+scope.getName()+") is called ------");
+		log.info("TTT.appStop("+scope.getName()+") is called  in MainApplication.java");
 		try
 		{
 			//log.info("-------------------------appStop is called in the level of "+APP_SCOPE_NAME+"-----------------------------------");
@@ -90,7 +90,7 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 	}
 	@Override public boolean appConnect(IConnection conn, Object[] params)
 	{
-		log.info("-------------------------appConnect("+conn.getClient().getId()+") is called-----------------------------------");
+		log.info("TTT.appConnect("+conn.getClient().getId()+") is called in MainApplication.java");
 		try
 		{
 			if(conn.getPath().equals(APP_SCOPE_NAME)) ++APP_CONNECTION_COUNT;//this should be decremented later, Oct 28, 2013
@@ -105,7 +105,7 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 		return super.appConnect(conn, params);
 	}
 	@Override public void appDisconnect(IConnection conn)
-	{	log.info("-------------------------appDisconnect("+conn.getClient().getId()+") is called-----------------------------------");
+	{	log.info("TTT.appDisconnect("+conn.getClient().getId()+") is called in MainApplication.java");
 		// destroy the transient shared objects...
 		super.appDisconnect(conn);
 	}
@@ -115,7 +115,7 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 	//whenever a new room is created at the 1st time, this will be called.
 	@Override public boolean roomStart(IScope room)
 	{
-		log.info("-------------------------roomStart(roomName: "+room.getName()+") is called-----------------------------------");
+		log.info("TTT.roomStart(roomName: "+room.getName()+") is called in MainApplication.java");
 		try
 		{
 			this.currentRoomScope=room;
@@ -134,7 +134,7 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 	//whenever a new room is destroyed at the 1st time without no connections being remained, this will be called.
 	@Override public void roomStop(IScope room)
 	{
-		log.info("-------------------------roomStop(roomName: "+room.getName()+") is called-----------------------------------");
+		log.info("TTT.roomStop(roomName: "+room.getName()+") is called in MainApplication.java");
 		try
 		{
 			roomScopeSet.remove(room); 
@@ -152,68 +152,64 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 	@Override public boolean roomConnect(IConnection conn, Object[] params)
 	{
 		boolean bAccepted=true;
-		log.info("-------------------------roomConnect(clientID: "+conn.getClient().getId()+") is called from "+conn.getRemoteAddress()+" ----------------------------------");
+		log.info("TTT.roomConnect(clientID: "+conn.getClient().getId()+") is called from "+conn.getRemoteAddress()+" in MainApplication.java");
 		try
 		{
-			UserBean ub=new UserBean();
-			
-			ub.setRoom_id(params[0].toString());
-			ub.setRoom_name(params[1].toString());
-			ub.setHospital_id(params[2].toString());
-			ub.setHospital_name(params[3].toString());
-			ub.setUser_id(params[4].toString());
-			ub.setEmail(params[5].toString());
-			ub.setIs_owner((Boolean)params[6]);
-			ub.setLogin_level(Integer.parseInt(params[7].toString()));
-			ub.setIp_address(conn.getRemoteAddress());
-			
-			log.info("param[0]="+ub.getRoom_id());//room_id
-			log.info("param[1]="+ub.getRoom_name());//room_name
-			log.info("param[2]="+ub.getHospital_id());//hospital_id
-			log.info("param[3]="+ub.getHospital_name());//hospital_name
-			log.info("param[4]="+ub.getUser_id());//user_id
-			log.info("param[5]="+ub.getEmail());//email
-			log.info("param[6]="+ub.isIs_owner());//is_owner
-			log.info("param[7]="+ub.getLogin_level());//login_level
-			log.info("ub.getIp_address="+ub.getIp_address());//login_level
-			log.info("param[8]="+params[8].toString());//model.bw.kbitDown
-			log.info("param[9]="+params[9].toString());//model.bw.kbitUp
-			log.info("param[10]="+params[10].toString());//model.bw.latencyDown
-			log.info("param[11]="+params[11].toString());//model.bw.latencyUp
-			
-			//rejectUser(ub, conn.getScope().getClients());
-			Set<IClient> clients=conn.getScope().getClients();
-			log.info("The number of clients so far is "+clients.size()+", Utils.MAX_CLIENTS="+Utils.MAX_CLIENTS);
-			if(clients.size()>=Utils.MAX_CLIENTS)
+			//1. check the number of parameters (null or length==0)
+			//2. reject if the provided parameters are less than expected
+			//3. reject if the number of clients are over the limit
+			if(params==null || params.length==0)
 			{
-				log.info("Now the room ("+ub.getRoom_id()+") is full with the maximum, "+Utils.MAX_CLIENTS+" connections.");
-				this.rejectClient("Now the room ("+ub.getRoom_id()+") is full with the maximum, "+Utils.MAX_CLIENTS+" connections.");			
+				log.info("Rejecting since no user information provided");
+				this.rejectClient("Rejecting since no user information provided");
+			}
+			else if(params.length!=7)
+			{
+				log.info("Rejecting since the length of user information provided is not correct");
+				this.rejectClient("Rejecting since the length of user information provided is not correct");
 			}
 			else
 			{
-				Iterator<IClient> client=clients.iterator();
-				while(client.hasNext())
+				UserBean ub=new UserBean();
+				ub.setRoomId(Integer.parseInt(params[0].toString()));
+				ub.setRoomName(params[1].toString());
+				ub.setUserId(params[2].toString());
+				ub.setEmail(params[3].toString());
+				ub.setHospitalId(params[4].toString());
+				ub.setHospitalName(params[5].toString());
+				ub.setParticipantType(params[6].toString());
+				ub.setIpAddress(conn.getRemoteAddress());
+				log.info(ub.toString());
+				
+				Set<IClient> clients=conn.getScope().getClients();
+				log.info("The number of clients so far is "+clients.size()+", Utils.MAX_CLIENTS="+Utils.MAX_CLIENTS);
+				if(clients.size()>=Utils.MAX_CLIENTS)
 				{
-					IClient c=client.next();
-					UserBean ubAttr=(UserBean)c.getAttribute("userBean");
-					//anyone connected from the same room more than one, then it is not allowed.
-					//one from the center hospital and the other from the local hospital in each room session.
-					if(ubAttr.isIs_owner() && ub.isIs_owner())
-					{	
-						log.info("There exists already one controller so that you can't be another.");
-						rejectClient("There exists already one controller so that you can't be another.");
-						break;
-					}
-					else if(ubAttr.getIp_address().equals(ub.getIp_address()))
+					log.info("Now the room, "+ub.getRoomName()+" is full with the maximum, "+Utils.MAX_CLIENTS+" connections.");
+					this.rejectClient("Now the room, "+ub.getRoomName()+" is full with the maximum, "+Utils.MAX_CLIENTS+" connections.");			
+				}
+				else
+				{
+					Iterator<IClient> client=clients.iterator();
+					for(int i=1; client.hasNext(); i++)
 					{
-						log.info("Only one connection is allowed with the ip, '"+ub.getIp_address()+"'.");
-						rejectClient("Only one connection is allowed with the ip, '"+ub.getIp_address()+"'.");						
-						break;
+						IClient c=client.next();
+						UserBean ubAttr=(UserBean)c.getAttribute("userBean");
+						//No duplicated user is allowed from the same room.
+						log.info("["+i+"]. roomId/userId="+ubAttr.getRoomId()+"/"+ubAttr.getUserId()+", new client roomId/userId="+ub.getRoomId()+"/"+ub.getUserId());
+						if(ubAttr.getUserId().equals(ub.getUserId()))
+						{	
+							log.info("There exists the same user in the room, "+ub.getRoomName()+".");
+							rejectClient("There exists the same user in the room, "+ub.getRoomName()+".");
+							break;
+						}
 					}
 				}
+				
+				conn.getClient().setAttribute("userBean", ub);
 			}
-			
-			conn.getClient().setAttribute("userBean", ub);
+
+
 		}
 		catch(Exception e)
 		{
@@ -225,14 +221,16 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 	}
 	@Override public void roomDisconnect(IConnection conn)
 	{
-		log.info("-------------------------roomDisconnect("+conn.getClient().getId()+") is called-----------------------------------");
+		log.info("TTT.roomDisconnect("+conn.getClient().getId()+") is called to disconnect and its attributes in MainApplication.java");
 		try
 		{
+			//This disconnection will presumably include conn.getClient().removeAttributes()
 			super.roomDisconnect(conn);
 		}
 		catch(Exception e)
 		{
 			log.severe(e.toString()+" with conn.getClient().getId()="+conn.getClient().getId()+" in roomDisconnect() of MainApplication.java");
+			//LET THE USER KNOW THE DISCONNECT OF A ROOM MEMBER HAS BEEN FAILED
 		}
 	}
 	

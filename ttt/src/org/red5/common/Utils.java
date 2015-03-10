@@ -57,7 +57,7 @@ public class Utils
 		public static List<String> nameList=new ArrayList<String>();	
 		
 		//********** tttServer ***************************
-		public static int MAX_CLIENTS=0;//will be assigned from max_clients_accessible, general_informatio.properties
+		public static int MAX_CLIENTS=10;//will be assigned from max_clients_accessible, general_informatio.properties
 
 		public static String getFormattedDate(Date date)
 		{

@@ -2,6 +2,12 @@
 <s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" xmlns:skins="com.sickkids.caliper.skins.*">
+	<fx:Script>
+		<![CDATA[
+			import com.sickkids.caliper.service.INetConnectionService;
+			[Bindable][Inject] public var _netConnectionService:INetConnectionService;
+		]]>
+	</fx:Script>
 	<s:layout>
 		<s:VerticalLayout paddingBottom="0" paddingLeft="0" paddingRight="0" paddingTop="0"/>
 	</s:layout>
@@ -22,6 +28,8 @@
 	<mx:HBox width="100%" paddingLeft="3" paddingTop="2" paddingRight="0" visible="true" includeInLayout="true" verticalAlign="middle" verticalCenter="0">
 		<!-- later see ReviewPanel.mxml to use upIcon and downIcon-->
 		<s:Image id="upIcon" source="@Embed(source='assets/images/controls/fullscreen25.png')" buttonMode="true"/>
+		<s:Image source="@Embed(source='assets/images/controls/connected25.png')" visible="{_netConnectionService.netConnection().connected}" includeInLayout="{_netConnectionService.netConnection().connected}"/>
+		<s:Image source="@Embed(source='assets/images/controls/disconnected25.png')" visible="{_netConnectionService.netConnection().connected==true}" includeInLayout="{_netConnectionService.netConnection().connected==true}"/>
 		<s:Spacer width="100%"/>
 		<s:Image id="settings" source="@Embed(source='assets/images/controls/setting25.png')" buttonMode="true"/>
 		<!-- Once it is switched then make the control off (eg: fullscreen, setttings, etc until it receives on again from the server -->

@@ -3,35 +3,47 @@ package org.red5.dao;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import com.sickkids.caliper.common.ParticipantType;
+
 public class UserBean implements Serializable
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7015953661855061123L;
-	private String user_id="";
-	private String hospital_id="";
-	private String hospital_name="";
-	private String room_id="";
-	private String room_name="";
-	private String first_name="";
-	private String last_name="";
-	private String email="";
-	private boolean is_owner=false;
-	private String owner_password="";
-	private Timestamp creation_date=null;
-	private boolean is_active=false;
-	private boolean is_login=false;
-	private int login_level = 2; //2: Dr, 3: RN, 4: User
-	private String ip_address = "0.0.0.0";
 	
-	public Timestamp getCreation_date()
+	
+	private int roomId=-1;
+	private String roomName="";
+	private String userId="";
+	private String email="";
+	private String hospitalId="";
+	private String hospitalName="";
+	private ParticipantType participantType=ParticipantType.NONE;	
+	private String ipAddress = "0.0.0.0";
+	public int getRoomId()
 	{
-		return creation_date;
+		return roomId;
 	}
-	public void setCreation_date(Timestamp creation_date)
+	public void setRoomId(int roomId)
 	{
-		this.creation_date = creation_date;
+		this.roomId = roomId;
+	}
+	public String getRoomName()
+	{
+		return roomName;
+	}
+	public void setRoomName(String roomName)
+	{
+		this.roomName = roomName;
+	}
+	public String getUserId()
+	{
+		return userId;
+	}
+	public void setUserId(String userId)
+	{
+		this.userId = userId;
 	}
 	public String getEmail()
 	{
@@ -41,108 +53,65 @@ public class UserBean implements Serializable
 	{
 		this.email = email;
 	}
-	public String getFirst_name()
+	public String getHospitalId()
 	{
-		return first_name;
+		return hospitalId;
 	}
-	public void setFirst_name(String first_name)
+	public void setHospitalId(String hospitalId)
 	{
-		this.first_name = first_name;
+		this.hospitalId = hospitalId;
 	}
-	public boolean isIs_active()
+	public String getHospitalName()
 	{
-		return is_active;
+		return hospitalName;
 	}
-	public void setIs_active(boolean is_active)
+	public void setHospitalName(String hospitalName)
 	{
-		this.is_active = is_active;
+		this.hospitalName = hospitalName;
 	}
-	public boolean isIs_login()
+	public ParticipantType getParticipantType()
 	{
-		return is_login;
+		return participantType;
 	}
-	public void setIs_login(boolean is_login)
+	public void setParticipantType(ParticipantType participantType)
 	{
-		this.is_login = is_login;
+		this.participantType = participantType;
 	}
-	public boolean isIs_owner()
+	public void setParticipantType(String participantType)
 	{
-		return is_owner;
+		if(participantType.equals("LECTURER")) this.participantType=ParticipantType.LECTURER;
+		else if(participantType.equals("TEACHING_ASSISTANT")) this.participantType=ParticipantType.TEACHING_ASSISTANT;
+		else if(participantType.equals("INTERACTIVE_VIEWER1")) this.participantType=ParticipantType.INTERACTIVE_VIEWER1;
+		else if(participantType.equals("INTERACTIVE_VIEWER2")) this.participantType=ParticipantType.INTERACTIVE_VIEWER2;
+		else if(participantType.equals("ONEWAY_VIEWER1")) this.participantType=ParticipantType.ONEWAY_VIEWER1;
+		else if(participantType.equals("ONEWAY_VIEWER2")) this.participantType=ParticipantType.ONEWAY_VIEWER2;
+		else if(participantType.equals("ONEWAY_VIEWER3")) this.participantType=ParticipantType.ONEWAY_VIEWER3;
+		else if(participantType.equals("ONEWAY_VIEWER4")) this.participantType=ParticipantType.ONEWAY_VIEWER4;
+		else if(participantType.equals("ONEWAY_VIEWER5")) this.participantType=ParticipantType.ONEWAY_VIEWER5;
+		else if(participantType.equals("ONEWAY_VIEWER6")) this.participantType=ParticipantType.ONEWAY_VIEWER6;
+		else this.participantType=ParticipantType.NONE;
 	}
-	public void setIs_owner(boolean is_owner)
+	public String getIpAddress()
 	{
-		this.is_owner = is_owner;
+		return ipAddress;
 	}
-	public String getLast_name()
+	public void setIpAddress(String ipAddress)
 	{
-		return last_name;
+		this.ipAddress = ipAddress;
 	}
-	public void setLast_name(String last_name)
+	public String toString()
 	{
-		this.last_name = last_name;
+		return
+		"roomId="+roomId+"\n"+
+		"roomName="+roomName+"\n"+
+		"userId="+userId+"\n"+
+		"email="+email+"\n"+
+		"hospitalId="+hospitalId+"\n"+
+		"hospitalName="+hospitalName+"\n"+
+		"participantType="+participantType+"\n"+
+		"clientIp="+ipAddress+"\n";
+		
 	}
-	public String getOwner_password()
-	{
-		return owner_password;
-	}
-	public void setOwner_password(String owner_password)
-	{
-		this.owner_password = owner_password;
-	}
-	public String getUser_id()
-	{
-		return user_id;
-	}
-	public void setUser_id(String user_id)
-	{
-		this.user_id = user_id;
-	}
-	public String getRoom_id()
-	{
-		return room_id;
-	}
-	public void setRoom_id(String room_id)
-	{
-		this.room_id = room_id;
-	}
-	public String getRoom_name()
-	{
-		return room_name;
-	}
-	public void setRoom_name(String room_name)
-	{
-		this.room_name = room_name;
-	}
-	public String getHospital_id()
-	{
-		return hospital_id;
-	}
-	public void setHospital_id(String hospital_id)
-	{
-		this.hospital_id = hospital_id;
-	}
-	public String getHospital_name()
-	{
-		return hospital_name;
-	}
-	public void setHospital_name(String hospital_name)
-	{
-		this.hospital_name = hospital_name;
-	}
-	public int getLogin_level()
-	{
-		return login_level;
-	}
-	public void setLogin_level(int login_level)
-	{
-		this.login_level = login_level;
-	}
-	public String getIp_address()
-	{
-		return ip_address;
-	}
-	public void setIp_address(String ip_address)
-	{
-		this.ip_address = ip_address;
-	}
+	
+	
 }

@@ -57,3 +57,77 @@ flex stage into flv
 https://www.google.ca/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=flex+stage+into+flv
   	 	
 There is an alchemy lib that generates FLV with bitmapdata. This tutorial explains it better zeropointnine.com/blog/updated-flv-encoder-alchem –  Lelis718 Jan 6 '12 at 13:45
+
+#NetStream
+Also see the following events in the NetStream class, which are properties of the client object: onCuePoint, onDRMContentData, onImageData, onMetaData, onPlayStatus, onTextData, onXMPData
+
+#REF: The following is in http://stackoverflow.com/questions/24873152/red5-cannot-call-red5-method-function-from-flash-client-air-for-ios
+private function setUpRed5Connection(){
+        nc = new NetConnection();
+        nc.client = this;       
+        nc.connect("rtmp://192.168.1.4/RED5Hugt");
+        nc.addEventListener(NetStatusEvent.NET_STATUS,getStream);
+    }
+
+    public function onBWCheck(...rest):Number
+    { 
+        return 0; 
+    } 
+
+    public function onBWDone(...rest):void
+    { 
+        var p_bw:Number; 
+        if (rest.length > 0){
+            p_bw = rest[0]; 
+        }
+        trace("bandwidth = " + p_bw + " Kbps."); 
+    }  
+
+    function getStream(e:NetStatusEvent):void
+    {
+
+        //connectCamera();
+        nsIn = new NetStream(nc); 
+        nsOut = new NetStream(nc); 
+
+        //vid.attachNetStream(nsIn);
+        //nsIn.play("tester");
+
+        //nsOut=new NetStream(nc);
+        //netOut.attachAudio(mic);
+        //nsOut.attachCamera(cam);
+        //nsOut.publish("tester", "live");
+
+
+    }
+
+    public function performSend(country:String, uid:String):void{
+
+        trace("cdcdcdcdcdcdcdcdcdcdc");
+
+        var nr:Responder = new Responder(netResponderHandler);
+        nc.call("perform", nr, uid, country);
+
+    }
+
+    function netResponderHandler(serverResult:Object)
+    {
+        trace("The result is " + serverResult);
+    }
+    
+    RED5 server:
+
+public long perform(Object[] params){
+
+    System.out.println((String)params[0] + " " + (String) params[1]);
+
+
+
+    User u = this.getCountryPerformer(country).getUser(uid);
+    long yt = u.ticket;
+
+
+
+    return yt;
+
+}
