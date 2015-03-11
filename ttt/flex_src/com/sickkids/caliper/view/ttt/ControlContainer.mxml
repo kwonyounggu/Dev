@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" xmlns:skins="com.sickkids.caliper.skins.*">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" xmlns:skins="com.sickkids.caliper.skins.*" creationComplete="bordercontainerCreationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
-			import com.sickkids.caliper.service.INetConnectionService;
-			[Bindable][Inject] public var _netConnectionService:INetConnectionService;
+			import mx.events.FlexEvent;
+			
+			import flex.util.ui.throbber.SimpleThrobber;
+			
+			public const simpleThrobber:SimpleThrobber = new SimpleThrobber(24, 24, 2);
+			
+			
+			protected function bordercontainerCreationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				simpleThrobber.hideWhenStopped=true;
+			}
+			
 		]]>
 	</fx:Script>
 	<s:layout>
@@ -28,8 +39,20 @@
 	<mx:HBox width="100%" paddingLeft="3" paddingTop="2" paddingRight="0" visible="true" includeInLayout="true" verticalAlign="middle" verticalCenter="0">
 		<!-- later see ReviewPanel.mxml to use upIcon and downIcon-->
 		<s:Image id="upIcon" source="@Embed(source='assets/images/controls/fullscreen25.png')" buttonMode="true"/>
-		<s:Image source="@Embed(source='assets/images/controls/connected25.png')" visible="{_netConnectionService.netConnection().connected}" includeInLayout="{_netConnectionService.netConnection().connected}"/>
-		<s:Image source="@Embed(source='assets/images/controls/disconnected25.png')" visible="{_netConnectionService.netConnection().connected==true}" includeInLayout="{_netConnectionService.netConnection().connected==true}"/>
+		<mx:UIComponent id="connectingId"
+						height="25"
+						width="25"
+						horizontalCenter="0"
+						verticalCenter="0" visible="false" includeInLayout="false">
+			<mx:initialize>
+				<![CDATA[
+				connectingId.addChild(simpleThrobber);
+				]]>
+			</mx:initialize>
+		</mx:UIComponent>
+
+		<s:Image id="connectedId" source="@Embed(source='assets/images/controls/connected25.png')" visible="false" includeInLayout="false" buttonMode="true"/>
+		<s:Image id="disconnectedId" source="@Embed(source='assets/images/controls/disconnected25.png')" visible="false" includeInLayout="false" buttonMode="true"/>
 		<s:Spacer width="100%"/>
 		<s:Image id="settings" source="@Embed(source='assets/images/controls/setting25.png')" buttonMode="true"/>
 		<!-- Once it is switched then make the control off (eg: fullscreen, setttings, etc until it receives on again from the server -->

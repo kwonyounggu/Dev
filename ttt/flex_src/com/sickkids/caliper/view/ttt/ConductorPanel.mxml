@@ -7,11 +7,11 @@
 	</s:layout>
 	<fx:Script>
 		<![CDATA[
-		
+		public var position:String="";//DR (saying left side), RN (saying right side)
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:VideoDisplay id="localVideoDisplay" />  
+	<s:VideoDisplay id="localVideoDisplay" width="25%" height="25%"/>  
 </s:Panel>

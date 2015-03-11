@@ -1,6 +1,7 @@
 package com.sickkids.caliper.service
 {
 	import com.sickkids.caliper.components.AppCommon;
+	import com.sickkids.caliper.events.TttNetConnectionEvent;
 	import com.sickkids.caliper.model.TttModel;
 	import com.sickkids.caliper.vo.UserInfoBean;
 	
@@ -22,6 +23,7 @@ package com.sickkids.caliper.service
 		
 		private var _netConnection:NetConnection=null;
 		private var _url:String="rtmp://localhost/ttt";
+		
 		public function NetConnectionService(dest:String="carmProxy", endpoint:String="{FlexGlobals.topLevelApplication._host}/carm/messagebroker/amf")
 		{
 			trace("INFO: NetConnectionService() is called in NetConnectionService.as, endpoint="+endpoint);
@@ -48,9 +50,7 @@ package com.sickkids.caliper.service
 			{	
 				_netConnection.close();//send disconnect event for all open connection(s)
 			}
-			//var strUrl:String=url+"/"+room.room_id;
-			//nc.connect(strUrl, user.room_id, user.user_id, user.first_name, user.email);
-			//_netConnection.connect(_url+"/"+userInfo.courseNumber, user.room_id, user.user_id, user.email, user.is_owner, model.bw.kbitDown, model.bw.kbitUp, model.bw.latencyDown, model.bw.latencyUp);
+			//dispatch(new TttNetConnectionEvent(TttNetConnectionEvent.ROOM_CONNECT_EVENT));//display the spin image
 			_netConnection.connect(_url+"/"+userInfo.courseNumber,
 									userInfo.courseNumber, //roomNumber
 									userInfo.courseName, //roomName
@@ -59,10 +59,6 @@ package com.sickkids.caliper.service
 									userInfo.hospitalId,
 									userInfo.hopitalName,
 									userInfo.participantType);
-			//trace("INFO:: *** BEGIN roomConnection called in NetConnectionDelegate.as ***");
-			//trace("INFO:: *** objectEncoding="+nc.objectEncoding);
-			//trace("INFO:: *** strUrl="+strUrl);	
-			//trace("INFO:: *** END roomConnection called in NetConnectionDelegate.as ***");
 		} 
 		public function netConnection():NetConnection
 		{
@@ -182,6 +178,7 @@ package com.sickkids.caliper.service
 		public function close():void
 		{
 			if(_netConnection.connected) _netConnection.close();
+			dispatch(new TttNetConnectionEvent(TttNetConnectionEvent.ROOM_DISCONNECTED_EVENT));
 		}	
 		/*****************************************************************************************************************
 		 *  for APP remote shared object
@@ -215,27 +212,39 @@ package com.sickkids.caliper.service
 		{
 				switch (e.info.code) 
 				{
-					case "NetConnection.Connect.Success" :
-						  trace("INFO: Connection to remote server is successful.");
+					case "NetConnection.Connect.AppShutdown":
+							trace("INFO: The server-side application is shutting down.");//error
+							break;
+					case "NetConnection.Connect.Success" ://status
+						  trace("INFO: The connection attempt succeeded.");
+						  dispatch(new TttNetConnectionEvent(TttNetConnectionEvent.ROOM_CONNECTED_EVENT));//display the connected image
 						  break;
-					case "NetConnection.Connect.Closed" :/*** Handle something when app server is shutting down***/
+					case "NetConnection.Connect.Closed" :
+						//Use "NetConnection.Connect.Closed" to implement your NetConnection reconnect logic.
 						//Here is to show that the remote connection/app server is closed, appropriate action needs to be taken
 						//if it is closed from server, then let the user know using Alert.show("please try again to connect to the server since it may be due to a hight network traffic at the current moment.");					
-						trace("INFO: Connection to remote server is closed for the ROOM.");
-						trace("INFO: Remote connection closed.");						
+						trace("INFO: The connection was closed successfully.");//status	
+						dispatch(new TttNetConnectionEvent(TttNetConnectionEvent.ROOM_DISCONNECTED_EVENT));//display the disconnected image
 						break;
 					case "NetConnection.Connect.Failed" :
-						trace("INFO: Connection to remote server is failed.");
+						trace("INFO: The connection attempt failed.");//error
+						dispatch(new TttNetConnectionEvent(TttNetConnectionEvent.ROOM_DISCONNECTED_EVENT));
 						break;
-					case "NetConnection.Connect.Rejected" :
-						//This will be called anyone who tried to connect using the preroommed person id.
-						trace("INFO: Remote server rejected a connection request.");
+					case "NetConnection.Connect.Rejected" ://error
+						//The connection attempt did not have permission to access the application.
+						trace("INFO: Remote server rejected a room connection request.");
 						break;
-					case "NetConnection.Connect.InvalidApp":
-						trace("INFO: Remote application doesn't exist.");
+					case "NetConnection.Connect.InvalidApp": //error
+						trace("INFO: The application name specified in the call to NetConnection.connect() is invalid.");
 						break;
-					case "NetConnection.Connect.AppShutdown":
-						trace("INFO: Remote server is shutdown.");
+					case "NetConnection.Connect.IdleTimeout": //status
+						//On Flash Media Server, <AutoCloseIdleClients> is disabled by default. When enabled, the default timeout value is 3600 seconds (1 hour). 
+						//For more information, see Close idle connections.
+						trace("INFO: The server disconnected the client because the client was idle longer than the configured value for <MaxIdleTime>.");
+						break; 
+					case "NetConnection.Connect.NetworkChange": //status
+						//Use this event to check for a network interface change. Don't use this event to implement your NetConnection reconnect logic. 
+						trace("INFO: Flash Player has detected a network change, for example, a dropped wireless connection, a successful wireless connection,or a network cable loss.");
 						break; 
 					
 					//************* NetStream ************/

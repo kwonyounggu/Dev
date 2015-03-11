@@ -5,6 +5,8 @@ package com.sickkids.caliper.events
 	public class TttNetConnectionEvent extends Event
 	{
 		public static const ROOM_CONNECT_EVENT:String="ROOM_CONNECT_EVENT";
+		public static const ROOM_CONNECTED_EVENT:String="ROOM_CONNECTED_EVENT";
+		public static const ROOM_DISCONNECTED_EVENT:String="ROOM_DISCONNECTED_EVENT";
 		
 		
 		private var _arg1:Object=null;

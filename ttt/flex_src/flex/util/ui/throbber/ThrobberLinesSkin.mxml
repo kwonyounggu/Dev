@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
+	alpha.disabled="0.5">
+	<fx:Metadata>
+		[HostComponent("flex.util.ui.throbber.Throbber")]
+	</fx:Metadata>
+
+
+	<fx:Script fb:purpose="styling">
+		<![CDATA[
+			public static const COLOR_NORMAL:uint = 0xCCCCCC; //D6D6D6;
+
+			private var normalColor:uint = COLOR_NORMAL;
+
+			private var highlightColors:Array = [0x626262, 0x717171, 0x7F7F7F, 0xAFAFAF];
+
+			private const highlightColorsCount:int = 4;
+
+			override protected function updateDisplayList(w:Number, h:Number):void {
+				shadow.alpha = (hostComponent.dropShadowVisible ? 0.4 : 0);
+				if (isNaN(getStyle("backgroundColor"))) {
+					background.visible = false;
+				} else {
+					background.visible = true;
+					bgFill.color = getStyle("backgroundColor");
+					bgFill.alpha = getStyle("backgroundAlpha");
+				}
+
+				var lineThickness:int = Math.max(1, int(getStyle("lineThickness")));
+				var lineAlpha:Number = getStyle("lineAlpha");
+				if (isNaN(lineAlpha)) {
+					lineAlpha = 1;
+				}
+
+				normalColor = getStyle("color");
+				var colorsArray:* = getStyle("highlightColors");
+				if (colorsArray is Array) {
+					highlightColors = (colorsArray as Array).slice();
+				} else {
+					var highlightColor:Number = getStyle("highlightColor");
+					highlightColors = [];
+					if (!isNaN(highlightColor)) {
+						highlightColors[0] = highlightColor;
+					}
+				}
+				for (var i:int = highlightColors.length; i < highlightColorsCount; i++) {
+					highlightColors[i] = normalColor;
+				}
+
+				drawLines(w, h, lineThickness, lineAlpha);
+
+				super.updateDisplayList(w, h);
+			}
+
+			protected function drawLines(w:Number, h:Number, thickness:int = 5, lineAlpha:Number = 1):void {
+				var g:Graphics = throbber.graphics;
+				g.clear();
+				var midX:int = Math.round(w / 2);
+				var midY:int = Math.round(w / 2);
+				var radius:int = Math.min(midX, midY);
+
+				if ((radius > 0) && (thickness > 0) && (lineAlpha > 0)) {
+					var angle:Number = 0;
+					const maxAngle:Number = (2 * Math.PI);
+					var incr:Number = maxAngle / hostComponent.maxSteps;
+					var count:int = 0;
+					while (angle < maxAngle) {
+						var color:uint = getColor(count);
+						g.lineStyle(thickness, color, lineAlpha, true, null, CapsStyle.ROUND);
+
+						// figure out the position around the circle
+						var x1:Number = midX + (radius * Math.sin(angle));
+						var y1:Number = midY - (radius * Math.cos(angle));
+						// make a hole in the center, make each line segment be 40% of the radius
+						var dr:int = (3 * radius / 5);
+						var x2:Number = midX + (dr * Math.sin(angle));
+						var y2:Number = midY - (dr * Math.cos(angle));
+						g.moveTo(x1, y1);
+						g.lineTo(x2, y2);
+
+						angle += incr;
+						count++;
+					}
+				}
+			}
+
+			private function getColor(step:int):uint {
+				var color:uint = normalColor;
+				if (hostComponent.currentStep >= 0) {
+					var diff:int = (hostComponent.currentStep - step);
+					if (diff < 0) {
+						diff += hostComponent.maxSteps;
+					}
+					if (diff == 0) {
+						color = highlightColors[0];
+					} else if (diff == 1) {
+						color = highlightColors[1];
+					} else if (diff == 2) {
+						color = highlightColors[2];
+					} else if (diff == 3) {
+						color = highlightColors[3];
+					} else {
+						color = normalColor;
+					}
+				}
+				return color;
+			}
+		]]>
+	</fx:Script>
+
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="disabled"/>
+	</s:states>
+
+	<!--- Defines the background. -->
+	<s:Rect id="background"
+		bottom="0"
+		left="0"
+		right="0"
+		top="0">
+		<s:fill>
+			<s:SolidColor id="bgFill"
+				color="#E6E6E6"/>
+		</s:fill>
+	</s:Rect>
+
+	<mx:UIComponent id="throbber"
+		bottom="2"
+		left="2"
+		right="2"
+		top="2">
+		<mx:filters>
+			<s:DropShadowFilter id="shadow"
+				color="#000000"
+				alpha="0.4"
+				angle="90"
+				distance="2"/>
+		</mx:filters>
+	</mx:UIComponent>
+
+</s:Skin>

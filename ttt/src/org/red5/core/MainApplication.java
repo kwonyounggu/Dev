@@ -153,6 +153,7 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 	{
 		boolean bAccepted=true;
 		log.info("TTT.roomConnect(clientID: "+conn.getClient().getId()+") is called from "+conn.getRemoteAddress()+" in MainApplication.java");
+		
 		try
 		{
 			//1. check the number of parameters (null or length==0)

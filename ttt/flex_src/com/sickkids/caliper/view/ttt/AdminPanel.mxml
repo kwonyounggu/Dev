@@ -21,6 +21,7 @@
 			<s:TextArea id="logDisplay" height="100%" width="100%">
 				
 			</s:TextArea>
+			
 		</mx:VBox>
 		<mx:VBox label="Camera/Mic Settings" height="100%" width="100%">
 			

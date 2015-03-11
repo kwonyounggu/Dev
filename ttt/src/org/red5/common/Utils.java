@@ -194,4 +194,15 @@ public class Utils
 	            e.printStackTrace();
 	        }
 	    }
+		public static void delay(int sec)
+		{
+			try 
+			{
+			    Thread.sleep(sec*1000);
+			} 
+			catch(InterruptedException ex) 
+			{
+			    Thread.currentThread().interrupt();
+			}
+		}
 }
