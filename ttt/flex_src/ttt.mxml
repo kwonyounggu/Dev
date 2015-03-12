@@ -30,6 +30,10 @@
 					adminPanel.visible=adminPanel.includeInLayout=false;
 				}	
 			}
+			public function log(s:String):void
+			{
+				adminPanel.log(s);
+			}
 		]]>
 	</fx:Script>
 	<fx:Declarations>

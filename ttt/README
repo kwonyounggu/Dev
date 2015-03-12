@@ -189,3 +189,42 @@ class CustomClient {
     }
 }
 #Adobe Spinner in http://flexdevtips.blogspot.ca/2011/05/simple-animating-preloader-and.html
+#ConerRadious for VideoDisplay in https://forums.adobe.com/thread/4370?tstart=0
+The approach that leo said above is the way to go... here's the code for the same, using a UIComponent Mask 
+
+<?xml version="1.0"?> 
+<mx:Application xmlns:mx=" http://www.adobe.com/2006/mxml" creationComplete="initMask()"> 
+<mx:Script> 
+<![CDATA[ 
+import mx.core.UIComponent; 
+import mx.events.VideoEvent; 
+import flash.media.Camera; 
+private var cam  
+private var square:UIComponent; 
+public function initCamera():void { 
+cam = Camera.getCamera(); 
+if (cam) { 
+cam.setQuality(65535,80); 
+cam.setMode(380,280,25,true); 
+myVD.attachCamera(cam); 
+} 
+else { 
+trace("No camera Found "); 
+} 
+} 
+private function initMask():void { 
+square = new UIComponent(); 
+square.graphics.beginFill(0x000000); 
+square.graphics.drawRoundRect(0, 0, 320, 240,25); 
+square.x = 0; 
+square.y = 0; 
+myCanvas.addChild(square); 
+myVD.mask = square; 
+} 
+]]> 
+</mx:Script> 
+<mx:Canvas width="400" height="300" id="myCanvas"> 
+<mx:VideoDisplay width="380" height="280" id="myVD"/> 
+</mx:Canvas> 
+<mx:Button label="Start Camera" click="initCamera()" /> 
+</mx:Application>

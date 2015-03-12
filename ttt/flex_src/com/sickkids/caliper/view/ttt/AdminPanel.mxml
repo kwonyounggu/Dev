@@ -9,6 +9,7 @@
 			
 		public function log(s:String):void
 		{
+			//the s goes to the server so that it will be shared to conductors
 			logDisplay.text=logDisplay.text+s+"\n";
 		}
 		]]>
