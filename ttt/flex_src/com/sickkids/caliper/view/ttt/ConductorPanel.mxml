@@ -10,7 +10,9 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.events.FlexEvent;
-		public var position:String="";//DR (saying left side), RN (saying right side)
+		    public var myObject:String="";//DR (saying left side), RN (saying right side)
+			public var netStream1:NetStream;
+			public var netStream2:NetStream;
 			
 			protected function panelCreationCompleteHandler(event:FlexEvent):void
 			{
@@ -18,18 +20,18 @@
 				trace("INFO: width="+this.width+", height="+this.height+" in panelCreationCompleteHandler() of ConductorPanel.mxml");
 			}
 			
-			protected function localVideoDisplayMouseHandler(event:MouseEvent):void
+			protected function localWebcamDisplayMouseHandler(event:MouseEvent):void
 			{
-				trace("INFO: event.type="+event.type+" in localVideoDisplayMouseHandler() of ConductorPanel.mxml");
+				trace("INFO: event.type="+event.type+" in localWebcamDisplayMouseHandler() of ConductorPanel.mxml");
 				if(event.type==MouseEvent.MOUSE_OVER)
 				{
-					localVideoDisplay.percentWidth=100;
-					localVideoDisplay.percentHeight=98;
+					localWebcamDisplay.percentWidth=100;
+					localWebcamDisplay.percentHeight=98;
 				}
 				else if(event.type==MouseEvent.MOUSE_OUT)
 				{
-					localVideoDisplay.percentWidth=25;
-					localVideoDisplay.percentHeight=25;
+					localWebcamDisplay.percentWidth=25;
+					localWebcamDisplay.percentHeight=25;
 				}
 			}
 			
@@ -38,10 +40,10 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:BorderContainer id="topBorderContainer" width="100%" height="56%" borderWeight="0" borderAlpha="0" backgroundColor="0xffffff">
-		
-		<s:VideoDisplay id="localVideoDisplay" width="25%" height="24%" bottom="3" right="0" mouseOver="localVideoDisplayMouseHandler(event)" mouseOut="localVideoDisplayMouseHandler(event)">
-			
+	<s:BorderContainer id="topBorderContainer" width="100%" height="56%" borderAlpha="0" backgroundColor="0xff1234">
+		<s:VideoDisplay id="remoteWebcamDisplay" width="100%" height="100%" top="0" left="0">			
+		</s:VideoDisplay>
+		<s:VideoDisplay id="localWebcamDisplay" width="25%" height="24%" bottom="3" right="0" mouseOver="localWebcamDisplayMouseHandler(event)" mouseOut="localWebcamDisplayMouseHandler(event)">			
 		</s:VideoDisplay>
 	</s:BorderContainer>
 	<s:BorderContainer id="bottomBorderContainer" width="100%" height="44%" borderWeight="0" borderAlpha="0" >

@@ -12,6 +12,7 @@ package com.sickkids.caliper.view.ttt
 	
 	import mx.controls.Alert;
 	import mx.core.FlexGlobals;
+	import mx.core.UIComponent;
 	import mx.events.FlexEvent;
 	import mx.events.ResizeEvent;
 	import mx.utils.StringUtil;
@@ -26,6 +27,7 @@ package com.sickkids.caliper.view.ttt
 	{
 		[Inject] public var view:ConductorPanel;
 		[Inject] public var model:TttModel;
+		//private var roundedUI:UIComponent=new UIComponent();
 		
 		public function ConductorPanelMediator()
 		{
@@ -34,15 +36,16 @@ package com.sickkids.caliper.view.ttt
 		override public function onRegister():void
 		{
 			trace("INFO: onRegister() is called in ConductorPanelMediator.as");
-			view.localVideoDisplay.addEventListener(ResizeEvent.RESIZE, onVideoDisplayResize);
+			view.localWebcamDisplay.addEventListener(ResizeEvent.RESIZE, onVideoDisplayResize);
 			
 			
 			attachPublishCamera();
-
+			//view.topBorderContainer.rawChildren.addChild(roundedUI);//masking UI
 		}
 		override public function onRemove():void
 		{
 			trace("INFO: onRemove() is called in ConductorPanelMediator.as");
+			//view.topBorderContainer.rawChildren.removeChild(roundedUI);//masking UI
 		}
 		private function attachPublishCamera():void
 		{
@@ -65,9 +68,9 @@ package com.sickkids.caliper.view.ttt
 					dynVideoSource.streamType=StreamType.LIVE;  
 					dynVideoSource.streamItems=videoItems;  
 					
-					view.localVideoDisplay.source=dynVideoSource;
+					view.localWebcamDisplay.source=dynVideoSource;
 					 
-					view.localVideoDisplay.videoObject.attachCamera(model.localCamera);
+					view.localWebcamDisplay.videoObject.attachCamera(model.localCamera);
 					
 					//settings
 					model.localCamera.setQuality(0, 80);//bandwidth, quality
@@ -104,8 +107,8 @@ package com.sickkids.caliper.view.ttt
 					model.localMic.enhancedOptions=options;
 					model.localMic.setLoopBack(true);
 					//set events
-					//mic.addEventListener(ActivityEvent.ACTIVITY, this.onActivityHandlerForMicrophone);
-					//mic.addEventListener(StatusEvent.STATUS, this.micStatus);
+					model.localMic.addEventListener(ActivityEvent.ACTIVITY, onMicrophoneonActivity);
+					model.localMic.addEventListener(StatusEvent.STATUS, onMicrophoneonStatus);
 				}
 				else
 				{
@@ -115,45 +118,47 @@ package com.sickkids.caliper.view.ttt
 			
 			if(model.userInfo.participantType=="LECTURER")
 			{
-				if(view.position=="DR")
+				if(view.myObject=="DR")
 				{
-					
+					//play INTERACTIVE_VIEWER1
+					//publish LECTURER
 				}
-				else if(view.position=="RN")
+				else if(view.myObject=="RN")//instance
 				{
-					
+					//play INTERACTIVE_VIEWER2
+					//publish RN
 				}
 				
 			}
 			else if(model.userInfo.participantType=="TEACHING_ASSISTANT")
 			{
-				if(view.position=="DR")
+				if(view.myObject=="DR")
 				{
 					
 				}
-				else if(view.position=="RN")
+				else if(view.myObject=="RN")
 				{
 					
 				}
 			}
 			else if(model.userInfo.participantType=="INTERACTIVE_VIEWER1")
 			{
-				if(view.position=="DR")
+				if(view.myObject=="DR")
 				{
 					
 				}
-				else if(view.position=="RN")
+				else if(view.myObject=="RN")
 				{
 					
 				}
 			}
 			else if(model.userInfo.participantType=="INTERACTIVE_VIEWER2")
 			{
-				if(view.position=="DR")
+				if(view.myObject=="DR")
 				{
 					
 				}
-				else if(view.position=="RN")
+				else if(view.myObject=="RN")
 				{
 					
 				}
@@ -161,11 +166,11 @@ package com.sickkids.caliper.view.ttt
 			else
 			{
 				//left side then DR, right side then RN
-				if(view.position=="DR")
+				if(view.myObject=="DR")
 				{
 					
 				}
-				else if(view.position=="RN")
+				else if(view.myObject=="RN")
 				{
 					
 				}
@@ -174,6 +179,34 @@ package com.sickkids.caliper.view.ttt
 		private function onVideoDisplayResize(e:ResizeEvent):void
 		{
 			trace("INFO: onVideoDisplayResize() is called in ConductorPanelMediator.as");
+			/*
+			square = new UIComponent(); 
+			square.graphics.beginFill(0x000000); 
+			square.graphics.drawRoundRect(0, 0, 320, 240,25); 
+			square.x = 0; 
+			square.y = 0; 
+			myCanvas.addChild(square); 
+			myVD.mask = square; 
+			
+			
+			var cornerRadius:uint = 20;
+			roundedUI[index].graphics.clear();
+			roundedUI[index].graphics.beginFill(0xFF0000);
+			roundedUI[index].graphics.drawRoundRect(0, 0, evt.currentTarget.width, evt.currentTarget.height, cornerRadius, cornerRadius);
+			//roundedUI[index].graphics.drawRoundRect(41, 0, 100, 100, cornerRadius, cornerRadius);//width=183, 100x100 starting from 41 to make rectangle in the middle
+			roundedUI[index].graphics.endFill();
+			evt.currentTarget.mask = roundedUI[index];
+			*/
+			
+			/*
+			var cornerRadius:uint = 20;
+			roundedUI.graphics.clear();
+			roundedUI.graphics.beginFill(0xFF0000);
+			roundedUI.graphics.drawRoundRect(0, 0, e.currentTarget.width, e.currentTarget.height, cornerRadius, cornerRadius);
+			roundedUI.graphics.endFill();
+			e.currentTarget.mask = roundedUI;
+			*/
+			
 		}
 		private function onCameraStatus(e:StatusEvent):void
 		{
@@ -197,11 +230,42 @@ package com.sickkids.caliper.view.ttt
 		{
 			var str:String = "[{0}] activating:{1}\n";
 			var cam:Camera=e.currentTarget as Camera;
-			FlexGlobals.topLevelApplication.log("Camera name="+cam.name+" "+
-												"activity level="+cam.activityLevel+" "+
-												"index="+cam.index+" "+
-												"BW="+cam.bandwidth+" "+
-												"FPS="+cam.currentFPS+" "+
+			FlexGlobals.topLevelApplication.log("Camera name="+cam.name+"\n"+
+												"activity level="+cam.activityLevel+"\n"+
+												"index="+cam.index+"\n"+
+												"BW="+cam.bandwidth+"\n"+
+												"FPS="+cam.currentFPS+"\n"+
+												StringUtil.substitute(str, e.type, e.activating));
+		}
+		private function onMicrophoneonStatus(evt:StatusEvent):void 
+		{
+			var str:String = "[{0}] code:'{1}', level:'{2}'\n";
+
+			FlexGlobals.topLevelApplication.log(StringUtil.substitute(str, evt.type, evt.code, evt.level));
+			switch (evt.code) 
+			{
+				case "Microphone.Muted":
+					FlexGlobals.topLevelApplication.log("(Microphone.Muted) User denied access to camera in onMicrophoneonStatus(.) of ConductorPanelMediator.as");
+					break;
+				case "Microphone.Unmuted":
+					FlexGlobals.topLevelApplication.log("(Microphone.Unmuted) User allowed access to camera in onMicrophoneonStatus(.) of ConductorPanelMediator.as");
+					break;
+				default:
+					FlexGlobals.topLevelApplication.log("Unkwon status="+evt.code+" in onMicrophoneonStatus(.) of ConductorPanelMediator.as");
+					break;
+			}
+		}
+		private function onMicrophoneonActivity(e:ActivityEvent):void
+		{
+			//By ActivityLevel, Activating and so on, you can activate recording
+			var str:String = "[{0}] activating:{1}\n";
+			var mic:Microphone=e.currentTarget as Microphone;
+			FlexGlobals.topLevelApplication.log("Microphone name="+mic.name+
+												"activity level="+mic.activityLevel+"\n"+
+												"codec="+mic.codec+"\n"+
+												"index="+mic.index+"\n"+
+												"gain="+mic.gain+"\n"+
+												"rate="+mic.rate+"\n"+
 												StringUtil.substitute(str, e.type, e.activating));
 		}
 	}

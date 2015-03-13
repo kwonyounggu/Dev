@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"  width="880" height="620"
+			    xmlns:view="com.webmonster.app.view.*"
+			    xmlns:common="com.webmonster.app.common.*"
+			    showCloseButton="true"
+			    creationComplete="init(event)"
+			    close="titleWindow_close(event)"			   
+			    title="{lblTitle.text}"
+			    layout="absolute"
+			    > <!--paddingLeft="12" paddingTop="32" paddingRight="13" paddingBottom="6" -->
+
+	<mx:Script>
+		<![CDATA[
+			import com.webmonster.app.model.SoCamera;
+			import com.adobe.html.Strike;
+			import com.webmonster.app.events.JoinRoomEvent;
+			import mx.events.PropertyChangeEvent;		
+			import mx.collections.ArrayCollection;
+			import mx.events.CloseEvent;
+			import mx.core.Container;
+			import com.webmonster.app.events.RMIEvent;
+			import com.webmonster.app.vo.UserBean;
+			import com.webmonster.app.vo.RoomBean;
+			import mx.managers.PopUpManager;
+			import com.webmonster.app.model.AppModel;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.webmonster.app.control.AppController;
+			import mx.binding.utils.ChangeWatcher;
+			import com.webmonster.app.model.MyCamera;
+			import com.webmonster.app.common.LSOUserPreference;
+			import mx.managers.CursorManager;
+			
+			[Bindable]
+			private var model : AppModel = AppModel.getInstance();
+			
+			[Bindable]
+			private var isChange:Boolean=false;
+			private var ub:UserBean=null;
+			private var timer:Timer;
+			
+			private function init(e:Event):void
+			{
+				PopUpManager.centerPopUp(this);
+				setValues();				
+			}
+			private function setValues():void
+			{
+				sldrWidth.minimum=1;
+				sldrWidth.maximum=640;
+				//=>sldrWidth.value=model.currentCamera.width;
+				sldrWidth.snapInterval=1;
+				sldrWidth.tickInterval=50;
+				sldrWidth.labels=new Array();
+				sldrWidth.labels[0]="1";
+				sldrWidth.labels[1]=sldrWidth.maximum.toString();				
+				stpWidth.minimum=sldrWidth.minimum;
+				stpWidth.maximum=sldrWidth.maximum;
+				
+				sldrHeight.minimum=1;
+				sldrHeight.maximum=480;
+				//=>sldrHeight.value=model.currentCamera.height;
+				sldrHeight.snapInterval=1;
+				sldrHeight.tickInterval=40;
+				sldrHeight.labels=new Array();
+				sldrHeight.labels[0]="1";
+				sldrHeight.labels[1]=sldrHeight.maximum.toString();				
+				stpHeight.minimum=sldrHeight.minimum;
+				stpHeight.maximum=sldrHeight.maximum;
+				
+				sldrFps.minimum=1;
+				sldrFps.maximum=30;
+				//=>sldrFps.value=model.currentCamera.currentFPS;
+				sldrFps.snapInterval=1;
+				sldrFps.tickInterval=2;
+				sldrFps.labels=new Array();
+				sldrFps.labels[0]="1";
+				sldrFps.labels[1]=sldrFps.maximum.toString();				
+				stpFps.minimum=sldrFps.minimum;
+				stpFps.maximum=sldrFps.maximum;
+								
+				sldrKeyFrame.minimum=1;
+				sldrKeyFrame.maximum=60;
+				//=>sldrKeyFrame.value=model.currentCamera.keyFrameInterval;
+				sldrKeyFrame.snapInterval=1;
+				sldrKeyFrame.tickInterval=5;
+				sldrKeyFrame.labels=new Array();
+				sldrKeyFrame.labels[0]="1";
+				sldrKeyFrame.labels[1]=sldrKeyFrame.maximum.toString();				
+				stpKeyFrame.minimum=sldrKeyFrame.minimum;
+				stpKeyFrame.maximum=sldrKeyFrame.maximum;
+				stpKeyFrame.stepSize=sldrKeyFrame.snapInterval;
+				
+				sldrBandwidth.minimum=0;
+				sldrBandwidth.maximum=288;
+				//=>sldrBandwidth.value=Math.round(model.currentCamera.bandwidth/1000);
+				sldrBandwidth.snapInterval=1;
+				sldrBandwidth.tickInterval=30;
+				sldrBandwidth.labels=new Array();
+				sldrBandwidth.labels[0]="0";
+				sldrBandwidth.labels[1]=sldrBandwidth.maximum.toString();				
+				
+				
+				sldrFrameQly.minimum=1;
+				sldrFrameQly.maximum=100;
+				//=>sldrFrameQly.value=model.currentCamera.quality;
+				sldrFrameQly.snapInterval=1;
+				sldrFrameQly.tickInterval=10;
+				sldrFrameQly.labels=new Array();
+				sldrFrameQly.labels[0]="1";
+				sldrFrameQly.labels[1]=sldrFrameQly.maximum.toString();				
+				stpFrameQly.minimum=sldrFrameQly.minimum;
+				stpFrameQly.maximum=sldrFrameQly.maximum;
+				stpFrameQly.stepSize=sldrFrameQly.snapInterval;
+				
+				sldrMicRate.minimum=1;
+				sldrMicRate.maximum=22;
+				sldrMicRate.value=11;
+				sldrMicRate.snapInterval=1;
+				sldrMicRate.tickInterval=2;
+				sldrMicRate.labels=new Array();
+				sldrMicRate.labels[0]="1";
+				sldrMicRate.labels[1]=sldrMicRate.maximum.toString();				
+				stpMicRate.minimum=sldrMicRate.minimum;
+				stpMicRate.maximum=sldrMicRate.maximum;
+				stpMicRate.stepSize=sldrMicRate.snapInterval;
+				
+				sldrStartBuffer.minimum=0;
+				sldrStartBuffer.maximum=5;
+				sldrStartBuffer.value=AppModel.VOD_START_BUFFER_TIME;
+				sldrStartBuffer.snapInterval=1;
+				sldrStartBuffer.tickInterval=1;
+				sldrStartBuffer.labels=new Array();
+				sldrStartBuffer.labels[0]="0";
+				sldrStartBuffer.labels[1]=sldrStartBuffer.maximum.toString();				
+				stpStartBuffer.minimum=sldrStartBuffer.minimum;
+				stpStartBuffer.maximum=sldrStartBuffer.maximum;
+				stpStartBuffer.stepSize=sldrStartBuffer.snapInterval;
+				
+				sldrExpandBuffer.minimum=8;
+				sldrExpandBuffer.maximum=20;
+				sldrExpandBuffer.value=AppModel.VOD_EXPANED_BUFFER_TIME;
+				sldrExpandBuffer.snapInterval=1;
+				sldrExpandBuffer.tickInterval=1;
+				sldrExpandBuffer.labels=new Array();
+				sldrExpandBuffer.labels[0]="8";
+				sldrExpandBuffer.labels[1]=sldrExpandBuffer.maximum.toString();				
+				stpExpandBuffer.minimum=sldrExpandBuffer.minimum;
+				stpExpandBuffer.maximum=sldrExpandBuffer.maximum;
+				stpExpandBuffer.stepSize=sldrExpandBuffer.snapInterval;
+				
+				sldrSvrDownBw.minimum=0;
+				sldrSvrDownBw.maximum=1800;
+				sldrSvrDownBw.value=0;
+				sldrSvrDownBw.snapInterval=10;
+				sldrSvrDownBw.tickInterval=300;
+				sldrSvrDownBw.labels=new Array();
+				sldrSvrDownBw.labels[0]="0";
+				sldrSvrDownBw.labels[1]=sldrSvrDownBw.maximum.toString();
+				
+				sldrSvrUpBw.minimum=0;
+				sldrSvrUpBw.maximum=1800;
+				sldrSvrUpBw.value=0;
+				sldrSvrUpBw.snapInterval=10;
+				sldrSvrUpBw.tickInterval=300;
+				sldrSvrUpBw.labels=new Array();
+				sldrSvrUpBw.labels[0]="0";
+				sldrSvrUpBw.labels[1]=sldrSvrUpBw.maximum.toString();
+				
+				//set default values
+				if(!MyCamera.dirty)
+				{
+					//=>MyCamera.WIDTH=model.currentCamera.width;
+					//=>MyCamera.HEIGHT=model.currentCamera.height;
+					//=>MyCamera.FPS=model.currentCamera.currentFPS;
+					//=>MyCamera.BANDWIDTH=model.currentCamera.bandwidth;	
+					//=>MyCamera.QUALITY=model.currentCamera.quality;//1 to 100
+					//=>MyCamera.KEY_FRAME=model.currentCamera.keyFrameInterval;//1 to 48
+					//=>MyCamera.RATE=model.mic.rate;//hz
+					
+					MyCamera.dirty=true;
+				}
+		 
+				chkbxDefault.selected=false;
+				
+				timer = new Timer(1000);
+                timer.addEventListener(TimerEvent.TIMER, displayNetStream);
+                timer.start();
+			}
+			private function titleWindow_close(e:CloseEvent):void 
+			{
+				timer.stop();
+				timer=null;
+                PopUpManager.removePopUp(this);
+            }		
+			private function onSubmit(e:Event):void
+			{	
+				if(!isChange) 
+				{	
+					PopUpManager.removePopUp(this);	
+					return;
+				}
+				
+				//spinner.play();
+				CursorManager.setBusyCursor();
+				if(isChange) onApply(null);
+				/*
+				var soCamera:SoCamera=new SoCamera();
+
+				soCamera.FPS=sldrFps.value;
+				//soCamera.MOTION_LEVEL=sldrMotionLevel.value;
+				//soCamera.MOTION_TIMEOUT=sldrMotionTimeout.value;
+				soCamera.KEY_FRAME=sldrKeyFrame.value;
+				soCamera.QUALITY=sldrFrameQly.value;
+				//soCamera.LOOPBACK=chkbxLoopback.selected;
+				
+				MyCamera.setPreferenceValues(model.currentCamera,soCamera);
+				LSOUserPreference.setPreference("lsoCamera",soCamera as Object,true);//into local disk
+				*/
+				//spinner.stop();
+				CursorManager.removeBusyCursor();
+				
+				timer.stop();
+				timer=null;
+				PopUpManager.removePopUp(this);						
+			}
+			private function setDefaultValues(e:Event):void
+			{
+				if(!isChange) isChange=true;
+				if(chkbxDefault.selected==true)
+				{
+					sldrWidth.value=MyCamera.WIDTH;
+					sldrHeight.value=MyCamera.HEIGHT;
+					sldrFps.value=MyCamera.FPS;
+					sldrKeyFrame.value=MyCamera.KEY_FRAME;
+					sldrBandwidth.value=Math.round(MyCamera.BANDWIDTH/1000);
+					sldrFrameQly.value=MyCamera.QUALITY;
+					sldrMicRate.value=MyCamera.RATE;					
+				}
+			}
+			private function onChangeEvent(e:Event):void
+			{
+				if(!isChange) isChange=true;
+				if(chkbxDefault.selected==true) 
+				{	
+					chkbxDefault.selected=false;
+				}
+				switch(e.currentTarget)
+				{
+					case sldrWidth:				
+					case stpWidth: trace("SetMode Width"); sldrHeight.value=Math.round(sldrWidth.value*3/4); break;					
+					case sldrHeight:					
+					case stpHeight: trace("SetMode Height"); sldrWidth.value=Math.round(sldrHeight.value*4/3); break;					
+					case sldrFps:					
+					case stpFps: trace("SetMode FPS");break;									
+					case sldrKeyFrame:					
+					case stpKeyFrame: trace("Key Frame Interval");break;	
+					case sldrBandwidth: trace("Bandwidth"); break;				
+					case sldrFrameQly:					
+					case stpFrameQly: trace("Frame Quality");break;					
+					case sldrMicRate:					
+					case stpMicRate: trace("Mic Rate");break;
+					case stpStartBuffer:
+					case sldrStartBuffer: trace("StartBuffer");break;
+					case sldrExpandBuffer:				
+					case stpExpandBuffer: trace("ExpandBuffer");break;
+					
+				}
+				//if(e.currentTarget==sldrStartBuffer) trace("sldrStartBuffer");
+			}
+			private function onApply(e:Event):void
+			{
+				var i:int=0;
+				if(sldrStartBuffer.value!=AppModel.VOD_START_BUFFER_TIME)
+				{
+					AppModel.VOD_START_BUFFER_TIME=sldrStartBuffer.value;
+					for(i=0;i<model.streamListener.incomingNetStreamList.length;i++)
+						NetStream(model.streamListener.incomingNetStreamList.getItemAt(i)).bufferTime=AppModel.VOD_START_BUFFER_TIME;
+				}
+				if(sldrExpandBuffer.value!=AppModel.VOD_EXPANED_BUFFER_TIME)
+				{
+					AppModel.VOD_EXPANED_BUFFER_TIME=sldrExpandBuffer.value;
+				}
+				/*
+				//=>if(model.currentCamera!=null && sldrBandwidth.value!=Math.round(model.currentCamera.bandwidth/1000))
+				{
+					//=>model.currentCamera.setQuality(sldrBandwidth.value*1000,sldrFrameQly.value);
+				}
+				//=>if(model.mic!=null && sldrMicRate.value!=model.mic.rate)
+				{
+					//=>model.mic.rate=sldrMicRate.value;
+				}
+				//=>if(model.currentCamera!=null && sldrKeyFrame.value!=model.currentCamera.keyFrameInterval)
+				{
+					//=>model.currentCamera.setKeyFrameInterval(sldrKeyFrame.value);
+				}
+				//=>if(model.currentCamera!=null)
+				{
+				  //=> if(sldrWidth.value!=model.currentCamera.width)
+				   {
+				   		//=>model.currentCamera.setMode(sldrWidth.value, Math.round(sldrWidth.value*3/4),sldrFps.value);
+				   }
+				   //=>else if(sldrHeight.value!=model.currentCamera.height)
+				   {
+				   		//=>model.currentCamera.setMode(Math.round(sldrHeight.value*4/3), sldrHeight.value,sldrFps.value);
+				   }
+				   //=>else if(sldrFps.value!=model.currentCamera.currentFPS)
+				   {
+				   		//=>model.currentCamera.setMode(sldrWidth.value, sldrHeight.value,sldrFps.value);
+				   }
+				}
+				*/
+				isChange=false;
+			}
+			private function onApplyBW(e:Event):void
+			{
+				trace("downkbps="+sldrSvrDownBw.value+", upkbps="+sldrSvrUpBw.value+", username="+(ub==null? "":ub.first_name));
+				if(ub!=null)
+					CairngormEventDispatcher.getInstance().dispatchEvent(new RMIEvent(AppController.ROOM_SET_BW_EVENT,sldrSvrDownBw.value, sldrSvrUpBw.value,ub.first_name));
+			}
+			private function onConnectionInfo(e:Event):void
+			{
+				//CairngormEventDispatcher.getInstance().dispatchEvent(new RMIEvent(AppController.ROOM_GET_CONNECTION_INFO_EVENT));
+			}
+			private function displayNetStream(e:TimerEvent):void
+			{
+				if(model.streamListener!=null && model.streamListener.incomingNetStreamList.length>0)
+				{	
+					var stream:NetStream=model.streamListener.incomingNetStreamList.getItemAt(0) as NetStream;
+					audioCodec.text="Audio Codec="+stream.audioCodec as String;
+					bufferLength.text="Buffer Length="+stream.bufferLength as String;
+					bufferTime.text="Buffer Time="+stream.bufferTime as String;
+					bytesLoaded.text="Bytes Loaded="+stream.bytesLoaded as String;
+					bytesTotal.text="Bytes Total="+stream.bytesTotal as String;
+					liveDelay.text="Live Delay="+stream.liveDelay as String;
+				}
+			}
+		]]>
+	</mx:Script>
+
+	<mx:VBox x="8" y="10"  height="98%" width="48%" horizontalAlign="center" paddingTop="10" paddingBottom="5"  borderThickness="1" cornerRadius="8" borderColor="#5C5CA3" borderStyle="inset">
+		<mx:HBox width="90%" horizontalAlign="left" >
+			<mx:Image source="assets/icons/webdev-file-16x16.png"/>
+			<mx:Label id="lblTitle" text="Current Camera Settings" fontSize="12" fontWeight="bold" color="#FFA953"/>
+			<mx:Spacer width="100%"/>
+			<mx:CheckBox id="chkbxDefault" label="Defaults" click="setDefaultValues(event)"/>
+		</mx:HBox>
+		<mx:HRule width="90%" height="7"/>
+								
+		<mx:Form height="95%" width="100%" >	
+			<mx:FormItem direction="horizontal">
+				<mx:Label text="Down (kbps):{model.bw.kbitDown}"  color="#5C5CA3"/>
+				<mx:Label text="Up (kbps):{model.bw.kbitUp}"  color="#5C5CA3"/>	
+			</mx:FormItem>
+			<mx:FormItem direction="horizontal">	
+				<mx:Label text="Down Latency:{model.bw.latencyDown}"  color="#5C5CA3"/>
+				<mx:Label text="Up Latency:{model.bw.latencyUp}"  color="#5C5CA3"/>	
+			</mx:FormItem>
+			<mx:Spacer height="10"/>
+			<mx:FormItem label="Width: " direction="horizontal">
+				<mx:HSlider id="sldrWidth" dataTipPlacement="top" value="{stpWidth.value}" tickColor="black" allowTrackClick="true" liveDragging="true" click="onChangeEvent(event)"/>
+				<mx:NumericStepper id="stpWidth" value="{sldrWidth.value}" width="60" click="onChangeEvent(event)"/>
+			</mx:FormItem>
+			<mx:FormItem label="Height: " direction="horizontal">
+				<mx:HSlider id="sldrHeight" dataTipPlacement="top" value="{stpHeight.value}" tickColor="black" allowTrackClick="true" liveDragging="true" click="onChangeEvent(event)"/>
+				<mx:NumericStepper id="stpHeight" value="{sldrHeight.value}" width="60" click="onChangeEvent(event)"/>
+			</mx:FormItem>
+			<mx:FormItem label="FPS: " direction="horizontal">
+				<mx:HSlider id="sldrFps" dataTipPlacement="top" value="{stpFps.value}" tickColor="black" allowTrackClick="true" liveDragging="true" click="onChangeEvent(event)"/>
+				<mx:NumericStepper id="stpFps" value="{sldrFps.value}" width="60" change="onChangeEvent(event)"/>
+			</mx:FormItem>
+			
+			<mx:FormItem label="Key Frame: " direction="horizontal" >
+				<mx:HSlider id="sldrKeyFrame" dataTipPlacement="top" value="{stpKeyFrame.value}" tickColor="black" allowTrackClick="true" liveDragging="true" click="onChangeEvent(event)"/>
+				<mx:NumericStepper id="stpKeyFrame" value="{sldrKeyFrame.value}" width="60" change="onChangeEvent(event)"/>
+			</mx:FormItem>
+			<mx:FormItem label="Bandwidth: " direction="horizontal">
+				<mx:HSlider id="sldrBandwidth" dataTipPlacement="top" tickColor="black" allowTrackClick="true" liveDragging="true" click="onChangeEvent(event)"/>			
+				<mx:Label id="lblBandwidth" text="{Math.round(sldrBandwidth.value)}(KBytes)" color="#5C5CA3"/>						
+			</mx:FormItem>
+			<mx:FormItem label="Frame Quality: " direction="horizontal">
+				<mx:HSlider id="sldrFrameQly" dataTipPlacement="top" value="{stpFrameQly.value}" tickColor="black" allowTrackClick="true" liveDragging="true" click="onChangeEvent(event)"/>
+				<mx:NumericStepper id="stpFrameQly" value="{sldrFrameQly.value}" width="60" change="onChangeEvent(event)"/>
+			</mx:FormItem>
+			<mx:FormItem label="Mic Rate: " direction="horizontal">
+				<mx:HSlider id="sldrMicRate" dataTipPlacement="top" value="{stpMicRate.value}" tickColor="black" allowTrackClick="true" liveDragging="true" click="onChangeEvent(event)"/>
+				<mx:NumericStepper id="stpMicRate" value="{sldrMicRate.value}" width="60" change="onChangeEvent(event)"/>
+			</mx:FormItem>
+			<mx:FormItem label="Start Buffer: " direction="horizontal">
+				<mx:HSlider id="sldrStartBuffer" dataTipPlacement="top" value="{stpStartBuffer.value}" tickColor="black" allowTrackClick="true" liveDragging="true" click="onChangeEvent(event)"/>
+				<mx:NumericStepper id="stpStartBuffer" value="{sldrStartBuffer.value}" width="60" change="onChangeEvent(event)"/>
+			</mx:FormItem>
+			<mx:FormItem label="Expand Buffer: " direction="horizontal">
+				<mx:HSlider id="sldrExpandBuffer" dataTipPlacement="top" value="{stpExpandBuffer.value}" tickColor="black" allowTrackClick="true" liveDragging="true" click="onChangeEvent(event)"/>
+				<mx:NumericStepper id="stpExpandBuffer" value="{sldrExpandBuffer.value}" width="60" change="onChangeEvent(event)"/>
+			</mx:FormItem>		
+		</mx:Form>		
+		<mx:HBox width="100%" horizontalAlign="center" paddingBottom="10">
+			<mx:Button label="OK" width="60" paddingLeft="0" paddingRight="0" horizontalCenter="0" click="onSubmit(event)" fontSize="12"/>
+			<mx:Spacer width="20"/>
+			<mx:Button label="Apply" width="60" paddingLeft="0" paddingRight="0" horizontalCenter="0" click="onApply(event)" fontSize="12" enabled="{isChange}"/>
+			<mx:Button label="Cancel" width="60" paddingLeft="0" paddingRight="0" horizontalCenter="0" fontSize="12" click="titleWindow_close(null)"/>
+		</mx:HBox>		
+	</mx:VBox>
+	<mx:Box x="{this.width/6}" y="{this.height/3}" width="100" height="100" horizontalAlign="center" verticalAlign="middle">
+        <common:Spinner id="spinner" tickColor="#88C1AE" fadeSpeed="1000" autoPlay="false"/>
+    </mx:Box>
+    <mx:VBox x="{10+440}" y="{10}" height="98%" width="48%" horizontalAlign="center" paddingTop="10" paddingBottom="5" borderThickness="1" cornerRadius="8" borderColor="#5C5CA3" borderStyle="inset">
+    	<mx:HBox width="90%" horizontalAlign="left" >
+			<mx:Image source="assets/icons/webdev-file-16x16.png"/>
+			<mx:Label text="Current Stream Information" fontSize="12" fontWeight="bold" color="#FFA953"/>
+			<mx:Spacer width="100%"/>
+		</mx:HBox>
+		<mx:HRule width="90%" height="7"/>
+		<mx:Form height="95%" width="100%" >	
+			<mx:Label id="audioCodec"/>		
+			<mx:Label id="bufferLength"/>
+			<mx:Label id="bufferTime"/>
+			<mx:Label id="bytesLoaded"/>
+			<mx:Label id="bytesTotal"/>
+			<mx:Label id="liveDelay"/>
+			
+			<mx:FormItem label="Server DownBW: " direction="horizontal">
+				<mx:HSlider id="sldrSvrDownBw" dataTipPlacement="top" tickColor="black" allowTrackClick="true" liveDragging="true" click="onChangeEvent(event)"/>			
+				<mx:Label id="lblSvrDownBw" text="{Math.round(sldrSvrDownBw.value)}(kbps)" color="#5C5CA3"/>						
+			</mx:FormItem>
+			<mx:FormItem label="Server UpBW: " direction="horizontal">
+				<mx:HSlider id="sldrSvrUpBw" dataTipPlacement="top" tickColor="black" allowTrackClick="true" liveDragging="true" click="onChangeEvent(event)"/>			
+				<mx:Label id="lblSvrUpBw" text="{Math.round(sldrSvrUpBw.value)}(kbps)" color="#5C5CA3"/>						
+			</mx:FormItem>	
+			<mx:FormItem label="Name:" fontSize="12">
+					<mx:ComboBox id="comboBoxUsers" dataProvider="" width="150"
+								 selectedItem="" 
+								 close="ub=ComboBox(event.target).selectedItem as UserBean" 
+								 labelField="first_name" />
+					  
+			</mx:FormItem>
+			<mx:FormItem direction="vertical" horizontalAlign="center">
+				<mx:Button label="Apply" width="60" paddingLeft="0" paddingRight="0" horizontalCenter="0" click="onApplyBW(event)" fontSize="12" />
+			</mx:FormItem>	
+			<mx:Spacer height="20"/>
+			<mx:FormItem label="System Info:" direction="vertical" horizontalAlign="center">
+				<mx:Button label="Send" width="60" paddingLeft="0" paddingRight="0" horizontalCenter="0" click="onConnectionInfo(event)" fontSize="12" />						
+			</mx:FormItem>
+		</mx:Form>
+    </mx:VBox>
+</mx:TitleWindow>

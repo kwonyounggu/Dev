@@ -39,7 +39,7 @@ package com.sickkids.caliper.view.ttt
 		}
 		private function onSettingsClick(event:MouseEvent):void
 		{
-			trace("INFO: onSettingsClick() is clicked in ControlContainerMediator.as");
+			trace("INFO: onSettingsClick() is clicked in ControlContainerMediator.as (token="+model.userInfo.bTokenPossesed+")");
 			if(model.userInfo.bTokenPossesed)
 			{
 				this.controlContainer.parentDocument.toggleAdminPanelView();
