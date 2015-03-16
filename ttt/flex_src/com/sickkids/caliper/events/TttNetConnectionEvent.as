@@ -7,6 +7,7 @@ package com.sickkids.caliper.events
 		public static const ROOM_CONNECT_EVENT:String="ROOM_CONNECT_EVENT";
 		public static const ROOM_CONNECTED_EVENT:String="ROOM_CONNECTED_EVENT";
 		public static const ROOM_DISCONNECTED_EVENT:String="ROOM_DISCONNECTED_EVENT";
+		public static const ROOM_CONNECT_FAILED_EVENT:String="ROOM_CONNECT_FAILED_EVENT";
 		
 		
 		private var _arg1:Object=null;

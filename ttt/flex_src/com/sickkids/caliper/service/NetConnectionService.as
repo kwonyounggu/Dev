@@ -22,11 +22,11 @@ package com.sickkids.caliper.service
 		[Inject] public var tttModel:TttModel;
 		
 		private var _netConnection:NetConnection=null;
-		private var _url:String="rtmp://localhost/ttt";
+		private var _url:String="rtmp://172.16.17.133/ttt";
 		
-		public function NetConnectionService(dest:String="carmProxy", endpoint:String="{FlexGlobals.topLevelApplication._host}/carm/messagebroker/amf")
+		public function NetConnectionService(dest:String="carmProxy", endpoint:String="rtmp://{FlexGlobals.topLevelApplication._host}/ttt")
 		{
-			trace("INFO: NetConnectionService() is called in NetConnectionService.as, endpoint="+endpoint);
+			trace("INFO: NetConnectionService() is called in NetConnectionService.as, endpoint="+endpoint+", _url="+_url);
 			//_remoteObject=new RemoteObject();
 			//_remoteObject.concurrency="last";
 			//_remoteObject.showBusyCursor=true;
@@ -178,7 +178,7 @@ package com.sickkids.caliper.service
 		public function close():void
 		{
 			if(_netConnection.connected) _netConnection.close();
-			dispatch(new TttNetConnectionEvent(TttNetConnectionEvent.ROOM_DISCONNECTED_EVENT));
+			//dispatch(new TttNetConnectionEvent(TttNetConnectionEvent.ROOM_DISCONNECTED_EVENT));
 		}	
 		/*****************************************************************************************************************
 		 *  for APP remote shared object
@@ -228,7 +228,7 @@ package com.sickkids.caliper.service
 						break;
 					case "NetConnection.Connect.Failed" :
 						trace("INFO: The connection attempt failed.");//error
-						dispatch(new TttNetConnectionEvent(TttNetConnectionEvent.ROOM_DISCONNECTED_EVENT));
+						dispatch(new TttNetConnectionEvent(TttNetConnectionEvent.ROOM_CONNECT_FAILED_EVENT));
 						break;
 					case "NetConnection.Connect.Rejected" ://error
 						//The connection attempt did not have permission to access the application.

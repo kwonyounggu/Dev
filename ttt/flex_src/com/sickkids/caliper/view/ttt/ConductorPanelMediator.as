@@ -1,33 +1,35 @@
 package com.sickkids.caliper.view.ttt
 {
 
+	import com.sickkids.caliper.events.TttNetConnectionEvent;
 	import com.sickkids.caliper.model.TttModel;
+	import com.sickkids.caliper.service.INetConnectionService;
 	
 	import flash.events.ActivityEvent;
+	import flash.events.NetStatusEvent;
 	import flash.events.StatusEvent;
 	import flash.media.Camera;
 	import flash.media.Microphone;
 	import flash.media.MicrophoneEnhancedMode;
 	import flash.media.MicrophoneEnhancedOptions;
+	import flash.media.Video;
+	import flash.net.NetStream;
 	
 	import mx.controls.Alert;
 	import mx.core.FlexGlobals;
-	import mx.core.UIComponent;
-	import mx.events.FlexEvent;
-	import mx.events.ResizeEvent;
+
 	import mx.utils.StringUtil;
 	
 	import spark.components.mediaClasses.DynamicStreamingVideoItem;
 	import spark.components.mediaClasses.DynamicStreamingVideoSource;
 	
-	import org.osmf.net.StreamType;
 	import org.robotlegs.mvcs.Mediator;
 	
 	public class ConductorPanelMediator extends Mediator
 	{
 		[Inject] public var view:ConductorPanel;
 		[Inject] public var model:TttModel;
-		//private var roundedUI:UIComponent=new UIComponent();
+		[Inject] public var netConnectionService:INetConnectionService;
 		
 		public function ConductorPanelMediator()
 		{
@@ -36,16 +38,13 @@ package com.sickkids.caliper.view.ttt
 		override public function onRegister():void
 		{
 			trace("INFO: onRegister() is called in ConductorPanelMediator.as");
-			view.localWebcamDisplay.addEventListener(ResizeEvent.RESIZE, onVideoDisplayResize);
-			
-			
-			attachPublishCamera();
-			//view.topBorderContainer.rawChildren.addChild(roundedUI);//masking UI
+			//view.localWebcamDisplay.addEventListener(ResizeEvent.RESIZE, onVideoDisplayResize);
+			this.addContextListener(TttNetConnectionEvent.ROOM_CONNECTED_EVENT, onNetConnectionStatus, TttNetConnectionEvent);
+			this.addContextListener(TttNetConnectionEvent.ROOM_DISCONNECTED_EVENT, onNetConnectionStatus, TttNetConnectionEvent);			
 		}
 		override public function onRemove():void
 		{
 			trace("INFO: onRemove() is called in ConductorPanelMediator.as");
-			//view.topBorderContainer.rawChildren.removeChild(roundedUI);//masking UI
 		}
 		private function attachPublishCamera():void
 		{
@@ -59,7 +58,7 @@ package com.sickkids.caliper.view.ttt
 				model.localCamera=Camera.getCamera(); //Camera.names[0]);
 				if(model.localCamera)
 				{
-					videoItems=new Vector.<DynamicStreamingVideoItem>();  
+					/*videoItems=new Vector.<DynamicStreamingVideoItem>();  
 					videoItems[0]=new DynamicStreamingVideoItem(); 
 					
 					dynVideoSource=new DynamicStreamingVideoSource();  
@@ -71,7 +70,9 @@ package com.sickkids.caliper.view.ttt
 					view.localWebcamDisplay.source=dynVideoSource;
 					 
 					view.localWebcamDisplay.videoObject.attachCamera(model.localCamera);
-					
+					*/
+					view.localWebcamDisplay.video=new Video();
+					view.localWebcamDisplay.video.attachCamera(model.localCamera);
 					//settings
 					model.localCamera.setQuality(0, 80);//bandwidth, quality
 					model.localCamera.setMode(320,240,15); //width, height, fps
@@ -122,6 +123,21 @@ package com.sickkids.caliper.view.ttt
 				{
 					//play INTERACTIVE_VIEWER1
 					//publish LECTURER
+					view.netStream1=new NetStream(netConnectionService.netConnection());
+					view.netStream1.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream1.client=this;					
+					//publish Dr.WebCam and Audio
+					view.netStream1.attachAudio(model.localMic);
+					view.netStream1.attachCamera(model.localCamera);
+					view.netStream1.publish(model.userInfo.lecturerId);
+					
+					//subcribe Active#1. WebCam and Audio
+					view.netStream2=new NetStream(netConnectionService.netConnection());
+					view.netStream2.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream2.client=this;
+					view.remoteWebcamDisplay.video=new Video();
+					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
+					view.netStream2.play(model.userInfo.activeParticipantId1);
 				}
 				else if(view.myObject=="RN")//instance
 				{
@@ -175,38 +191,6 @@ package com.sickkids.caliper.view.ttt
 					
 				}
 			}
-		}
-		private function onVideoDisplayResize(e:ResizeEvent):void
-		{
-			trace("INFO: onVideoDisplayResize() is called in ConductorPanelMediator.as");
-			/*
-			square = new UIComponent(); 
-			square.graphics.beginFill(0x000000); 
-			square.graphics.drawRoundRect(0, 0, 320, 240,25); 
-			square.x = 0; 
-			square.y = 0; 
-			myCanvas.addChild(square); 
-			myVD.mask = square; 
-			
-			
-			var cornerRadius:uint = 20;
-			roundedUI[index].graphics.clear();
-			roundedUI[index].graphics.beginFill(0xFF0000);
-			roundedUI[index].graphics.drawRoundRect(0, 0, evt.currentTarget.width, evt.currentTarget.height, cornerRadius, cornerRadius);
-			//roundedUI[index].graphics.drawRoundRect(41, 0, 100, 100, cornerRadius, cornerRadius);//width=183, 100x100 starting from 41 to make rectangle in the middle
-			roundedUI[index].graphics.endFill();
-			evt.currentTarget.mask = roundedUI[index];
-			*/
-			
-			/*
-			var cornerRadius:uint = 20;
-			roundedUI.graphics.clear();
-			roundedUI.graphics.beginFill(0xFF0000);
-			roundedUI.graphics.drawRoundRect(0, 0, e.currentTarget.width, e.currentTarget.height, cornerRadius, cornerRadius);
-			roundedUI.graphics.endFill();
-			e.currentTarget.mask = roundedUI;
-			*/
-			
 		}
 		private function onCameraStatus(e:StatusEvent):void
 		{
@@ -267,6 +251,94 @@ package com.sickkids.caliper.view.ttt
 												"gain="+mic.gain+"\n"+
 												"rate="+mic.rate+"\n"+
 												StringUtil.substitute(str, e.type, e.activating));
+		}
+		private function onNetConnectionStatus(e:TttNetConnectionEvent):void
+		{
+			switch(e.type)
+			{
+				case TttNetConnectionEvent.ROOM_CONNECT_EVENT:
+					trace("INFO: onNetConnectionStatus(ROOM_CONNECT_EVENT) is called in ConductorPanelMediator.as----------");
+					//controlContainer.connectedId.visible=controlContainer.connectedId.includeInLayout=false;
+					//controlContainer.disconnectedId.visible=controlContainer.disconnectedId.includeInLayout=false;
+					//controlContainer.connectingId.visible=controlContainer.connectingId.includeInLayout=true;
+					//controlContainer.simpleThrobber.start();
+					break;
+				case TttNetConnectionEvent.ROOM_CONNECTED_EVENT:
+					trace("INFO: onNetConnectionStatus(ROOM_CONNECTED_EVENT) is called in ConductorPanelMediator.as [participantType="+model.userInfo.participantType+", myObject="+view.myObject+"]");
+					attachPublishCamera();
+					//controlContainer.simpleThrobber.stop();
+					//controlContainer.connectedId.visible=controlContainer.connectedId.includeInLayout=true;
+					//controlContainer.disconnectedId.visible=controlContainer.disconnectedId.includeInLayout=false;
+					//controlContainer.connectingId.visible=controlContainer.connectingId.includeInLayout=false;
+					break;
+				case TttNetConnectionEvent.ROOM_DISCONNECTED_EVENT:
+					trace("INFO: onNetConnectionStatus(ROOM_DISCONNECTED_EVENT) is called in ConductorPanelMediator.as [participantType="+model.userInfo.participantType+", myObject="+view.myObject+"]");
+					//controlContainer.simpleThrobber.stop();
+					//controlContainer.connectedId.visible=controlContainer.connectedId.includeInLayout=false;
+					//controlContainer.disconnectedId.visible=controlContainer.disconnectedId.includeInLayout=true;
+					//controlContainer.connectingId.visible=controlContainer.connectingId.includeInLayout=false;
+					break;
+				default: break;
+			}
+		}
+		public function onNetStreamStatus(e:NetStatusEvent):void
+		{
+			switch (e.info.code) 
+			{
+				case "NetStream.Publish.Start":
+					trace("INFO: NetStream.Publish.Start in ConductorPanelMediator.as");
+					break;
+				case "NetStream.Publish.BadName":
+					trace("INFO: The stream name is already used in ConductorPanelMediator.as");
+					break;
+				case "NetStream.Play.Start":
+					trace("INFO: NetStream.Play.Start in ConductorPanelMediator.as");
+					break;
+				case "NetStream.Play.UnpublishNotify": 
+					//NetStream(event.currentTarget).close(); <-----Use this Feb 5, 2013
+					trace("INFO: NetStream.Play.UnpublishNotify in ConductorPanelMediator.as");
+					break;
+				case "NetStream.Unpublish.Success": 
+					trace("INFO: NetStream.Unpublish.Success in ConductorPanelMediator.as");
+					break;
+				case "NetStream.Play.Stop":
+					trace("INFO: NetStream.Play.Stop in ConductorPanelMediator.as");
+					break;	
+				case "NetStream.Failed":	trace("INFO: NetStream.Failed in ConductorPanelMediator.as");
+					break;
+				case "NetStream.Play.Failed": trace("INFO: NetStream.Play.Failed in ConductorPanelMediator.as");
+					break;
+				case "NetStream.Play.StreamNotFound": // These get routed to the same handler as NetConnection
+					trace("INFO: NetStream.Play.StreamNotFound in ConductorPanelMediator.as");
+					break;
+				
+				case "NetStream.Buffer.Full":              		  
+					//netStream.bufferTime=AppModel.VOD_EXPANED_BUFFER_TIME;	              		  	
+					trace("INFO: NetStream.Buffer.Full in ConductorPanelMediator.as");         		  
+					break;
+				case "NetStream.Buffer.Empty":			  		  
+					//netStream.bufferTime=AppModel.VOD_START_BUFFER_TIME;
+					trace("INFO: NetStream.Buffer.Empty in ConductorPanelMediator.as");
+					break;
+				case "NetStream.Unpause.Notify":
+					trace("INFO: NetStream.Unpause.Notify in ConductorPanelMediator.as");
+					break;
+				case "NetStream.Play.InsufficientBW":
+					//netStream.bufferTime=AppModel.VOD_START_BUFFER_TIME;
+					trace("INFO: NetStream.Unpause.Notify/NetStream.Play.InsufficientBW in ConductorPanelMediator.as");
+					break;
+				default :
+					trace("INFO: Unknown event code in ConductorPanelMediator.as");
+					break;
+			}	
+		}
+		public function onMetaData(info:Object):void 
+		{
+			trace("INFO metadata: duration=" + info.duration + " width=" + info.width + " height=" + info.height + " framerate=" + info.framerate);
+		}
+		public function onCuePoint(info:Object):void 
+		{
+			trace("INFO cuepoint: time=" + info.time + " name=" + info.name + " type=" + info.type);
 		}
 	}
 	

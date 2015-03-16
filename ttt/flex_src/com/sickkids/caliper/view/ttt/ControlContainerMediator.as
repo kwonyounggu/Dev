@@ -30,6 +30,7 @@ package com.sickkids.caliper.view.ttt
 			
 			this.addContextListener(TttNetConnectionEvent.ROOM_CONNECTED_EVENT, onNetConnectionStatus, TttNetConnectionEvent);
 			this.addContextListener(TttNetConnectionEvent.ROOM_DISCONNECTED_EVENT, onNetConnectionStatus, TttNetConnectionEvent);
+			this.addContextListener(TttNetConnectionEvent.ROOM_CONNECT_FAILED_EVENT, onNetConnectionStatus, TttNetConnectionEvent);
 			
 			onConnectClick(null);
 		}
@@ -80,6 +81,13 @@ package com.sickkids.caliper.view.ttt
 					break;
 				case TttNetConnectionEvent.ROOM_DISCONNECTED_EVENT:
 					trace("INFO: onNetConnectionStatus(ROOM_DISCONNECTED_EVENT) is called in ControlContainerMediator.as");
+					controlContainer.simpleThrobber.stop();
+					controlContainer.connectedId.visible=controlContainer.connectedId.includeInLayout=false;
+					controlContainer.disconnectedId.visible=controlContainer.disconnectedId.includeInLayout=true;
+					controlContainer.connectingId.visible=controlContainer.connectingId.includeInLayout=false;
+					break;
+				case TttNetConnectionEvent.ROOM_CONNECT_FAILED_EVENT:
+					trace("INFO: onNetConnectionStatus(ROOM_CONNECT_FAILED_EVENT) is called in ControlContainerMediator.as");
 					controlContainer.simpleThrobber.stop();
 					controlContainer.connectedId.visible=controlContainer.connectedId.includeInLayout=false;
 					controlContainer.disconnectedId.visible=controlContainer.disconnectedId.includeInLayout=true;
