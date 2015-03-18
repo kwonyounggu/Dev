@@ -25,10 +25,12 @@ import org.red5.server.api.scheduling.ISchedulingService;
 import org.red5.server.api.scope.IScope;
 import org.red5.server.api.service.IPendingServiceCall;
 import org.red5.server.api.service.IPendingServiceCallback;
+import org.red5.server.api.service.IServiceCapableConnection;
 
 import org.springframework.core.io.Resource;
 
 
+import com.sickkids.caliper.common.ParticipantType;
 import com.sickkids.caliper.manager.ConnectionPoolManager;
 import com.sickkids.caliper.manager.SharedObjectListener;
 
@@ -38,7 +40,7 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 
 	//protected static Log log = LogFactory.getLog(MainApplication.class.getName());
 	protected static Logger log=Utils.logger;
-	private IScope currentRoomScope=null;
+	//private IScope roomScope=null;
 	public IScope appScope=null;
 
 	private HashMap<Integer, String> scopes;
@@ -118,8 +120,8 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 		log.info("TTT.roomStart(roomName: "+room.getName()+") is called in MainApplication.java");
 		try
 		{
-			this.currentRoomScope=room;
-			roomScopeSet.add(room);
+			//this.roomScope=room;//current room scope
+			roomScopeSet.add(room);//all the rooms, March-18-2015, needs to be removed when roomLeave
 			
 			createSharedObject(room, room.getName(), false);
 			ISharedObject roomSo = getSharedObject(room, room.getName(),false);
@@ -239,6 +241,36 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 	public void resultReceived(IPendingServiceCall arg0)
 	{
 		// TODO Auto-generated method stub
+		log.info("TTT.resultReceived(getServiceMethodName="+arg0.getServiceMethodName()+", getServiceName="+arg0.getServiceName()+", getArguments="+arg0.getArguments()+") is called in MainApplication.java");
+	}
+	@SuppressWarnings("unchecked")
+	public void clientLog(String logStr)
+	{
+		try
+		{
+			IConnection current = Red5.getConnectionLocal();
+			log.info("TTT.clientLog(String logStr) is called from active and passive clients with\nfrom Client ID:" + current.getClient().getId() + "\nlogStr :" + logStr+" in MainApplication.java");
+			//Iterator<IConnection> it = (Iterator<IConnection>) this.scope.getConnections();
+			for(Set<IConnection> connections : this.scope.getConnections())
+				 for (IConnection conn: connections) 
+				 {
+					UserBean ubAttr=(UserBean)conn.getClient().getAttribute("userBean");
+					log.info(ubAttr.getEmail()+"-----------------");
+					
+					if(ubAttr.getParticipantType()==ParticipantType.LECTURER || ubAttr.getParticipantType()==ParticipantType.TEACHING_ASSISTANT)
+					{
+						if (conn instanceof IServiceCapableConnection)
+						{
+							((IServiceCapableConnection) conn).invoke("logMessages",new Object[]{ logStr });
+							
+						}
+					}
+				}
+		}
+		catch(Exception e)
+		{
+			log.info("Error: "+e.getMessage()+" cause:"+e.getCause());
+		}
 		
 	}
 	private void incrementPersistentSharedObject()

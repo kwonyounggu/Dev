@@ -1,6 +1,7 @@
 package com.sickkids.caliper.view.ttt
 {
 
+	import com.sickkids.caliper.events.TttNetCallEvent;
 	import com.sickkids.caliper.events.TttNetConnectionEvent;
 	import com.sickkids.caliper.model.TttModel;
 	import com.sickkids.caliper.service.INetConnectionService;
@@ -14,10 +15,10 @@ package com.sickkids.caliper.view.ttt
 	import flash.media.MicrophoneEnhancedOptions;
 	import flash.media.Video;
 	import flash.net.NetStream;
+	import flash.net.Responder;
 	
 	import mx.controls.Alert;
 	import mx.core.FlexGlobals;
-
 	import mx.utils.StringUtil;
 	
 	import spark.components.mediaClasses.DynamicStreamingVideoItem;
@@ -30,6 +31,7 @@ package com.sickkids.caliper.view.ttt
 		[Inject] public var view:ConductorPanel;
 		[Inject] public var model:TttModel;
 		[Inject] public var netConnectionService:INetConnectionService;
+		private var callServiceResponder:Responder=new Responder(okResult, faultResult);
 		
 		public function ConductorPanelMediator()
 		{
@@ -49,78 +51,12 @@ package com.sickkids.caliper.view.ttt
 		private function attachPublishCamera():void
 		{
 			trace("INFO: attachPublishCamera("+model.userInfo.participantType+") is called in ConductorPanelMediator.as");
-			
-			var videoItems:Vector.<DynamicStreamingVideoItem>=null;
-			var dynVideoSource:DynamicStreamingVideoSource=null;
-			
-			if(model.userInfo.participantType.indexOf("ONEWAY_VIEWER")==-1)
-			{
-				model.localCamera=Camera.getCamera(); //Camera.names[0]);
-				if(model.localCamera)
-				{
-					/*videoItems=new Vector.<DynamicStreamingVideoItem>();  
-					videoItems[0]=new DynamicStreamingVideoItem(); 
-					
-					dynVideoSource=new DynamicStreamingVideoSource();  
-					
-					dynVideoSource.host= "";  
-					dynVideoSource.streamType=StreamType.LIVE;  
-					dynVideoSource.streamItems=videoItems;  
-					
-					view.localWebcamDisplay.source=dynVideoSource;
-					 
-					view.localWebcamDisplay.videoObject.attachCamera(model.localCamera);
-					*/
-					view.localWebcamDisplay.video=new Video();
-					view.localWebcamDisplay.video.attachCamera(model.localCamera);
-					//settings
-					model.localCamera.setQuality(0, 80);//bandwidth, quality
-					model.localCamera.setMode(320,240,15); //width, height, fps
-					model.localCamera.addEventListener(StatusEvent.STATUS, onCameraStatus);
-					model.localCamera.addEventListener(ActivityEvent.ACTIVITY, onCameraActivity);
-					
-				}
-				else
-				{
-					Alert.show("No Webcam is found!");
-					FlexGlobals.topLevelApplication.log("No webcam is found!");
-				}
-				//Important: At any given time you can have only a single instance of enhanced microphone device. 
-				//All other Microphone instances stop providing audio data and receive a StatusEvent with the code property Microphone.Unavailable. 
-				//When enhanced audio fails to initialize, calls to this method return null, setting a value for Microphone.enhancedOptions has no effect, 
-				//and all existing Microphone instances function as before.
-				//To configure an enhanced Microphone object, set the Microphone.enhancedOptions property. The following code uses an enhanced Microphone object and full-duplex acoustic echo cancellation in a local test:
-				//var mic:Microphone = Microphone.getEnhancedMicrophone();
-				//var options:MicrophoneEnhancedOptions = new MicrophoneEnhancedOptions();
-				//options.mode = MicrophoneEnhancedMode.FULL_DUPLEX;
-				//mic.enhancedOptions = options;
-				//mic.setLoopBack(true);
-				//The setUseEchoSuppression() method is ignored when using acoustic echo cancellation. 
-				//When a SWF file tries to access the object returned by Microphone.getEnhancedMicrophone() 
-				//—for example, when you call NetStream.attachAudio()— Flash Player displays a Privacy dialog box that lets the user choose 
-				//whether to allow or deny access to the microphone. (Make sure your Stage size is at least 215 x 138 pixels; this is the minimum size Flash Player requires to display the dialog box.) 
-						
-				model.localMic=Microphone.getEnhancedMicrophone();
-				if(model.localMic)
-				{
-					var options:MicrophoneEnhancedOptions=new MicrophoneEnhancedOptions();
-					options.mode=MicrophoneEnhancedMode.FULL_DUPLEX;
-					model.localMic.enhancedOptions=options;
-					model.localMic.setLoopBack(true);
-					//set events
-					model.localMic.addEventListener(ActivityEvent.ACTIVITY, onMicrophoneonActivity);
-					model.localMic.addEventListener(StatusEvent.STATUS, onMicrophoneonStatus);
-				}
-				else
-				{
-					FlexGlobals.topLevelApplication.log("No Microphone is found!");
-				}
-			}
-			
+
 			if(model.userInfo.participantType=="LECTURER")
 			{
 				if(view.myObject=="DR")
 				{
+					setLocalCameraMicrophone();
 					//play INTERACTIVE_VIEWER1
 					//publish LECTURER
 					view.netStream1=new NetStream(netConnectionService.netConnection());
@@ -142,7 +78,22 @@ package com.sickkids.caliper.view.ttt
 				else if(view.myObject=="RN")//instance
 				{
 					//play INTERACTIVE_VIEWER2
-					//publish RN
+					//play RN
+					
+					view.netStream1=new NetStream(netConnectionService.netConnection());
+					view.netStream1.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream1.client=this;
+					view.localWebcamDisplay.video=new Video();
+					view.localWebcamDisplay.video.attachNetStream(view.netStream1);
+					view.netStream1.play(model.userInfo.teachingAssistantId);
+					
+					//subcribe
+					view.netStream2=new NetStream(netConnectionService.netConnection());
+					view.netStream2.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream2.client=this;
+					view.remoteWebcamDisplay.video=new Video();
+					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
+					view.netStream2.play(model.userInfo.activeParticipantId2);
 				}
 				
 			}
@@ -150,33 +101,121 @@ package com.sickkids.caliper.view.ttt
 			{
 				if(view.myObject=="DR")
 				{
+					view.netStream1=new NetStream(netConnectionService.netConnection());
+					view.netStream1.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream1.client=this;
+					view.localWebcamDisplay.video=new Video();
+					view.localWebcamDisplay.video.attachNetStream(view.netStream1);
+					view.netStream1.play(model.userInfo.lecturerId);
 					
+					//subcribe Active#1. WebCam and Audio
+					view.netStream2=new NetStream(netConnectionService.netConnection());
+					view.netStream2.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream2.client=this;
+					view.remoteWebcamDisplay.video=new Video();
+					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
+					view.netStream2.play(model.userInfo.activeParticipantId2);
 				}
 				else if(view.myObject=="RN")
 				{
+					setLocalCameraMicrophone();
+					view.netStream1=new NetStream(netConnectionService.netConnection());
+					view.netStream1.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream1.client=this;					
+					//publish Dr.WebCam and Audio
+					view.netStream1.attachAudio(model.localMic);
+					view.netStream1.attachCamera(model.localCamera);
+					view.netStream1.publish(model.userInfo.teachingAssistantId);
 					
+					//subcribe Active#1. WebCam and Audio
+					view.netStream2=new NetStream(netConnectionService.netConnection());
+					view.netStream2.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream2.client=this;
+					view.remoteWebcamDisplay.video=new Video();
+					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
+					view.netStream2.play(model.userInfo.activeParticipantId2);
 				}
 			}
 			else if(model.userInfo.participantType=="INTERACTIVE_VIEWER1")
 			{
 				if(view.myObject=="DR")
 				{
+					setLocalCameraMicrophone();
+					//play LECTURER
+					//publish INTERACTIVE_VIEWER1
+					view.netStream1=new NetStream(netConnectionService.netConnection());
+					view.netStream1.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream1.client=this;					
+					//publish Dr.WebCam and Audio
+					view.netStream1.attachAudio(model.localMic);
+					view.netStream1.attachCamera(model.localCamera);
+					view.netStream1.publish(model.userInfo.activeParticipantId1);
 					
+					//subcribe Active#1. WebCam and Audio
+					view.netStream2=new NetStream(netConnectionService.netConnection());
+					view.netStream2.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream2.client=this;
+					view.remoteWebcamDisplay.video=new Video();
+					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
+					view.netStream2.play(model.userInfo.lecturerId);
 				}
 				else if(view.myObject=="RN")
 				{
+					view.netStream1=new NetStream(netConnectionService.netConnection());
+					view.netStream1.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream1.client=this;
+					view.localWebcamDisplay.video=new Video();
+					view.localWebcamDisplay.video.attachNetStream(view.netStream1);
+					view.netStream1.play(model.userInfo.activeParticipantId2);
 					
+					//subcribe Active#1. WebCam and Audio
+					view.netStream2=new NetStream(netConnectionService.netConnection());
+					view.netStream2.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream2.client=this;
+					view.remoteWebcamDisplay.video=new Video();
+					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
+					view.netStream2.play(model.userInfo.teachingAssistantId);
 				}
 			}
 			else if(model.userInfo.participantType=="INTERACTIVE_VIEWER2")
 			{
 				if(view.myObject=="DR")
 				{
+					view.netStream1=new NetStream(netConnectionService.netConnection());
+					view.netStream1.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream1.client=this;
+					view.localWebcamDisplay.video=new Video();
+					view.localWebcamDisplay.video.attachNetStream(view.netStream1);
+					view.netStream1.play(model.userInfo.activeParticipantId1);
 					
+					//subcribe Active#1. WebCam and Audio
+					view.netStream2=new NetStream(netConnectionService.netConnection());
+					view.netStream2.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream2.client=this;
+					view.remoteWebcamDisplay.video=new Video();
+					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
+					view.netStream2.play(model.userInfo.lecturerId);
 				}
 				else if(view.myObject=="RN")
 				{
+					setLocalCameraMicrophone();
+					//play LECTURER
+					//publish INTERACTIVE_VIEWER1
+					view.netStream1=new NetStream(netConnectionService.netConnection());
+					view.netStream1.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream1.client=this;					
+					//publish Dr.WebCam and Audio
+					view.netStream1.attachAudio(model.localMic);
+					view.netStream1.attachCamera(model.localCamera);
+					view.netStream1.publish(model.userInfo.activeParticipantId2);
 					
+					//subcribe Active#1. WebCam and Audio
+					view.netStream2=new NetStream(netConnectionService.netConnection());
+					view.netStream2.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream2.client=this;
+					view.remoteWebcamDisplay.video=new Video();
+					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
+					view.netStream2.play(model.userInfo.teachingAssistantId);
 				}
 			}
 			else
@@ -184,11 +223,37 @@ package com.sickkids.caliper.view.ttt
 				//left side then DR, right side then RN
 				if(view.myObject=="DR")
 				{
+					view.netStream1=new NetStream(netConnectionService.netConnection());
+					view.netStream1.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream1.client=this;
+					view.localWebcamDisplay.video=new Video();
+					view.localWebcamDisplay.video.attachNetStream(view.netStream1);
+					view.netStream1.play(model.userInfo.activeParticipantId1);
 					
+					//subcribe Active#1. WebCam and Audio
+					view.netStream2=new NetStream(netConnectionService.netConnection());
+					view.netStream2.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream2.client=this;
+					view.remoteWebcamDisplay.video=new Video();
+					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
+					view.netStream2.play(model.userInfo.lecturerId);
 				}
 				else if(view.myObject=="RN")
 				{
+					view.netStream1=new NetStream(netConnectionService.netConnection());
+					view.netStream1.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream1.client=this;
+					view.localWebcamDisplay.video=new Video();
+					view.localWebcamDisplay.video.attachNetStream(view.netStream1);
+					view.netStream1.play(model.userInfo.activeParticipantId2);
 					
+					//subcribe Active#1. WebCam and Audio
+					view.netStream2=new NetStream(netConnectionService.netConnection());
+					view.netStream2.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+					view.netStream2.client=this;
+					view.remoteWebcamDisplay.video=new Video();
+					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
+					view.netStream2.play(model.userInfo.teachingAssistantId);
 				}
 			}
 		}
@@ -196,17 +261,17 @@ package com.sickkids.caliper.view.ttt
 		{
 			var str:String = "[{0}] code:'{1}', level:'{2}'\n";
 
-			FlexGlobals.topLevelApplication.log(StringUtil.substitute(str, e.type, e.code, e.level));
+			log(StringUtil.substitute(str, e.type, e.code, e.level));
 			switch (e.code) 
 			{
 				case "Camera.Muted":
-					FlexGlobals.topLevelApplication.log("(Camera.Muted) User denied access to camera in onCameraStatus(.) of ConductorPanelMediator.as");
+					log("(Camera.Muted) User denied access to camera in onCameraStatus(.) of ConductorPanelMediator.as");
 					break;
 				case "Camera.Unmuted":
-					FlexGlobals.topLevelApplication.log("(Camera.Unmuted) User allowed access to camera in onCameraStatus(.) of ConductorPanelMediator.as");
+					log("(Camera.Unmuted) User allowed access to camera in onCameraStatus(.) of ConductorPanelMediator.as");
 					break;
 				default:
-					FlexGlobals.topLevelApplication.log("Unkwon status="+e.code+" in onCameraStatus(.) of ConductorPanelMediator.as");
+					log("Unkwon status="+e.code+" in onCameraStatus(.) of ConductorPanelMediator.as");
 					break;
 			}
 		}
@@ -214,7 +279,7 @@ package com.sickkids.caliper.view.ttt
 		{
 			var str:String = "[{0}] activating:{1}\n";
 			var cam:Camera=e.currentTarget as Camera;
-			FlexGlobals.topLevelApplication.log("Camera name="+cam.name+"\n"+
+			log("Camera name="+cam.name+"\n"+
 												"activity level="+cam.activityLevel+"\n"+
 												"index="+cam.index+"\n"+
 												"BW="+cam.bandwidth+"\n"+
@@ -225,17 +290,17 @@ package com.sickkids.caliper.view.ttt
 		{
 			var str:String = "[{0}] code:'{1}', level:'{2}'\n";
 
-			FlexGlobals.topLevelApplication.log(StringUtil.substitute(str, evt.type, evt.code, evt.level));
+			log(StringUtil.substitute(str, evt.type, evt.code, evt.level));
 			switch (evt.code) 
 			{
 				case "Microphone.Muted":
-					FlexGlobals.topLevelApplication.log("(Microphone.Muted) User denied access to camera in onMicrophoneonStatus(.) of ConductorPanelMediator.as");
+					log("(Microphone.Muted) User denied access to camera in onMicrophoneonStatus(.) of ConductorPanelMediator.as");
 					break;
 				case "Microphone.Unmuted":
-					FlexGlobals.topLevelApplication.log("(Microphone.Unmuted) User allowed access to camera in onMicrophoneonStatus(.) of ConductorPanelMediator.as");
+					log("(Microphone.Unmuted) User allowed access to camera in onMicrophoneonStatus(.) of ConductorPanelMediator.as");
 					break;
 				default:
-					FlexGlobals.topLevelApplication.log("Unkwon status="+evt.code+" in onMicrophoneonStatus(.) of ConductorPanelMediator.as");
+					log("Unkwon status="+evt.code+" in onMicrophoneonStatus(.) of ConductorPanelMediator.as");
 					break;
 			}
 		}
@@ -244,7 +309,7 @@ package com.sickkids.caliper.view.ttt
 			//By ActivityLevel, Activating and so on, you can activate recording
 			var str:String = "[{0}] activating:{1}\n";
 			var mic:Microphone=e.currentTarget as Microphone;
-			FlexGlobals.topLevelApplication.log("Microphone name="+mic.name+
+			log("Microphone name="+mic.name+
 												"activity level="+mic.activityLevel+"\n"+
 												"codec="+mic.codec+"\n"+
 												"index="+mic.index+"\n"+
@@ -339,6 +404,69 @@ package com.sickkids.caliper.view.ttt
 		public function onCuePoint(info:Object):void 
 		{
 			trace("INFO cuepoint: time=" + info.time + " name=" + info.name + " type=" + info.type);
+		}
+		public function setLocalCameraMicrophone():void
+		{
+			model.localCamera=Camera.getCamera(); //Camera.names[0]);
+			if(model.localCamera)
+			{				
+				view.localWebcamDisplay.video=new Video();
+				view.localWebcamDisplay.video.attachCamera(model.localCamera);
+				//settings
+				model.localCamera.setQuality(0, 80);//bandwidth, quality
+				model.localCamera.setMode(320,240,15); //width, height, fps
+				model.localCamera.addEventListener(StatusEvent.STATUS, onCameraStatus);
+				model.localCamera.addEventListener(ActivityEvent.ACTIVITY, onCameraActivity);
+				
+			}
+			else
+			{
+				Alert.show("No Webcam is found!");
+				log("No webcam is found!");
+			}
+			model.localMic=Microphone.getEnhancedMicrophone();
+			if(model.localMic)
+			{
+				var options:MicrophoneEnhancedOptions=new MicrophoneEnhancedOptions();
+				options.mode=MicrophoneEnhancedMode.FULL_DUPLEX;
+				model.localMic.enhancedOptions=options;
+				model.localMic.setLoopBack(true);
+				//set events
+				model.localMic.addEventListener(ActivityEvent.ACTIVITY, onMicrophoneonActivity);
+				model.localMic.addEventListener(StatusEvent.STATUS, onMicrophoneonStatus);
+			}
+			else
+			{
+				log("No Microphone is found!");
+			}
+		}
+		public function log(s:String):void
+		{
+			FlexGlobals.topLevelApplication.log(s);
+			if(!(model.userInfo.participantType=="LECTURER" || model.userInfo.participantType=="TEACHING_ASSISTANT"))
+				this.dispatch(new TttNetCallEvent(TttNetCallEvent.CALL_TO_METHOD_EVENT, callServiceResponder, "clientLog", s));
+		}
+		public function okResult(o:Object):void
+		{	  
+			/****************************************************************************
+			 if(o is Boolean) trace("callResult(), return value="+o);//return value=false
+			 else trace("callResult(), return="+o);
+			 trace("event.type="+event.type);
+			 *****************************************************************************/
+			trace("INFO: okResult(o:Object) is called in ConductorPanelMediator.as");
+			for(var p:String in o) 
+			{
+				trace("okResult(), "+p + " : " + o[p]);
+			}	
+		}
+		public function faultResult(o:Object):void
+		{
+			
+			trace("INFO: faultResult(o:Object) is called in ConductorPanelMediator.as");
+			for(var p:String in o) 
+			{
+				trace("faultResult(), "+p + " : " + o[p]);
+			}	
 		}
 	}
 	

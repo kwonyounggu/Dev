@@ -10,6 +10,9 @@
 			   >
 	<fx:Script>
 		<![CDATA[
+			import com.sickkids.caliper.events.TttNetCallEvent;
+			import com.sickkids.caliper.events.TttNetConnectionEvent;
+			
 			import mx.events.FlexEvent;
 			
 			protected function applicationPreinitializeHandler(event:FlexEvent):void
@@ -32,8 +35,9 @@
 			}
 			public function log(s:String):void
 			{
-				adminPanel.log(s);
+				adminPanel.log(s);			
 			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>

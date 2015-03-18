@@ -1,6 +1,8 @@
 package com.sickkids.caliper
 {	
+	import com.sickkids.caliper.controller.TttNetCallCommand;
 	import com.sickkids.caliper.controller.TttNetConnectionCommand;
+	import com.sickkids.caliper.events.TttNetCallEvent;
 	import com.sickkids.caliper.events.TttNetConnectionEvent;
 	import com.sickkids.caliper.model.TttModel;
 	import com.sickkids.caliper.service.INetConnectionService;
@@ -54,6 +56,7 @@ package com.sickkids.caliper
 			*/
 			
 			commandMap.mapEvent(TttNetConnectionEvent.ROOM_CONNECT_EVENT, TttNetConnectionCommand, TttNetConnectionEvent);
+			commandMap.mapEvent(TttNetCallEvent.CALL_TO_METHOD_EVENT, TttNetCallCommand, TttNetCallEvent);
 			trace("INFO: injector.mapSingletonOf(INetConnectionService, NetConnectionService) is set in TttContext.as");
 			injector.mapSingletonOf(INetConnectionService, NetConnectionService);
 

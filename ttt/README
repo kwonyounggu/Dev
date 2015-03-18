@@ -228,3 +228,8 @@ myVD.mask = square;
 </mx:Canvas> 
 <mx:Button label="Start Camera" click="initCamera()" /> 
 </mx:Application>
+#---------------------------
+get from red5 in logMessages() in NetConnectionService.as
+get from red5 in logMessages() in NetConnectionService.as
+get from red5 in logMessages() in NetConnectionService.as
+get from red5 in logMessages() in NetConnectionService.as

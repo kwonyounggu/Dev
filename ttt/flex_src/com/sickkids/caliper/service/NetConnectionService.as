@@ -480,5 +480,9 @@ package com.sickkids.caliper.service
 			AppCommon.app_setSharedAppListObject(appModel.appMap);
 			trace("INFO: after writting the app list into the shared obj with the size="+AppCommon.app_sharedAppListObject.data.appMap.size());
 		}*/
+		public function logMessages(o:Object):void
+		{
+			trace("get from red5 in logMessages() in NetConnectionService.as");
+		}
 	}
 }
