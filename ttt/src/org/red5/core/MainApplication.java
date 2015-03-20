@@ -243,6 +243,9 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 		// TODO Auto-generated method stub
 		log.info("TTT.resultReceived(getServiceMethodName="+arg0.getServiceMethodName()+", getServiceName="+arg0.getServiceName()+", getArguments="+arg0.getArguments()+") is called in MainApplication.java");
 	}
+	//***************************************************************************
+	//This is called from clients of non-conductors.
+	//***************************************************************************
 	@SuppressWarnings("unchecked")
 	public void clientLog(String logStr)
 	{

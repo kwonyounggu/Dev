@@ -480,9 +480,14 @@ package com.sickkids.caliper.service
 			AppCommon.app_setSharedAppListObject(appModel.appMap);
 			trace("INFO: after writting the app list into the shared obj with the size="+AppCommon.app_sharedAppListObject.data.appMap.size());
 		}*/
+		//***************************************************************************
+		//This is called from clientLog(String logStr) in Red5 Application.java
+		//clientLog(String logStr) is called from clients of non-conductors.
+		//So only non-conductors will receive this function.
+		//***************************************************************************
 		public function logMessages(o:Object):void
 		{
-			trace("get from red5 in logMessages() in NetConnectionService.as");
+			trace("get from red5 in logMessages() in NetConnectionService.as, I am "+tttModel.userInfo.userId+", "+tttModel.userInfo.participantType);
 		}
 	}
 }

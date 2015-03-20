@@ -21,9 +21,6 @@ package com.sickkids.caliper.view.ttt
 	import mx.core.FlexGlobals;
 	import mx.utils.StringUtil;
 	
-	import spark.components.mediaClasses.DynamicStreamingVideoItem;
-	import spark.components.mediaClasses.DynamicStreamingVideoSource;
-	
 	import org.robotlegs.mvcs.Mediator;
 	
 	public class ConductorPanelMediator extends Mediator
@@ -443,7 +440,7 @@ package com.sickkids.caliper.view.ttt
 		public function log(s:String):void
 		{
 			FlexGlobals.topLevelApplication.log(s);
-			if(!(model.userInfo.participantType=="LECTURER" || model.userInfo.participantType=="TEACHING_ASSISTANT"))
+			if(!(model.userInfo.participantType=="LECTURER" || model.userInfo.participantType=="TEACHING_ASSISTANT"))//only non-conductors
 				this.dispatch(new TttNetCallEvent(TttNetCallEvent.CALL_TO_METHOD_EVENT, callServiceResponder, "clientLog", s));
 		}
 		public function okResult(o:Object):void

@@ -3,27 +3,65 @@
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx"
 		  title="Administration"
+		  creationComplete="panelCreationCompleteHandler(event)"
 		  >
 	<fx:Script>
 		<![CDATA[
+			import com.sickkids.caliper.model.TttModel;
 			
-		public function log(s:String):void
-		{
-			//the s goes to the server so that it will be shared to conductors
-			logDisplay.text=logDisplay.text+s+"\n";
-		}
+			import mx.events.FlexEvent;
+			
+			[Inject] public var tttModel:TttModel;
+			public function log(s:String):void
+			{
+				//the s goes to the server so that it will be shared to conductors
+				logDisplay.text=logDisplay.text+s+"\n";
+			}
+			
+			
+			
+			protected function panelCreationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				//trace("INFO: panelCreationCompleteHandler() is called in AdminPanel.mxml, I am "+tttModel.userInfo.userId+", "+tttModel.userInfo.participantType);
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<mx:Accordion id="adminAccordion" height="100%" width="100%">
-		<mx:VBox label="Log Display" height="100%" width="100%">
-			<s:TextArea id="logDisplay" height="100%" width="100%">
-				
-			</s:TextArea>
-			
-		</mx:VBox>
+			<mx:TabNavigator id="logTab" label="Log Activities" height="100%" width="100%" >
+				<mx:VBox label="My Log" width="100%" height="100%">
+					<s:TextArea id="logDisplay" height="100%" width="100%"></s:TextArea>
+				</mx:VBox>	
+				<!-- visibility visible=false doen't work -->
+				<mx:VBox id="logVboxActiveViewer1" label="A Log#1" width="100%" height="100%">
+					<s:TextArea id="logDisplayActiveViewer1" height="100%" width="100%"></s:TextArea>
+				</mx:VBox>				
+				<mx:VBox id="logVboxActiveViewer2" label="A Log#2" width="100%" height="100%">
+					<s:TextArea id="logDisplayActiveViewer2" height="100%" width="100%"></s:TextArea>
+				</mx:VBox>
+				<mx:VBox id="logVboxPassiveViewer1" label="P Log#1" width="100%" height="100%">
+					<s:TextArea id="logDisplayPassiveViewer1" height="100%" width="100%"></s:TextArea>
+				</mx:VBox>
+				<mx:VBox id="logVboxPassiveViewer2" label="P Log#2" width="100%" height="100%">
+					<s:TextArea id="logDisplayPassiveViewer2" height="100%" width="100%"></s:TextArea>
+				</mx:VBox>
+				<mx:VBox id="logVboxPassiveViewer3" label="P Log#3" width="100%" height="100%">
+					<s:TextArea id="logDisplayPassiveViewer3" height="100%" width="100%"></s:TextArea>
+				</mx:VBox>
+				<mx:VBox id="logVboxPassiveViewer4" label="P Log#4" width="100%" height="100%">
+					<s:TextArea id="logDisplayPassiveViewer4" height="100%" width="100%"></s:TextArea>
+				</mx:VBox>
+				<mx:VBox id="logVboxPassiveViewer5" label="P Log#5" width="100%" height="100%">
+					<s:TextArea id="logDisplayPassiveViewer5" height="100%" width="100%"></s:TextArea>
+				</mx:VBox>
+				<mx:VBox id="logVboxPassiveViewer6" label="P Log#6" width="100%" height="100%">
+					<s:TextArea id="logDisplayPassiveViewer6" height="100%" width="100%"></s:TextArea>
+				</mx:VBox>
+			</mx:TabNavigator>			
 		<mx:VBox label="Camera/Mic Settings" height="100%" width="100%">
 			
 		</mx:VBox>
