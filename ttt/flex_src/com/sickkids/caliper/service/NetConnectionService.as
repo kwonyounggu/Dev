@@ -1,6 +1,7 @@
 package com.sickkids.caliper.service
 {
 	import com.sickkids.caliper.components.AppCommon;
+	import com.sickkids.caliper.events.TttNetCallEvent;
 	import com.sickkids.caliper.events.TttNetConnectionEvent;
 	import com.sickkids.caliper.model.TttModel;
 	import com.sickkids.caliper.vo.UserInfoBean;
@@ -487,7 +488,9 @@ package com.sickkids.caliper.service
 		//***************************************************************************
 		public function logMessages(o:Object):void
 		{
-			trace("get from red5 in logMessages() in NetConnectionService.as, I am "+tttModel.userInfo.userId+", "+tttModel.userInfo.participantType);
+			var s:String=o as String;
+			trace("get from red5 in logMessages("+ s +") in NetConnectionService.as, I am "+tttModel.userInfo.userId+", "+tttModel.userInfo.participantType);
+			dispatch(new TttNetCallEvent(TttNetCallEvent.LOG_CLIENTS_RETURNED_EVENT, null, null, o));
 		}
 	}
 }

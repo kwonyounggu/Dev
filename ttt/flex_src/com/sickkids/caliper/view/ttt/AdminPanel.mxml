@@ -17,7 +17,24 @@
 				//the s goes to the server so that it will be shared to conductors
 				logDisplay.text=logDisplay.text+s+"\n";
 			}
-			
+			public function logOfClients(participantType:String, s:String):void
+			{
+				switch(participantType)
+				{
+					case "LECTURER":
+					case "TEACHING_ASSISTANT": trace("ERROR: participantType of LECTURER/TEACHING_ASSISTANT is not supposed to here,  onLogClientsReturned(e:TttNetCallEvent) in AdminPanel.mxml");
+						break;
+					case "INTERACTIVE_VIEWER1": logDisplayActiveViewer1.text+=s+"\n"; break;
+					case "INTERACTIVE_VIEWER2": logDisplayActiveViewer2.text+=s+"\n"; break;					
+					case "ONEWAY_VIEWER1": logDisplayPassiveViewer1.text+=s+"\n";  break;
+					case "ONEWAY_VIEWER2": logDisplayPassiveViewer2.text+=s+"\n";  break;
+					case "ONEWAY_VIEWER3": logDisplayPassiveViewer3.text+=s+"\n"; break;
+					case "ONEWAY_VIEWER4": logDisplayPassiveViewer4.text+=s+"\n"; break;
+					case "ONEWAY_VIEWER5": logDisplayPassiveViewer5.text+=s+"\n"; break;
+					case "ONEWAY_VIEWER6": logDisplayPassiveViewer6.text+=s+"\n"; break;
+					default: trace("ERROR: participantType, "+participantType+" is not known,  onLogClientsReturned(e:TttNetCallEvent) in AdminPanel.mxml"); break;
+				}
+			}
 			
 			
 			protected function panelCreationCompleteHandler(event:FlexEvent):void
@@ -32,7 +49,7 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<mx:Accordion id="adminAccordion" height="100%" width="100%">
-			<mx:TabNavigator id="logTab" label="Log Activities" height="100%" width="100%" >
+			<mx:TabNavigator id="logTab" label="Log Activities" height="100%" width="100%" creationPolicy="all">
 				<mx:VBox label="My Log" width="100%" height="100%">
 					<s:TextArea id="logDisplay" height="100%" width="100%"></s:TextArea>
 				</mx:VBox>	

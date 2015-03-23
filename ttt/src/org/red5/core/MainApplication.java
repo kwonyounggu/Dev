@@ -263,8 +263,8 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 					if(ubAttr.getParticipantType()==ParticipantType.LECTURER || ubAttr.getParticipantType()==ParticipantType.TEACHING_ASSISTANT)
 					{
 						if (conn instanceof IServiceCapableConnection)
-						{
-							((IServiceCapableConnection) conn).invoke("logMessages",new Object[]{ logStr });
+						{	
+							((IServiceCapableConnection) conn).invoke("logMessages",new Object[]{logStr});
 							
 						}
 					}

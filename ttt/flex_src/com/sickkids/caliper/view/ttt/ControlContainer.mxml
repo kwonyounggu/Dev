@@ -36,7 +36,7 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<mx:HBox width="100%" paddingLeft="3" paddingTop="2" paddingRight="0" visible="true" includeInLayout="true" verticalAlign="middle" verticalCenter="0">
+	<mx:HBox width="100%" paddingLeft="3" paddingTop="2" paddingRight="0" visible="true" includeInLayout="true" verticalAlign="middle" verticalCenter="0">		
 		<!-- later see ReviewPanel.mxml to use upIcon and downIcon-->
 		<s:Image id="upIcon" source="@Embed(source='assets/images/controls/fullscreen25.png')" buttonMode="true"/>
 		<mx:UIComponent id="connectingId"
