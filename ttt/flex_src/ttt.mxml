@@ -7,12 +7,10 @@
 			   xmlns:ttt="com.sickkids.caliper.view.ttt.*" 
 			   preinitialize="applicationPreinitializeHandler(event)" 
 			   xmlns:caliper="com.sickkids.caliper.*"
+			   creationComplete="applicationCreationCompleteHandler(event)"
 			   >
 	<fx:Script>
-		<![CDATA[
-			import com.sickkids.caliper.events.TttNetCallEvent;
-			import com.sickkids.caliper.events.TttNetConnectionEvent;
-			
+		<![CDATA[		
 			import mx.events.FlexEvent;
 			
 			protected function applicationPreinitializeHandler(event:FlexEvent):void
@@ -38,23 +36,29 @@
 				adminPanel.log(s);			
 			}
 			
+			protected function applicationCreationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				trace("INFO: ttt.mxml has been completed ...");
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<caliper:TttContext contextView="{this}" />
 	</fx:Declarations>
-	
+	<!-- W=4 H=3 RATIO OF VIDEO MARCH-24-2015 -->
 	<s:HGroup horizontalCenter="0" paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0" width="100%" height="100%" gap="4">	
 		<s:VGroup horizontalCenter="0" paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0" width="33.3%" height="100%" gap="4">
-			<s:HGroup horizontalCenter="0" paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0" width="100%" height="40%" gap="4">
+			<s:HGroup horizontalCenter="0" paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0" width="100%" height="35%" gap="4">
 				<ttt:ConductorPanel width="50%" height="100%" myObject="DR"/>
 				<ttt:ConductorPanel width="50%" height="100%" myObject="RN"/>
 			</s:HGroup>
 			<s:Group horizontalCenter="0" width="100%" height="55%">
 				<ttt:TextPanel width="100%" height="100%"/>
 			</s:Group>
-			<s:Group horizontalCenter="0" width="100%" height="5%">
+			<s:Group horizontalCenter="0" width="100%" height="10%" id="controlGroup">
 				<ttt:ControlContainer width="100%" height="100%"/>
 			</s:Group>
 		</s:VGroup>

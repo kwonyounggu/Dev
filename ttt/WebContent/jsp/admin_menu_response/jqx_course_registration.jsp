@@ -588,7 +588,7 @@
 											<%
 												for(AllRegisteredUserBean ub : userList)	
 												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
+													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHospitalName()+"]</option>");																
 												}
 											%>
 										</select>
@@ -603,7 +603,7 @@
 											<%
 												for(AllRegisteredUserBean ub : userList)	
 												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
+													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHospitalName()+"]</option>");																
 												}
 											%>
 										</select>
@@ -618,7 +618,7 @@
 											<%
 												for(AllRegisteredUserBean ub : userList)	
 												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
+													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHospitalName()+"]</option>");																
 												}
 											%>
 										</select>
@@ -633,7 +633,7 @@
 											<%
 												for(AllRegisteredUserBean ub : userList)	
 												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
+													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHospitalName()+"]</option>");																
 												}
 											%>
 										</select>
@@ -648,7 +648,7 @@
 											<%
 												for(AllRegisteredUserBean ub : userList)	
 												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
+													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHospitalName()+"]</option>");																
 												}
 											%>
 										</select>
@@ -663,7 +663,7 @@
 											<%
 												for(AllRegisteredUserBean ub : userList)	
 												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
+													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHospitalName()+"]</option>");																
 												}
 											%>
 										</select>
@@ -678,7 +678,7 @@
 											<%
 												for(AllRegisteredUserBean ub : userList)	
 												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
+													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHospitalName()+"]</option>");																
 												}
 											%>
 										</select>
@@ -693,7 +693,7 @@
 											<%
 												for(AllRegisteredUserBean ub : userList)	
 												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
+													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHospitalName()+"]</option>");																
 												}
 											%>
 										</select>
@@ -708,7 +708,7 @@
 											<%
 												for(AllRegisteredUserBean ub : userList)	
 												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
+													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHospitalName()+"]</option>");																
 												}
 											%>
 										</select>
@@ -723,7 +723,7 @@
 											<%
 												for(AllRegisteredUserBean ub : userList)	
 												{
-													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHopitalName()+"]</option>");																
+													out.print("<option value='"+ub.getUserId()+":"+ub.getLoginLevel()+"'>"+ub.getFirstName()+" "+ub.getLastName()+" ["+ub.getHospitalName()+"]</option>");																
 												}
 											%>
 										</select>

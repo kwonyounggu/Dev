@@ -27,7 +27,7 @@
 			 				out.print("{"); 
 			 				
 			 				//Visible
-			 				out.print("\"hospitalName\": \""+ab.getHopitalName()+"\","); 
+			 				out.print("\"hospitalName\": \""+ab.getHospitalName()+"\","); 
 			 				out.print("\"name\": \""+ab.getFirstName()+" "+ab.getLastName()+"\","); 
 			 				out.print("\"userId\": \""+ab.getUserId()+"\","); 
 			 				out.print("\"email\": \""+ab.getEmail()+"\","); 

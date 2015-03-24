@@ -37,7 +37,7 @@ public class AllRegisteredUserBean implements Serializable
 	
 	private boolean valid=true;
 
-	private String hopitalName="";
+	private String hospitalName="";
 	
 	public int getAppId()
 	{
@@ -216,13 +216,13 @@ public class AllRegisteredUserBean implements Serializable
 		this.valid = valid;
 	}
 	
-	public String getHopitalName()
+	public String getHospitalName()
 	{
-		return hopitalName;
+		return hospitalName;
 	}
-	public void setHopitalName(String hopitalName)
+	public void setHospitalName(String hospitalName)
 	{
-		this.hopitalName = hopitalName;
+		this.hospitalName = hospitalName;
 	}
 	public AllRegisteredUserBean copy()
 	{
@@ -250,7 +250,7 @@ public class AllRegisteredUserBean implements Serializable
 		temp.seniority=this.seniority;
 		temp.valid=this.valid;
 		
-		temp.hopitalName=this.hopitalName;
+		temp.hospitalName=this.hospitalName;
 		return temp;
 	}
 	public String toString()

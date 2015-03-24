@@ -75,6 +75,8 @@ public class SQLDao
 				rb.setRemarks(rs.getString(21));
 				rb.setValid(rs.getBoolean(22));
 				
+				rb.setHospitalName(getGenericString("select hospital_name from hospital where hospital_id='"+rb.getHospitalId()+"';"));
+				
 			}
 		}
 		catch (SQLException e)
@@ -198,7 +200,7 @@ public class SQLDao
 				rb.setPrimayClinicalPractice(rs.getString(11));
 				rb.setSeniority(rs.getInt(12));			
 				rb.setValid(rs.getBoolean(13));
-				rb.setHopitalName(rs.getString(14));
+				rb.setHospitalName(rs.getString(14));
 				list.add(rb);
 			}
 		}

@@ -57,13 +57,13 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:BorderContainer id="topBorderContainer" width="100%" height="56%" borderAlpha="0" backgroundColor="0xff1234">
+	<s:BorderContainer id="topBorderContainer" width="100%" height="76%" borderAlpha="0" backgroundColor="0xff1234">
 		<ttt:VideoContainer id="remoteWebcamDisplay" width="100%" height="100%" top="0" left="0"/>	
 		<ttt:VideoContainer id="localWebcamDisplay" width="25%" height="24%" bottom="0" right="0" mouseOver="localWebcamDisplayMouseHandler(event)" mouseOut="localWebcamDisplayMouseHandler(event)"/>
 		<!--<s:VideoDisplay id="localWebcamDisplay" width="25%" height="24%" bottom="3" right="0" mouseOver="localWebcamDisplayMouseHandler(event)" mouseOut="localWebcamDisplayMouseHandler(event)">			
 		</s:VideoDisplay>-->
 	</s:BorderContainer>
-	<s:BorderContainer id="bottomBorderContainer" width="100%" height="44%" borderWeight="0" borderAlpha="0" >
+	<s:BorderContainer id="bottomBorderContainer" width="100%" height="24%" borderWeight="0" borderAlpha="0" >
 		<s:layout>
 			<s:VerticalLayout paddingTop="2" paddingRight="2" paddingBottom="2" paddingLeft="2"/>
 		</s:layout>

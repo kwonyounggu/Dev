@@ -210,6 +210,11 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 				}
 				
 				conn.getClient().setAttribute("userBean", ub);
+				if (conn instanceof IServiceCapableConnection)
+				{	
+					((IServiceCapableConnection) conn).invoke("loggedInUser",new Object[]{ub});
+					
+				}
 			}
 
 
@@ -228,6 +233,12 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 		try
 		{
 			//This disconnection will presumably include conn.getClient().removeAttributes()
+			UserBean ub=(UserBean)conn.getClient().getAttribute("userBean");
+			if (conn instanceof IServiceCapableConnection)
+			{	
+				((IServiceCapableConnection) conn).invoke("loggedOutUser",new Object[]{ub});
+				
+			}
 			super.roomDisconnect(conn);
 		}
 		catch(Exception e)

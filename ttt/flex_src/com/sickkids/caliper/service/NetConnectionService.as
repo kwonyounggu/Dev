@@ -4,6 +4,7 @@ package com.sickkids.caliper.service
 	import com.sickkids.caliper.events.TttNetCallEvent;
 	import com.sickkids.caliper.events.TttNetConnectionEvent;
 	import com.sickkids.caliper.model.TttModel;
+	import com.sickkids.caliper.vo.UserBean;
 	import com.sickkids.caliper.vo.UserInfoBean;
 	
 	import flash.events.AsyncErrorEvent;
@@ -58,7 +59,7 @@ package com.sickkids.caliper.service
 									userInfo.userId,
 									userInfo.email,
 									userInfo.hospitalId,
-									userInfo.hopitalName,
+									userInfo.hospitalName,
 									userInfo.participantType);
 		} 
 		public function netConnection():NetConnection
@@ -489,8 +490,18 @@ package com.sickkids.caliper.service
 		public function logMessages(o:Object):void
 		{
 			var s:String=o as String;
-			trace("get from red5 in logMessages("+ s +") in NetConnectionService.as, I am "+tttModel.userInfo.userId+", "+tttModel.userInfo.participantType);
+			trace("INFO: get from red5 in logMessages("+ s +") in NetConnectionService.as, I am "+tttModel.userInfo.userId+", "+tttModel.userInfo.participantType);
 			dispatch(new TttNetCallEvent(TttNetCallEvent.LOG_CLIENTS_RETURNED_EVENT, null, null, o));
+		}
+		public function loggedOutUser(o:Object):void
+		{
+			var ub:UserBean=o as UserBean;
+			trace("INFO: called from red5 in roomDisconnect("+o+") in NetConnectionService.as");
+		}
+		public function loggedInUser(o:Object):void
+		{
+			var ub:UserBean=o as UserBean;
+			trace("INFO: called from red5 in roomConnect("+o+") in NetConnectionService.as");
 		}
 	}
 }

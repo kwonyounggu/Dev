@@ -52,7 +52,7 @@
 								loginLevel : 		"${trb.loginLevel}",  
 								hospitalId : 		"${trb.hospitalId}",  
 								email : 			"${trb.email}",
-								hopitalName : 		"${trb.hopitalName}",  
+								hospitalName : 		"${trb.hospitalName}",  
 								courseNumber : 		"${curriculum_bean.courseNumber}",
 								courseName : 		"${curriculum_bean.courseName}",  
 								participantType : 	"<%=curriculumBean.getParticipantType(trb.getUserId())%>"

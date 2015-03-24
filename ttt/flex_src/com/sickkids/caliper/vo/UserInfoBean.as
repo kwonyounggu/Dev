@@ -11,7 +11,7 @@ package com.sickkids.caliper.vo
 		public var loginLevel:int=1;//admin
 		public var hospitalId:String="02";
 		public var email:String="younggu.kwon@sickkids.ca";
-		public var hopitalName:String="The Hospital for Sick Children";
+		public var hospitalName:String="The Hospital for Sick Children";
 		public var courseNumber:int=6;
 		public var courseName:String="Brain Diease Advanced";
 		public var participantType:String="LECTURER";
@@ -51,7 +51,7 @@ package com.sickkids.caliper.vo
 				loginLevel=Number(FlexGlobals.topLevelApplication.parameters.loginLevel);
 				hospitalId=FlexGlobals.topLevelApplication.parameters.hospitalId;
 				email=FlexGlobals.topLevelApplication.parameters.email;
-				hopitalName=FlexGlobals.topLevelApplication.parameters.hopitalName;
+				hospitalName=FlexGlobals.topLevelApplication.parameters.hospitalName;
 				courseNumber=Number(FlexGlobals.topLevelApplication.parameters.courseNumber);
 				courseName=FlexGlobals.topLevelApplication.parameters.courseName;
 				participantType=FlexGlobals.topLevelApplication.parameters.participantType;
@@ -108,7 +108,7 @@ package com.sickkids.caliper.vo
 					"loginLevel="+loginLevel+", "+"\n"+
 					"hospitalId="+hospitalId+", "+"\n"+
 					"email="+email+", "+"\n"+
-					"hopitalName="+hopitalName+", "+"\n"+
+					"hospitalName="+hospitalName+", "+"\n"+
 					"courseNumber="+courseNumber+", "+"\n"+
 					"courseName="+courseName+", "+"\n"+
 					"participantType="+participantType+", "+"\n"+
