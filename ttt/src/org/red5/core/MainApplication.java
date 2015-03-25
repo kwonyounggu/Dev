@@ -1,6 +1,7 @@
 package org.red5.core;
 
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -26,6 +27,7 @@ import org.red5.server.api.scope.IScope;
 import org.red5.server.api.service.IPendingServiceCall;
 import org.red5.server.api.service.IPendingServiceCallback;
 import org.red5.server.api.service.IServiceCapableConnection;
+import org.red5.server.api.service.ServiceUtils;
 
 import org.springframework.core.io.Resource;
 
@@ -209,12 +211,14 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 					}
 				}
 				
+				
 				conn.getClient().setAttribute("userBean", ub);
-				if (conn instanceof IServiceCapableConnection)
+				/*if (conn instanceof IServiceCapableConnection)
 				{	
 					((IServiceCapableConnection) conn).invoke("loggedInUser",new Object[]{ub});
 					
 				}
+				*/
 			}
 
 
@@ -233,12 +237,13 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 		try
 		{
 			//This disconnection will presumably include conn.getClient().removeAttributes()
-			UserBean ub=(UserBean)conn.getClient().getAttribute("userBean");
+			/*UserBean ub=(UserBean)conn.getClient().getAttribute("userBean");
 			if (conn instanceof IServiceCapableConnection)
 			{	
 				((IServiceCapableConnection) conn).invoke("loggedOutUser",new Object[]{ub});
 				
 			}
+			*/
 			super.roomDisconnect(conn);
 		}
 		catch(Exception e)
@@ -247,8 +252,60 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 			//LET THE USER KNOW THE DISCONNECT OF A ROOM MEMBER HAS BEEN FAILED
 		}
 	}
+	@Override public boolean roomJoin(IClient client, IScope room)
+	{
+		log.info("roomJoin() is called in MainApplication.java");
+		
+		try
+		{
+			//This is to let the all logged-in-users to the currently joined user
+			IConnection current = Red5.getConnectionLocal();
+			Collection<Set<IConnection>> conCollection = room.getConnections();
+			for (Set<IConnection> cons : conCollection) 
+			{
+				for (IConnection conn : cons) 
+				{
+					if (conn != null) 
+					{
+						//do something with the connection
+						if (conn.equals(current)) continue; // // Don't notify current client
 	
+						if (conn instanceof IServiceCapableConnection)
+						{
+							//This is to notify the connected clients in the same room about other room members being joined
+							log.info("roomJoin() is called in MainApplication.java, temp="+(UserBean)conn.getClient().getAttribute("userBean")+" ------------------- 1");
+							((IServiceCapableConnection) current).invoke("loggedInUser", new Object[]{(UserBean)conn.getClient().getAttribute("userBean")});
+						}		
+					}
+				}
+			}
+			//broadcast all connected client in order to let them know who is in	
+			log.info("roomJoin() is called in MainApplication.java, temp="+(UserBean)client.getAttribute("userBean")+" ------------------- 2");
+			Object[] param ={ client.getAttribute("userBean") };
+			ServiceUtils.invokeOnAllConnections(scope, "loggedInUser", param);			
+		}
+		catch(Exception e)
+		{
+			log.severe(e.toString()+" with client.getId()="+client.getId()+" in roomJoin() of MainApplication.java");
+		}
+		return true;
+	}
 	
+	@Override public void roomLeave(IClient client, IScope room)
+	{
+		log.info("roomLeave() is called in MainApplication.java");
+		try
+		{
+			log.info("roomLeave() is called in MainApplication.java, temp="+(UserBean)client.getAttribute("userBean")+" ------------------- 1");
+			//broadcast all connected client in order to let them know who is out			
+			Object[] param ={ client.getAttribute("userBean") };
+			ServiceUtils.invokeOnAllConnections(scope, "loggedOutUser", param);			
+		}
+		catch(Exception e)
+		{
+			log.severe(e.toString()+" with client.getId()="+client.getId()+" in roomLeave() of MainApplication.java");
+		}
+	}
 	public void resultReceived(IPendingServiceCall arg0)
 	{
 		// TODO Auto-generated method stub
@@ -264,7 +321,6 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 		{
 			IConnection current = Red5.getConnectionLocal();
 			log.info("TTT.clientLog(String logStr) is called from active and passive clients with\nfrom Client ID:" + current.getClient().getId() + "\nlogStr :" + logStr+" in MainApplication.java");
-			//Iterator<IConnection> it = (Iterator<IConnection>) this.scope.getConnections();
 			for(Set<IConnection> connections : this.scope.getConnections())
 				 for (IConnection conn: connections) 
 				 {
