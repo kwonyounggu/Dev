@@ -296,7 +296,7 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 		log.info("roomLeave() is called in MainApplication.java");
 		try
 		{
-			log.info("roomLeave() is called in MainApplication.java, temp="+(UserBean)client.getAttribute("userBean")+" ------------------- 1");
+			log.info("roomLeave() is called in MainApplication.java, temp="+(UserBean)client.getAttribute("userBean")+" ------------------- 3");
 			//broadcast all connected client in order to let them know who is out			
 			Object[] param ={ client.getAttribute("userBean") };
 			ServiceUtils.invokeOnAllConnections(scope, "loggedOutUser", param);			

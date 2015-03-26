@@ -10,6 +10,9 @@ package com.sickkids.caliper.events
 		public static const ROOM_CONNECT_FAILED_EVENT:String="ROOM_CONNECT_FAILED_EVENT";
 		
 		
+		public static const ROOM_JOIN_EVENT:String="ROOM_JOIN_EVENT";
+		public static const ROOM_LEAVE_EVENT:String="ROOM_LEAVE_EVENT";
+		
 		private var _arg1:Object=null;
 		private var _arg2:Object=null;
 		private var _arg3:Object=null;

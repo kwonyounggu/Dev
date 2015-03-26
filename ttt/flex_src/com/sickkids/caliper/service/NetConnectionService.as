@@ -496,12 +496,14 @@ package com.sickkids.caliper.service
 		public function loggedOutUser(o:Object):void
 		{
 			var ub:UserBean=o as UserBean;
-			trace("INFO: called from red5 in roomDisconnect("+o+") in NetConnectionService.as");
+			trace("INFO: called from red5 in roomLeave("+o+") in NetConnectionService.as");
+			dispatch(new TttNetConnectionEvent(TttNetConnectionEvent.ROOM_LEAVE_EVENT, o as UserBean));
 		}
 		public function loggedInUser(o:Object):void
 		{
 			var ub:UserBean=o as UserBean;
-			trace("INFO: called from red5 in roomConnect("+o+") in NetConnectionService.as");
+			trace("INFO: called from red5 in roomJoin("+o+") in NetConnectionService.as");
+			dispatch(new TttNetConnectionEvent(TttNetConnectionEvent.ROOM_JOIN_EVENT, o as UserBean));
 		}
 	}
 }

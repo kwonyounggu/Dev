@@ -35,7 +35,18 @@ package com.sickkids.caliper.vo
 		//public var bTokenPossesed:Boolean=false;//it can be possesed to anyone by the lecturer so that the owner of the token can control all
 		//The token can only be possed to two people in the room (LECTURER and or other)
 		//It can be enabled by the LECTURER any time but LECTURER's event is in higher priority
-				
+		/*
+		[Bindable] public var bLecturerLoggedIn:Boolean=false;
+		[Bindable] public var bTaLoggedIn:Boolean=false;
+		[Bindable] public var bActiveParticipant1LoggedIn:Boolean=false;
+		[Bindable] public var bActiveParticipant2LoggedIn:Boolean=false;
+		[Bindable] public var bPassiveParticipant1LoggedIn:Boolean=false;
+		[Bindable] public var bPassiveParticipant2LoggedIn:Boolean=false;
+		[Bindable] public var bPassiveParticipant3LoggedIn:Boolean=false;
+		[Bindable] public var bPassiveParticipant4LoggedIn:Boolean=false;
+		[Bindable] public var bPassiveParticipant5LoggedIn:Boolean=false;
+		[Bindable] public var bPassiveParticipant6LoggedIn:Boolean=false;
+		*/		
 		public function UserInfoBean()
 		{
 		}
