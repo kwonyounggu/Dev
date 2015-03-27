@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" viewSourceURL="srcview/index.html" creationComplete="init()">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.sickkids.caliper.components.AlertMsg;
+			
+			import mx.collections.ArrayCollection;
+			import mx.core.UIComponent;
+			
+			[Embed(source='Assets.swf', symbol='fwdMonthDown')]
+			[Bindable] private var rightArrow:Class;
+			
+			[Embed(source='Assets.swf', symbol='backMonthUp')]
+			[Bindable] private var leftArrow:Class;
+			
+			[Bindable] private var dp:ArrayCollection = new ArrayCollection([
+				{label:"11111111111"},
+				{label:"22222222222"},
+				{label:"33333333333"}
+			]);
+			
+			private function adjustSize():void {
+				if(container.maxHorizontalScrollPosition > 0){
+					if(container.horizontalScrollPosition > container.maxHorizontalScrollPosition)
+						container.horizontalScrollPosition = container.maxHorizontalScrollPosition;
+					scrollLeftBtn.visible = true;
+					scrollRightBtn.visible = true;
+				}else{
+					container.horizontalScrollPosition = 0;
+					scrollLeftBtn.visible = false;
+					scrollRightBtn.visible = false;
+				}
+			}
+			
+			private function scrollLeft(delta:int = 10):void {
+				if(container.horizontalScrollPosition > 0)
+					container.horizontalScrollPosition -= delta;
+			}
+			
+			private function scrollRight(delta:int = 10):void {
+				if(container.horizontalScrollPosition < container.maxHorizontalScrollPosition)
+					container.horizontalScrollPosition += delta;
+			}
+			
+			private function onMouseWheel(event:MouseEvent):void {
+				if(event.delta > 0)
+					scrollLeft(20);
+				else if(event.delta < 0)
+					scrollRight(20);
+			}
+			
+			private function onAddItem():void {
+				var i:int = dp.length+1;
+				var o:Object = {label: String(i * 11111111111)};
+				dp.addItem(o);
+			}
+			
+			private function onRemoveItem():void {
+				if(dp.length > 0)
+					dp.removeItemAt(dp.length-1);
+			}
+			
+			import mx.core.IToolTip;
+			import mx.managers.ToolTipManager;
+			import flash.events.MouseEvent;
+			
+			private var tt:IToolTip;
+			
+			private function init():void {
+				systemManager.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			}
+			
+			private function onMouseMove(evt:MouseEvent):void {
+				if (tt) {
+					tt.move(evt.stageX + 10, evt.stageY + 10);
+					evt.updateAfterEvent();
+				}
+			}
+			
+			private function toolTipCreate():void {
+				if (tt) {
+					toolTipDestroy();
+				}
+				tt = ToolTipManager.createToolTip(textInput.text, textInput.x, textInput.y);
+			}
+			
+			private function toolTipDestroy():void {
+				if (tt) {
+					ToolTipManager.destroyToolTip(tt);
+					tt = null;
+				}
+			}
+			
+			private var alert:AlertMsg=new AlertMsg();
+			
+			public function onMouseDown(e:MouseEvent):void
+			{
+				if(alert.isOpen) alert.close();
+				else
+				{
+					alert.x=e.currentTarget.x;
+					alert.y=e.currentTarget.y;
+					alert.open(this, false);
+				}
+			}
+			
+			
+		]]>
+	</mx:Script>
+	
+	
+	
+	<mx:TextInput id="textInput" text="Tool tip text..." />
+	<mx:HBox>
+		<mx:Button label="create" click="toolTipCreate()" />
+		<mx:Button label="destroy" click="toolTipDestroy()" />
+		<mx:Button id="mybutton" label="alert" mouseDown="onMouseDown(event)"  />
+	</mx:HBox>
+
+	<mx:Box width="60%" id="parentContainer" backgroundColor="#ffcc00">
+		
+		<mx:HBox width="100%" horizontalGap="0" mouseWheel="onMouseWheel(event)" resize="adjustSize()"
+				 horizontalScrollPolicy="off">
+			<mx:Button buttonDown="scrollLeft()" autoRepeat="true" id="scrollLeftBtn"
+					   includeInLayout="{scrollLeftBtn.visible}" visible="false"
+					   cornerRadius="0" icon="{leftArrow}" width="20" />
+			<mx:HBox maxWidth="{parentContainer.width-scrollRightBtn.width-scrollLeftBtn.width}"
+					 horizontalScrollPolicy="off" id="container"
+					 horizontalGap="0">
+				<mx:LinkBar dataProvider="{dp}" labelField="label" updateComplete="adjustSize()" />
+			</mx:HBox>
+			<mx:Button buttonDown="scrollRight()" autoRepeat="true" id="scrollRightBtn"
+					   includeInLayout="{scrollRightBtn.visible}" visible="false"
+					   cornerRadius="0" icon="{rightArrow}" width="20" />
+		</mx:HBox>
+		
+	</mx:Box>
+	<mx:Button label="add item" click="onAddItem()" />
+	<mx:Button label="remove item" click="onRemoveItem()" />
+	
+</mx:Application>

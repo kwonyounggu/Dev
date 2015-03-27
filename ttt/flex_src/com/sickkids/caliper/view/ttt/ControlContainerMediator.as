@@ -37,10 +37,32 @@ package com.sickkids.caliper.view.ttt
 			this.addContextListener(TttNetConnectionEvent.ROOM_LEAVE_EVENT, onRoomLeave, TttNetConnectionEvent);
 			
 			onConnectClick(null);
+			initialize();
 		}
 		override public function onRemove():void
 		{
 			trace("INFO: onRemove() is called in ControlContainerMediator.as");
+		}
+		private function initialize():void
+		{
+			switch(model.userInfo.participantType)
+			{
+				case "LECTURER": controlContainer.attenceLabel.visible=controlContainer.attenceLabel.includeInLayout=false; break;
+				case "TEACHING_ASSISTANT":
+				case "INTERACTIVE_VIEWER1": 					
+				case "INTERACTIVE_VIEWER2":
+				case "ONEWAY_VIEWER1": 
+				case "ONEWAY_VIEWER2": 
+				case "ONEWAY_VIEWER3": 
+				case "ONEWAY_VIEWER4": 
+				case "ONEWAY_VIEWER5": 
+				case "ONEWAY_VIEWER6":  
+					controlContainer.fullScreen.visible=controlContainer.fullScreen.includeInLayout=false;
+					controlContainer.settings.visible=controlContainer.settings.includeInLayout=false;
+					controlContainer.controlSwitch.visible=controlContainer.controlSwitch.includeInLayout=false;
+					break;
+				default: break;
+			}
 		}
 		private function onSettingsClick(event:MouseEvent):void
 		{
@@ -109,42 +131,52 @@ package com.sickkids.caliper.view.ttt
 				case "LECTURER":
 					controlContainer.lecturerIn.visible=controlContainer.lecturerIn.includeInLayout=true;
 					controlContainer.lecturerOut.visible=controlContainer.lecturerOut.includeInLayout=false;
+					controlContainer.lecturerIn.toolTip=ub.toolTip();
 					break;
 				case "TEACHING_ASSISTANT": 
 					controlContainer.taIn.visible=controlContainer.taIn.includeInLayout=true;
 					controlContainer.taOut.visible=controlContainer.taOut.includeInLayout=false;
+					controlContainer.taIn.toolTip=ub.toolTip();
 					break;
 				case "INTERACTIVE_VIEWER1": 
 					controlContainer.active1In.visible=controlContainer.active1In.includeInLayout=true;
 					controlContainer.active1Out.visible=controlContainer.active1Out.includeInLayout=false;
+					controlContainer.active1In.toolTip=ub.toolTip();
 					break;
 				case "INTERACTIVE_VIEWER2":
 					controlContainer.active2In.visible=controlContainer.active2In.includeInLayout=true;
 					controlContainer.active2Out.visible=controlContainer.active2Out.includeInLayout=false;
+					controlContainer.active2In.toolTip=ub.toolTip();
 					break;
 				case "ONEWAY_VIEWER1":
 					controlContainer.passive1In.visible=controlContainer.passive1In.includeInLayout=true;
 					controlContainer.passive1Out.visible=controlContainer.passive1Out.includeInLayout=false;
+					controlContainer.passive1In.toolTip=ub.toolTip();
 					break;
 				case "ONEWAY_VIEWER2":
 					controlContainer.passive2In.visible=controlContainer.passive2In.includeInLayout=true;
 					controlContainer.passive2Out.visible=controlContainer.passive2Out.includeInLayout=false;
+					controlContainer.passive2In.toolTip=ub.toolTip();
 					break;
 				case "ONEWAY_VIEWER3":
 					controlContainer.passive3In.visible=controlContainer.passive3In.includeInLayout=true;
 					controlContainer.passive3Out.visible=controlContainer.passive3Out.includeInLayout=false;
+					controlContainer.passive3In.toolTip=ub.toolTip();
 					break;
 				case "ONEWAY_VIEWER4":
 					controlContainer.passive4In.visible=controlContainer.passive4In.includeInLayout=true;
 					controlContainer.passive4Out.visible=controlContainer.passive4Out.includeInLayout=false;
+					controlContainer.passive4In.toolTip=ub.toolTip();
 					break;
 				case "ONEWAY_VIEWER5":
 					controlContainer.passive5In.visible=controlContainer.passive5In.includeInLayout=true;
 					controlContainer.passive5Out.visible=controlContainer.passive5Out.includeInLayout=false;
+					controlContainer.passive5In.toolTip=ub.toolTip();
 					break;
 				case "ONEWAY_VIEWER6":
 					controlContainer.passive6In.visible=controlContainer.passive6In.includeInLayout=true;
 					controlContainer.passive6Out.visible=controlContainer.passive6Out.includeInLayout=false;
+					controlContainer.passive6In.toolTip=ub.toolTip();
 					break;
 				default: break;
 			}

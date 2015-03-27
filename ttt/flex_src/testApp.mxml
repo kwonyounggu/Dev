@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   creationComplete="initApp()"
+			   width="800" height="800">
+	
+	<fx:Script>
+		<![CDATA[
+			protected function initApp():void 
+			{
+				spe.graphics.clear();
+				spe.graphics.lineStyle(1,0xff9900);
+				spe.graphics.beginFill(0xff9900,0.5);
+				spe.graphics.drawRect(-50,-75,100,100);
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:SkinnableContainer id="maskCanvas" 
+							  x="{spe.x}"
+							  y="{spe.y}"
+							  width="40" height="40"
+							  alpha="0"
+							  backgroundColor="white"
+							  />
+	</fx:Declarations>
+	<s:CheckBox id="showMask" label="Show Mask"/>
+	<s:Group id="graphArea" width="500"  height="500"
+			 horizontalCenter="0" verticalCenter="0"
+			 mask="{(showMask.selected) ? maskCanvas : null}">
+		<s:SpriteVisualElement id="spe"/>
+	</s:Group>
+	
+<!--	<s:BorderContainer width="100" height="100" 
+					   borderWeight="3" borderStyle="solid">
+		<s:Scroller width="100%" height="100%" verticalScrollBar="{new VScrollBar()}">
+			<s:Group
+				horizontalScrollPosition="50" 
+				verticalScrollPosition="50"> 
+				<s:Image width="300" height="400" 
+						 source="@Embed(source='assets/images/VideoConferencing_01.jpg')"/> 
+			</s:Group>                 
+		</s:Scroller>        
+	</s:BorderContainer> -->
+	
+	<s:Group>
+		<s:Group left="20" top="1" width="110" height="160">
+			<s:Scroller left="2" right="2" top="2" bottom="2">
+				<s:Group id="vp" horizontalScrollPosition="57" verticalScrollPosition="198">
+					<mx:Image source="@Embed(source='assets/images/VideoConferencing_01.jpg')"/>
+				</s:Group>
+			</s:Scroller>
+			
+			<s:Rect left="0" right="0" top="0" bottom="0">
+				<s:stroke>
+					<s:SolidColorStroke weight="1" color="0xD8D8D8"/>
+				</s:stroke>
+			</s:Rect>
+		</s:Group>
+		<s:Label horizontalCenter="10" top="175" text="viewport.width = {vp.width}"/>
+		<s:Label verticalCenter="-10" rotation="-90" text="viewport.height = {vp.height}"/>                
+	</s:Group>
+	
+	<s:VGroup left="140" top="10" gap="15">
+		<s:Label text="viewport.contentWidth = {vp.contentWidth}"/>
+		<s:Label text="viewport.contentHeight = {vp.contentHeight}"/>
+		<s:Label text="viewport.horizontalScrollPosition = {vp.horizontalScrollPosition}"/>
+		<s:Label text="viewport.verticalScrollPosition = {vp.verticalScrollPosition}"/>
+	</s:VGroup>
+</s:Application>

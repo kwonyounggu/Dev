@@ -4,7 +4,10 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" xmlns:skins="com.sickkids.caliper.skins.*" creationComplete="bordercontainerCreationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
+			import com.sickkids.caliper.components.AlertMsg;
+			
 			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
 			
 			import flex.util.ui.throbber.SimpleThrobber;
 			
@@ -14,6 +17,19 @@
 			{
 				// TODO Auto-generated method stub
 				simpleThrobber.hideWhenStopped=true;
+			}
+			
+			private var alert:AlertMsg=new AlertMsg();
+			
+			public function onMouseDown(e:MouseEvent):void
+			{
+				if(alert.isOpen) alert.close();
+				else
+				{
+					
+					alert.open(this, true);
+					PopUpManager.bringToFront(alert);
+				}
 			}
 			
 		]]>
@@ -37,7 +53,7 @@
 	</fx:Declarations>
 	<mx:HBox width="100%" paddingLeft="3" paddingTop="1" paddingRight="0" visible="true" includeInLayout="true" height="50%">		
 		<!-- later see ReviewPanel.mxml to use upIcon and downIcon-->
-		<s:Image id="upIcon" source="@Embed(source='assets/images/controls/fullscreen25.png')" buttonMode="true"/>
+		<s:Image id="fullScreen" source="@Embed(source='assets/images/controls/fullscreen25.png')" buttonMode="true"/>
 		<mx:UIComponent id="connectingId"
 						height="25"
 						width="25"
@@ -52,34 +68,34 @@
 
 		<s:Image id="connectedId" source="@Embed(source='assets/images/controls/connected25.png')" visible="false" includeInLayout="false" buttonMode="true"/>
 		<s:Image id="disconnectedId" source="@Embed(source='assets/images/controls/disconnected25.png')" visible="false" includeInLayout="false" buttonMode="true"/>
-		<s:Spacer width="100%"/>
-		<s:Image id="settings" source="@Embed(source='assets/images/controls/setting25.png')" buttonMode="true"/>
-		
+		<s:Label id="attenceLabel" text="Attendence Information" paddingTop="5" paddingRight="5" fontWeight="bold" fontSize="13"/>
+		<s:Spacer width="100%"/>		
+		<s:Image id="settings" source="@Embed(source='assets/images/controls/setting25.png')" buttonMode="true"/>		
 		<!-- Once it is switched then make the control off (eg: fullscreen, setttings, etc until it receives on again from the server -->
 		<skins:ToggleSwitch id="controlSwitch" selected="true" selectedLabel="Ctrl ON" deselectedLabel="Ctrl OFF" styleName="toggleSwitch"/>
 	</mx:HBox>
 	<mx:HBox width="100%" paddingLeft="3" paddingTop="0" paddingRight="0" paddingBottom="1" visible="true" includeInLayout="true"  height="50%">
 		<!-- This hbox will be used to display login information -->
 		<s:Image id="lecturerOut" source="@Embed(source='assets/images/controls/outto22.png')" buttonMode="false" visible="true" includeInLayout="true"/>
-		<s:Image id="lecturerIn" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false"/>
+		<s:Image id="lecturerIn" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false"  />
 		<s:Image id="taOut" source="@Embed(source='assets/images/controls/outto22.png')" buttonMode="false" visible="true" includeInLayout="true" />
-		<s:Image id="taIn" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false"/>
+		<s:Image id="taIn" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false" />
 		<!-- active users and passive users will see only this hbox -->
 		<s:Image id="active1Out" source="@Embed(source='assets/images/controls/outto22.png')" buttonMode="false" visible="true" includeInLayout="true"/>
-		<s:Image id="active1In" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false"/>
+		<s:Image id="active1In" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false" />
 		<s:Image id="active2Out" source="@Embed(source='assets/images/controls/outto22.png')" buttonMode="false" visible="true" includeInLayout="true" />
-		<s:Image id="active2In" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false"/>
+		<s:Image id="active2In" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false" />
 		<s:Image id="passive1Out" source="@Embed(source='assets/images/controls/outto22.png')" buttonMode="false" visible="true" includeInLayout="true"/>
-		<s:Image id="passive1In" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false"/>
+		<s:Image id="passive1In" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false" />
 		<s:Image id="passive2Out" source="@Embed(source='assets/images/controls/outto22.png')" buttonMode="false" visible="true" includeInLayout="true"/>
-		<s:Image id="passive2In" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false"/>
+		<s:Image id="passive2In" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false" />
 		<s:Image id="passive3Out" source="@Embed(source='assets/images/controls/outto22.png')" buttonMode="false" visible="true" includeInLayout="true"/>
-		<s:Image id="passive3In" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false"/>
+		<s:Image id="passive3In" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false" />
 		<s:Image id="passive4Out" source="@Embed(source='assets/images/controls/outto22.png')" buttonMode="false" visible="true" includeInLayout="true"/>
-		<s:Image id="passive4In" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false"/>
+		<s:Image id="passive4In" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false" />
 		<s:Image id="passive5Out" source="@Embed(source='assets/images/controls/outto22.png')" buttonMode="false" visible="true" includeInLayout="true"/>
-		<s:Image id="passive5In" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false"/>
+		<s:Image id="passive5In" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false" />
 		<s:Image id="passive6Out" source="@Embed(source='assets/images/controls/outto22.png')" buttonMode="false" visible="true" includeInLayout="true"/>
-		<s:Image id="passive6In" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false"/>
+		<s:Image id="passive6In" source="@Embed(source='assets/images/controls/into22.png')" buttonMode="false" visible="false" includeInLayout="false" />
 	</mx:HBox>
 </s:BorderContainer>
