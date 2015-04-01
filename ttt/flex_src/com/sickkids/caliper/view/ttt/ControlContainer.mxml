@@ -6,6 +6,7 @@
 		<![CDATA[
 			import com.sickkids.caliper.components.AlertMsg;
 			
+			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
 			
@@ -30,6 +31,12 @@
 					alert.open(this, true);
 					PopUpManager.bringToFront(alert);
 				}
+			}	
+			
+			protected function controlSwitch_changeHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				trace("-----------------------------");
 			}
 			
 		]]>
@@ -37,10 +44,7 @@
 	<s:layout>
 		<s:VerticalLayout paddingBottom="0" paddingLeft="0" paddingRight="0" paddingTop="0" gap="0"/>
 	</s:layout>
-	<s:states>
-		<s:State name="upIcon"/>
-		<s:State name="downIcon"/>                 
-	</s:states>
+	
 	<fx:Style>
 		
 		.toggleSwitch
@@ -72,7 +76,8 @@
 		<s:Spacer width="100%"/>		
 		<s:Image id="settings" source="@Embed(source='assets/images/controls/setting25.png')" buttonMode="true"/>		
 		<!-- Once it is switched then make the control off (eg: fullscreen, setttings, etc until it receives on again from the server -->
-		<skins:ToggleSwitch id="controlSwitch" selected="true" selectedLabel="Ctrl ON" deselectedLabel="Ctrl OFF" styleName="toggleSwitch"/>
+		<skins:ToggleSwitch id="controlSwitch" selected="true" selectedLabel="Ctrl ON" deselectedLabel="Ctrl OFF" styleName="toggleSwitch" enabled="false" />
+		<!--<s:ToggleButton id="controlSwitch" styleName="toggleSwitch" selected="true"/>-->
 	</mx:HBox>
 	<mx:HBox width="100%" paddingLeft="3" paddingTop="0" paddingRight="0" paddingBottom="1" visible="true" includeInLayout="true"  height="50%">
 		<!-- This hbox will be used to display login information -->

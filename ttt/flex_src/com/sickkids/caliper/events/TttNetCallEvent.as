@@ -7,6 +7,8 @@ package com.sickkids.caliper.events
 	{
 		public static const CALL_TO_METHOD_EVENT:String="CALL_TO_METHOD_EVENT";
 		public static const LOG_CLIENTS_RETURNED_EVENT:String="LOG_CLIENTS_RETURNED_EVENT";
+		public static const TOKEN_RECEIVED_EVENT:String="TOKEN_RECEIVED_EVENT";
+		public static const TOKEN_SEND_FAILED_EVENT:String="TOKEN_SEND_FAILED_EVENT";
 		
 		private var _res:Responder=null;
 		private var _method:Object=null;

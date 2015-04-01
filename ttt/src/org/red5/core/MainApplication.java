@@ -236,14 +236,7 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 		log.info("TTT.roomDisconnect("+conn.getClient().getId()+") is called to disconnect and its attributes in MainApplication.java");
 		try
 		{
-			//This disconnection will presumably include conn.getClient().removeAttributes()
-			/*UserBean ub=(UserBean)conn.getClient().getAttribute("userBean");
-			if (conn instanceof IServiceCapableConnection)
-			{	
-				((IServiceCapableConnection) conn).invoke("loggedOutUser",new Object[]{ub});
-				
-			}
-			*/
+			//This disconnection will presumably include conn.getClient().removeAttributes()			
 			super.roomDisconnect(conn);
 		}
 		catch(Exception e)
@@ -273,14 +266,14 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 						if (conn instanceof IServiceCapableConnection)
 						{
 							//This is to notify the connected clients in the same room about other room members being joined
-							log.info("roomJoin() is called in MainApplication.java, temp="+(UserBean)conn.getClient().getAttribute("userBean")+" ------------------- 1");
+							log.info("roomJoin() is called in MainApplication.java, userBean="+(UserBean)conn.getClient().getAttribute("userBean"));
 							((IServiceCapableConnection) current).invoke("loggedInUser", new Object[]{(UserBean)conn.getClient().getAttribute("userBean")});
 						}		
 					}
 				}
 			}
 			//broadcast all connected client in order to let them know who is in	
-			log.info("roomJoin() is called in MainApplication.java, temp="+(UserBean)client.getAttribute("userBean")+" ------------------- 2");
+			log.info("roomJoin() is called in MainApplication.java, userBean="+(UserBean)client.getAttribute("userBean"));
 			Object[] param ={ client.getAttribute("userBean") };
 			ServiceUtils.invokeOnAllConnections(scope, "loggedInUser", param);			
 		}
@@ -296,7 +289,7 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 		log.info("roomLeave() is called in MainApplication.java");
 		try
 		{
-			log.info("roomLeave() is called in MainApplication.java, temp="+(UserBean)client.getAttribute("userBean")+" ------------------- 3");
+			log.info("roomLeave() is called in MainApplication.java, userBean="+(UserBean)client.getAttribute("userBean"));
 			//broadcast all connected client in order to let them know who is out			
 			Object[] param ={ client.getAttribute("userBean") };
 			ServiceUtils.invokeOnAllConnections(scope, "loggedOutUser", param);			
@@ -314,7 +307,6 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 	//***************************************************************************
 	//This is called from clients of non-conductors.
 	//***************************************************************************
-	@SuppressWarnings("unchecked")
 	public void clientLog(String logStr)
 	{
 		try
@@ -325,7 +317,6 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 				 for (IConnection conn: connections) 
 				 {
 					UserBean ubAttr=(UserBean)conn.getClient().getAttribute("userBean");
-					log.info(ubAttr.getEmail()+"-----------------");
 					
 					if(ubAttr.getParticipantType()==ParticipantType.LECTURER || ubAttr.getParticipantType()==ParticipantType.TEACHING_ASSISTANT)
 					{
@@ -339,7 +330,43 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 		}
 		catch(Exception e)
 		{
-			log.info("Error: "+e.getMessage()+" cause:"+e.getCause());
+			log.info("Error: "+e.getMessage()+" cause:"+e.getCause()+" clientLog(arg) of MainApplication.java");
+		}
+		
+	}
+	//***************************************************************************
+	//This is called from either DR or RN to have or give up the control token
+	//***************************************************************************
+	public void tokenPass(String arg)
+	{
+		try
+		{
+			String senderType=arg.split("\\|")[0];
+			IConnection current = Red5.getConnectionLocal();
+			log.info("TTT.tokenPassed(String arg) is called from active and passive clients with\nfrom Client ID:" + current.getClient().getId() + "\narg :" + arg+" in MainApplication.java");
+			for(Set<IConnection> connections : this.scope.getConnections())
+				 for (IConnection conn: connections) 
+				 {
+					 	if (conn.equals(current)) continue; // // Don't notify current client
+					 	
+						UserBean ubAttr=(UserBean)conn.getClient().getAttribute("userBean");
+						log.info("senderType="+senderType+", ubBean.participantType="+ubAttr.getParticipantType());
+						if((senderType.equals("LECTURER") && ubAttr.getParticipantType()==ParticipantType.TEACHING_ASSISTANT) ||
+						   (senderType.equals("TEACHING_ASSISTANT") && ubAttr.getParticipantType()==ParticipantType.LECTURER))
+						{
+							if (conn instanceof IServiceCapableConnection)
+							{	
+								((IServiceCapableConnection) conn).invoke("tokenReceive",new Object[]{arg});
+								return;
+							}
+						}
+				}
+			//when the receiver of the token is not ready then notify the sender about the following
+			((IServiceCapableConnection) current).invoke("tokenSendFailed",new Object[]{arg});
+		}
+		catch(Exception e)
+		{
+			log.info("Error: "+e.getMessage()+" cause:"+e.getCause()+" tokenPass(arg) of MainApplication.java");
 		}
 		
 	}

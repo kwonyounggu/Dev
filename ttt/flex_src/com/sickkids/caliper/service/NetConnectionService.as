@@ -493,6 +493,18 @@ package com.sickkids.caliper.service
 			trace("INFO: get from red5 in logMessages("+ s +") in NetConnectionService.as, I am "+tttModel.userInfo.userId+", "+tttModel.userInfo.participantType);
 			dispatch(new TttNetCallEvent(TttNetCallEvent.LOG_CLIENTS_RETURNED_EVENT, null, null, o));
 		}
+		public function tokenReceive(o:Object):void
+		{
+			var s:String=o as String;
+			trace("INFO: get from red5 in tokenReceive("+ s +") in NetConnectionService.as, I am "+tttModel.userInfo.userId+", "+tttModel.userInfo.participantType);
+			dispatch(new TttNetCallEvent(TttNetCallEvent.TOKEN_RECEIVED_EVENT, null, null, o));
+		}
+		public function tokenSendFailed(o:Object):void
+		{
+			var s:String=o as String;
+			trace("INFO: get from red5 in tokenSendFailed("+ s +") in NetConnectionService.as, I am "+tttModel.userInfo.userId+", "+tttModel.userInfo.participantType);
+			dispatch(new TttNetCallEvent(TttNetCallEvent.TOKEN_SEND_FAILED_EVENT, null, null, o));
+		}
 		public function loggedOutUser(o:Object):void
 		{
 			var ub:UserBean=o as UserBean;
