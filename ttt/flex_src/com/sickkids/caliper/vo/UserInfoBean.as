@@ -31,7 +31,7 @@ package com.sickkids.caliper.vo
 		
 		public var trainingTime:Date=null;//given from the flashvar parameter
 		
-		public var bTokenPossesed:Boolean=true; //change it to false later
+		[Bindable] public var bTokenPossesed:Boolean=true; //change it to false later
 		//public var bTokenPossesed:Boolean=false;//it can be possesed to anyone by the lecturer so that the owner of the token can control all
 		//The token can only be possed to two people in the room (LECTURER and or other)
 		//It can be enabled by the LECTURER any time but LECTURER's event is in higher priority

@@ -1,17 +1,22 @@
 package com.sickkids.caliper.view.ttt
 {
+	import com.sickkids.caliper.controller.SequentialAction;
 	import com.sickkids.caliper.events.TttNetCallEvent;
 	import com.sickkids.caliper.events.TttNetConnectionEvent;
 	import com.sickkids.caliper.model.TttModel;
 	import com.sickkids.caliper.service.INetConnectionService;
 	import com.sickkids.caliper.vo.UserBean;
 	
+	import flash.display.StageDisplayState;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.net.Responder;
 	
+	import mx.binding.utils.ChangeWatcher;
 	import mx.controls.Alert;
 	import mx.core.FlexGlobals;
+	import mx.events.PropertyChangeEvent;
+	import mx.managers.SystemManager;
 	
 	import org.robotlegs.mvcs.Mediator;
 	
@@ -21,6 +26,7 @@ package com.sickkids.caliper.view.ttt
 		[Inject] public var model:TttModel;
 		[Inject] public var netConnectionService:INetConnectionService;
 		private var callServiceResponder:Responder=new Responder(okResult, faultResult);
+		public var _watcher:ChangeWatcher;
 		
 		public function ControlContainerMediator()
 		{
@@ -53,6 +59,11 @@ package com.sickkids.caliper.view.ttt
 				controlContainer.controlSwitch.addEventListener(Event.CHANGE, onControlClick);
 				this.addContextListener(TttNetCallEvent.TOKEN_RECEIVED_EVENT, onTokenReceived, TttNetCallEvent);
 				this.addContextListener(TttNetCallEvent.TOKEN_SEND_FAILED_EVENT, onTokenSendFailed, TttNetCallEvent);
+
+				_watcher=ChangeWatcher.watch(model, ["userInfo", "bTokenPossesed"], onChangeTokenPossed);
+				model.synchObj=new SequentialAction();
+				
+				controlContainer.fullScreen.addEventListener(MouseEvent.CLICK, onToggleFullScreen);
 			}
 		}
 		override public function onRemove():void
@@ -91,6 +102,7 @@ package com.sickkids.caliper.view.ttt
 			if(model.userInfo.bTokenPossesed)
 			{
 				this.controlContainer.parentDocument.toggleAdminPanelView();
+				model.synchObj.settingsOn=FlexGlobals.topLevelApplication.videoSwfView.visible;
 			}
 			else
 			{
@@ -422,6 +434,45 @@ package com.sickkids.caliper.view.ttt
 				}
 			}
 			log("bTokenPossesed: "+model.userInfo.bTokenPossesed+" onTokenSendFailed() of ControlContainerMediator.as");
+		}
+		public function onChangeTokenPossed(e:PropertyChangeEvent):void
+		{
+			if(model.userInfo.bTokenPossesed && controlContainer.controlSwitch.selected) 
+			{
+				trace("INFO: model.userInfo.bTokenPossesed is true from false");
+				//if (i am a dr)
+				//	if(rn is connected) i) get sychObject of RN's and ii) broadcast the sysnObject
+				//	else broadcast my synchObject
+				//else if(i am a rn)
+				//	if(dr is connected) i) get sychObject of DR's and ii) broadcast the sysnObject
+				//	else broadcast my synchObject
+				//Alert.show("true");
+			}
+			else if(!model.userInfo.bTokenPossesed && !controlContainer.controlSwitch.selected) 
+			{
+				trace("INFO: model.userInfo.bTokenPossesed is false from true");
+				//Alert.show("false");
+			}
+		}
+		public function onToggleFullScreen(e:MouseEvent):void
+		{
+			try
+			{
+				var sm:SystemManager=FlexGlobals.topLevelApplication.systemManager;
+				switch(sm.stage.displayState)
+				{
+					case StageDisplayState.FULL_SCREEN:
+						sm.stage.displayState=StageDisplayState.NORMAL;
+						break;
+					default:
+						sm.stage.displayState=StageDisplayState.FULL_SCREEN;
+						break;
+				}
+			}
+			catch(err:SecurityError)
+			{
+				//ignore
+			}
 		}
 		public function log(s:String):void
 		{

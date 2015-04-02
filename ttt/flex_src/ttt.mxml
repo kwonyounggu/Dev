@@ -40,6 +40,20 @@
 			{
 				// TODO Auto-generated method stub
 				trace("INFO: ttt.mxml has been completed ...");
+				systemManager.stage.addEventListener (FullScreenEvent.FULL_SCREEN, onFullScreenHandler);
+			}
+			private function onFullScreenHandler(e:FullScreenEvent):void
+			{
+				if(e.fullScreen) //Do something specific here if swiched to the full screen
+				{
+					this.dispatchEvent(e);
+					
+					this.percentWidth=this.percentHeight=100;
+				}
+				else //Do something specific here if swiched to the normal screen
+				{
+					this.dispatchEvent(e);
+				}
 			}
 			
 		]]>
@@ -51,16 +65,17 @@
 	<!-- W=4 H=3 RATIO OF VIDEO MARCH-24-2015 -->
 	<s:HGroup horizontalCenter="0" paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0" width="100%" height="100%" gap="4">	
 		<s:VGroup horizontalCenter="0" paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0" width="33.3%" height="100%" gap="4">
-			<s:HGroup horizontalCenter="0" paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0" width="100%" height="35%" gap="4">
+			<s:HGroup horizontalCenter="0" paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0" width="100%" height="40%" gap="4">
 				<ttt:ConductorPanel width="50%" height="100%" myObject="DR"/>
 				<ttt:ConductorPanel width="50%" height="100%" myObject="RN"/>
 			</s:HGroup>
-			<s:Group horizontalCenter="0" width="100%" height="55%">
+			<s:Group horizontalCenter="0" width="100%" height="60%">
 				<ttt:TextPanel width="100%" height="100%"/>
 			</s:Group>
-			<s:Group horizontalCenter="0" width="100%" height="10%" id="controlGroup">
-				<ttt:ControlContainer width="100%" height="100%"/>
-			</s:Group>
+			<ttt:ControlContainer width="100%" height="52" id="controlContainer"/>
+			<!--<s:Group horizontalCenter="0" width="100%" height="10%" id="controlGroup">
+				<ttt:ControlContainer width="100%" height="100%" id="controlContainer"/>	
+			</s:Group>-->
 		</s:VGroup>
 		<s:VGroup horizontalCenter="0" paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0" width="66.6%" height="100%" gap="0">
 			<s:VGroup id="videoSwfView" horizontalCenter="0" width="100%" height="100%" includeInLayout="true" visible="true" gap="4">

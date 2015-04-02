@@ -1,5 +1,6 @@
 package com.sickkids.caliper.model
 {			
+	import com.sickkids.caliper.controller.SequentialAction;
 	import com.sickkids.caliper.vo.UserInfoBean;
 	
 	import flash.media.Camera;
@@ -9,12 +10,12 @@ package com.sickkids.caliper.model
 	
 	import org.robotlegs.mvcs.Actor;
 	
-	[Bindable]
 	public class TttModel extends Actor
 	{	
 		public var localMic:Microphone=null;
 		public var localCamera:Camera=null;
-		public var userInfo:UserInfoBean=new UserInfoBean();
+		[Bindable] public var userInfo:UserInfoBean=new UserInfoBean();
+		public var synchObj:SequentialAction=null;
 				
 		//controlToken
 		//onAir when the scheduled time is on

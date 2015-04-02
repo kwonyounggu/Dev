@@ -2,10 +2,10 @@
 <s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
-		 creationComplete="panelCreationCompleteHandler(event)" xmlns:ttt="com.sickkids.caliper.view.ttt.*"
+		 creationComplete="panelCreationCompleteHandler(event)" xmlns:ttt="com.sickkids.caliper.view.ttt.*" resize="panelResizeHandler(event)"
 		 >
 	<s:layout>
-		<s:VerticalLayout gap="0" paddingTop="2" paddingRight="2" paddingBottom="2" paddingLeft="2"/>
+		<s:VerticalLayout gap="0" paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0"/>
 	</s:layout>
 	<fx:Script>
 		<![CDATA[
@@ -22,6 +22,8 @@
 			{
 				// TODO Auto-generated method stub
 				trace("INFO: width="+this.width+", height="+this.height+" in panelCreationCompleteHandler() of ConductorPanel.mxml");
+				//topBorderContainer.percentHeight=this.width*0.75;
+				//bottomBorderContainer.percentHeight=100-topBorderContainer.percentHeight;
 				
 			}
 			
@@ -36,7 +38,7 @@
 				else if(event.type==MouseEvent.MOUSE_OUT)
 				{
 					localWebcamDisplay.percentWidth=25;
-					localWebcamDisplay.percentHeight=24;
+					localWebcamDisplay.percentHeight=25;
 				}
 				
 			}
@@ -52,18 +54,24 @@
 				
 				
 			}
+			
+			protected function panelResizeHandler(event:ResizeEvent):void
+			{
+				// TODO Auto-generated method stub
+				//topBorderContainer.percentHeight=this.width*0.75;
+				//bottomBorderContainer.percentHeight=100-topBorderContainer.percentHeight;
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:BorderContainer id="topBorderContainer" width="100%" height="76%" borderAlpha="0" backgroundColor="0xff1234">
+	<s:BorderContainer id="topBorderContainer" width="100%" height="{this.width*0.75}" borderAlpha="0" backgroundColor="0xff1234">
 		<ttt:VideoContainer id="remoteWebcamDisplay" width="100%" height="100%" top="0" left="0"/>	
-		<ttt:VideoContainer id="localWebcamDisplay" width="25%" height="24%" bottom="0" right="0" mouseOver="localWebcamDisplayMouseHandler(event)" mouseOut="localWebcamDisplayMouseHandler(event)"/>
-		<!--<s:VideoDisplay id="localWebcamDisplay" width="25%" height="24%" bottom="3" right="0" mouseOver="localWebcamDisplayMouseHandler(event)" mouseOut="localWebcamDisplayMouseHandler(event)">			
-		</s:VideoDisplay>-->
+		<ttt:VideoContainer id="localWebcamDisplay" width="25%" height="25%" bottom="0" right="0" mouseOver="localWebcamDisplayMouseHandler(event)" mouseOut="localWebcamDisplayMouseHandler(event)"/>
 	</s:BorderContainer>
-	<s:BorderContainer id="bottomBorderContainer" width="100%" height="24%" borderWeight="0" borderAlpha="0" >
+	<s:BorderContainer id="bottomBorderContainer" width="100%" height="{this.width*0.25}" borderWeight="0" borderAlpha="0" >
 		<s:layout>
 			<s:VerticalLayout paddingTop="2" paddingRight="2" paddingBottom="2" paddingLeft="2"/>
 		</s:layout>
