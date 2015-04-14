@@ -18,20 +18,20 @@ package com.sickkids.caliper.vo
 		
 		//The followings will be used for publishing and subcribing. 
 		//Remove the values (Temporary assigment) later
-		public var lecturerId:String="LECTURER_steven.bloom.01";		
-		public var teachingAssistantId:String="TEACHING_ASSISTANT_young.kwon.08";
-		public var activeParticipantId1:String="INTERACTIVE_VIEWER1_kristen.middaugh.01";
-		public var activeParticipantId2:String="INTERACTIVE_VIEWER2_chris.parshuram.01";
-		public var passiveParticipantId1:String="ONEWAY_VIEWER1_user1.kwon.01";
+		public var lecturerId:String="";//"LECTURER_steven.bloom.01";		
+		public var teachingAssistantId:String="";//"TEACHING_ASSISTANT_young.kwon.08";
+		public var activeParticipantId1:String="";//"INTERACTIVE_VIEWER1_kristen.middaugh.01";
+		public var activeParticipantId2:String="";//"INTERACTIVE_VIEWER2_chris.parshuram.01";
+		public var passiveParticipantId1:String="";//"ONEWAY_VIEWER1_user1.kwon.01";
 		public var passiveParticipantId2:String="";
-		public var passiveParticipantId3:String="ONEWAY_VIEWER3_passive.viewer.01";
+		public var passiveParticipantId3:String="";//"ONEWAY_VIEWER3_passive.viewer.01";
 		public var passiveParticipantId4:String="";
 		public var passiveParticipantId5:String="";
 		public var passiveParticipantId6:String="";
 		
 		public var trainingTime:Date=null;//given from the flashvar parameter
 		
-		[Bindable] public var bTokenPossesed:Boolean=true; //change it to false later
+		[Bindable] public var bTokenPossesed:Boolean=false; //change it to false later
 		//public var bTokenPossesed:Boolean=false;//it can be possesed to anyone by the lecturer so that the owner of the token can control all
 		//The token can only be possed to two people in the room (LECTURER and or other)
 		//It can be enabled by the LECTURER any time but LECTURER's event is in higher priority
@@ -67,47 +67,21 @@ package com.sickkids.caliper.vo
 				courseName=FlexGlobals.topLevelApplication.parameters.courseName;
 				participantType=FlexGlobals.topLevelApplication.parameters.participantType;
 				
+				lecturerId=FlexGlobals.topLevelApplication.parameters.lecturerId;
+				teachingAssistantId=FlexGlobals.topLevelApplication.parameters.teachingAssistantId;
+				activeParticipantId1=FlexGlobals.topLevelApplication.parameters.activeParticipantId1;
+				activeParticipantId2=FlexGlobals.topLevelApplication.parameters.activeParticipantId2;
+				passiveParticipantId1=FlexGlobals.topLevelApplication.parameters.passiveParticipantId1;
+				passiveParticipantId2=FlexGlobals.topLevelApplication.parameters.passiveParticipantId2;
+				passiveParticipantId3=FlexGlobals.topLevelApplication.parameters.passiveParticipantId3;
+				passiveParticipantId4=FlexGlobals.topLevelApplication.parameters.passiveParticipantId4;
+				passiveParticipantId5=FlexGlobals.topLevelApplication.parameters.passiveParticipantId5;
+				passiveParticipantId6=FlexGlobals.topLevelApplication.parameters.passiveParticipantId6;
+				
 				
 				if(participantType=="LECTURER")
 				{
-					bTokenPossesed=true;
-					lecturerId=participantType+"_"+userId;
-				}
-				else if(participantType=="TEACHING_ASSISTANT")
-				{
-					teachingAssistantId=participantType+"_"+userId;
-				}
-				else if(participantType=="INTERACTIVE_VIEWER1")
-				{
-					activeParticipantId1=participantType+"_"+userId;
-				}
-				else if(participantType=="INTERACTIVE_VIEWER2")
-				{
-					activeParticipantId2=participantType+"_"+userId;
-				}
-				else if(participantType=="ONEWAY_VIEWER1")
-				{
-					passiveParticipantId1=participantType+"_"+userId;
-				}
-				else if(participantType=="ONEWAY_VIEWER2")
-				{
-					passiveParticipantId2=participantType+"_"+userId;
-				}
-				else if(participantType=="ONEWAY_VIEWER3")
-				{
-					passiveParticipantId3=participantType+"_"+userId;
-				}
-				else if(participantType=="ONEWAY_VIEWER4")
-				{
-					passiveParticipantId4=participantType+"_"+userId;
-				}
-				else if(participantType=="ONEWAY_VIEWER5")
-				{
-					passiveParticipantId5=participantType+"_"+userId;
-				}
-				else if(participantType=="ONEWAY_VIEWER6")
-				{
-					passiveParticipantId6=participantType+"_"+userId;
+					bTokenPossesed=true;					
 				}
 			}
 		}

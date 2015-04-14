@@ -55,7 +55,17 @@
 								hospitalName : 		"${trb.hospitalName}",  
 								courseNumber : 		"${curriculum_bean.courseNumber}",
 								courseName : 		"${curriculum_bean.courseName}",  
-								participantType : 	"<%=curriculumBean.getParticipantType(trb.getUserId())%>"
+								participantType : 	"<%=curriculumBean.getParticipantType(trb.getUserId())%>",
+								lecturerId : "${curriculum_bean.courseNumber}_LECTURER_${curriculum_bean.lecturerId}",
+								teachingAssistantId :"${curriculum_bean.courseNumber}_TEACHING_ASSISTANT_${curriculum_bean.taId}",
+								activeParticipantId1:"${curriculum_bean.courseNumber}_INTERACTIVE_VIEWER1_${curriculum_bean.interactiveSiteViewer1Id}",
+								activeParticipantId2:"${curriculum_bean.courseNumber}_INTERACTIVE_VIEWER2_${curriculum_bean.interactiveSiteViewer2Id}",
+								passiveParticipantId1:"${curriculum_bean.courseNumber}_ONEWAY_VIEWER1_${curriculum_bean.onewaySiteViewer1Id}",
+								passiveParticipantId2:"${curriculum_bean.courseNumber}_ONEWAY_VIEWER2_${curriculum_bean.onewaySiteViewer2Id}",
+								passiveParticipantId3:"${curriculum_bean.courseNumber}_ONEWAY_VIEWER3_${curriculum_bean.onewaySiteViewer3Id}",
+								passiveParticipantId4:"${curriculum_bean.courseNumber}_ONEWAY_VIEWER4_${curriculum_bean.onewaySiteViewer4Id}",
+								passiveParticipantId5:"${curriculum_bean.courseNumber}_ONEWAY_VIEWER5_${curriculum_bean.onewaySiteViewer5Id}",
+								passiveParticipantId6:"${curriculum_bean.courseNumber}_ONEWAY_VIEWER6_${curriculum_bean.onewaySiteViewer6Id}"
 						};
 						swfobject.embedSWF("ttt.swf", "myContent", "940", "528", "10.0.0", "playerProductInstall.swf", flashvars, params);
 						

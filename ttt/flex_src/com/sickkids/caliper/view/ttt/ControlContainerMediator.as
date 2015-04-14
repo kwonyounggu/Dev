@@ -61,10 +61,9 @@ package com.sickkids.caliper.view.ttt
 				this.addContextListener(TttNetCallEvent.TOKEN_SEND_FAILED_EVENT, onTokenSendFailed, TttNetCallEvent);
 
 				_watcher=ChangeWatcher.watch(model, ["userInfo", "bTokenPossesed"], onChangeTokenPossed);
-				model.synchObj=new SequentialAction();
-				
-				controlContainer.fullScreen.addEventListener(MouseEvent.CLICK, onToggleFullScreen);
+				model.synchObj=new SequentialAction();	
 			}
+			controlContainer.fullScreen.addEventListener(MouseEvent.CLICK, onToggleFullScreen);//to everyone
 		}
 		override public function onRemove():void
 		{
@@ -89,8 +88,8 @@ package com.sickkids.caliper.view.ttt
 				case "ONEWAY_VIEWER4": 
 				case "ONEWAY_VIEWER5": 
 				case "ONEWAY_VIEWER6":  
-					controlContainer.fullScreen.visible=controlContainer.fullScreen.includeInLayout=false;
-					controlContainer.settings.visible=controlContainer.settings.includeInLayout=false;
+					//controlContainer.fullScreen.visible=controlContainer.fullScreen.includeInLayout=false;
+					//controlContainer.settings.visible=controlContainer.settings.includeInLayout=false;
 					controlContainer.controlSwitch.visible=controlContainer.controlSwitch.includeInLayout=false;
 					break;
 				default: break;
@@ -99,12 +98,12 @@ package com.sickkids.caliper.view.ttt
 		private function onSettingsClick(event:MouseEvent):void
 		{
 			trace("INFO: onSettingsClick() is clicked in ControlContainerMediator.as (token="+model.userInfo.bTokenPossesed+")");
-			if(model.userInfo.bTokenPossesed)
+			//if(model.userInfo.bTokenPossesed)
 			{
 				this.controlContainer.parentDocument.toggleAdminPanelView();
 				model.synchObj.settingsOn=FlexGlobals.topLevelApplication.videoSwfView.visible;
 			}
-			else
+			//else
 			{
 				//no event will be produced but ignored
 			}
@@ -157,14 +156,14 @@ package com.sickkids.caliper.view.ttt
 					controlContainer.simpleThrobber.stop();
 					controlContainer.connectedId.visible=controlContainer.connectedId.includeInLayout=true;
 					controlContainer.disconnectedId.visible=controlContainer.disconnectedId.includeInLayout=false;
-					controlContainer.connectingId.visible=controlContainer.connectingId.includeInLayout=false;
+					controlContainer.connectingId.visible=controlContainer.connectingId.includeInLayout=false;					
 					break;
 				case TttNetConnectionEvent.ROOM_DISCONNECTED_EVENT:
 					trace("INFO: onNetConnectionStatus(ROOM_DISCONNECTED_EVENT) is called in ControlContainerMediator.as");
 					controlContainer.simpleThrobber.stop();
 					controlContainer.connectedId.visible=controlContainer.connectedId.includeInLayout=false;
 					controlContainer.disconnectedId.visible=controlContainer.disconnectedId.includeInLayout=true;
-					controlContainer.connectingId.visible=controlContainer.connectingId.includeInLayout=false;
+					controlContainer.connectingId.visible=controlContainer.connectingId.includeInLayout=false;					
 					break;
 				case TttNetConnectionEvent.ROOM_CONNECT_FAILED_EVENT:
 					trace("INFO: onNetConnectionStatus(ROOM_CONNECT_FAILED_EVENT) is called in ControlContainerMediator.as");
@@ -175,7 +174,8 @@ package com.sickkids.caliper.view.ttt
 					break;
 				default: break;
 			}
-			controlContainer.fullScreen.enabled=controlContainer.settings.enabled=controlContainer.controlSwitch.enabled=controlContainer.connectedId.visible;
+			controlContainer.controlSwitch.enabled=controlContainer.connectedId.visible;
+			//controlContainer.fullScreen.enabled=controlContainer.settings.enabled=controlContainer.controlSwitch.enabled=controlContainer.connectedId.visible;
 		}
 		private function onRoomJoin(e:TttNetConnectionEvent):void
 		{

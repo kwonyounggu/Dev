@@ -440,8 +440,9 @@ package com.sickkids.caliper.view.ttt
 		public function log(s:String):void
 		{
 			FlexGlobals.topLevelApplication.log(s);
-			if(!(model.userInfo.participantType=="LECTURER" || model.userInfo.participantType=="TEACHING_ASSISTANT"))//only non-conductors
-				this.dispatch(new TttNetCallEvent(TttNetCallEvent.CALL_TO_METHOD_EVENT, callServiceResponder, "clientLog", model.userInfo.participantType+"|"+s));
+			//Temporary block April-14-2015
+			//if(!(model.userInfo.participantType=="LECTURER" || model.userInfo.participantType=="TEACHING_ASSISTANT"))//only non-conductors
+			//	this.dispatch(new TttNetCallEvent(TttNetCallEvent.CALL_TO_METHOD_EVENT, callServiceResponder, "clientLog", model.userInfo.participantType+"|"+s));
 		}
 		public function okResult(o:Object):void
 		{	  
