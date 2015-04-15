@@ -79,7 +79,7 @@ package com.sickkids.caliper.vo
 				passiveParticipantId6=FlexGlobals.topLevelApplication.parameters.passiveParticipantId6;
 				
 				
-				if(participantType=="LECTURER")
+				if(participantType=="LECTURER" || participantType=="TEACHING_ASSISTANT")
 				{
 					bTokenPossesed=true;					
 				}

@@ -98,6 +98,7 @@ package com.sickkids.caliper.view.ttt
 			{
 				if(view.myObject=="DR")
 				{
+					//small video at the right hand bottom corner
 					view.netStream1=new NetStream(netConnectionService.netConnection());
 					view.netStream1.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
 					view.netStream1.client=this;
@@ -111,7 +112,7 @@ package com.sickkids.caliper.view.ttt
 					view.netStream2.client=this;
 					view.remoteWebcamDisplay.video=new Video();
 					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
-					view.netStream2.play(model.userInfo.activeParticipantId2);
+					view.netStream2.play(model.userInfo.activeParticipantId1);
 				}
 				else if(view.myObject=="RN")
 				{
@@ -441,8 +442,8 @@ package com.sickkids.caliper.view.ttt
 		{
 			FlexGlobals.topLevelApplication.log(s);
 			//Temporary block April-14-2015
-			//if(!(model.userInfo.participantType=="LECTURER" || model.userInfo.participantType=="TEACHING_ASSISTANT"))//only non-conductors
-			//	this.dispatch(new TttNetCallEvent(TttNetCallEvent.CALL_TO_METHOD_EVENT, callServiceResponder, "clientLog", model.userInfo.participantType+"|"+s));
+			if(!(model.userInfo.participantType=="LECTURER" || model.userInfo.participantType=="TEACHING_ASSISTANT"))//only non-conductors
+				this.dispatch(new TttNetCallEvent(TttNetCallEvent.CALL_TO_METHOD_EVENT, callServiceResponder, "clientLog", model.userInfo.participantType+"|"+s));
 		}
 		public function okResult(o:Object):void
 		{	  

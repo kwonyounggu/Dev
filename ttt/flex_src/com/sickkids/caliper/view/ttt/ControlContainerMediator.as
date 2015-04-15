@@ -98,12 +98,14 @@ package com.sickkids.caliper.view.ttt
 		private function onSettingsClick(event:MouseEvent):void
 		{
 			trace("INFO: onSettingsClick() is clicked in ControlContainerMediator.as (token="+model.userInfo.bTokenPossesed+")");
-			//if(model.userInfo.bTokenPossesed)
+			this.controlContainer.parentDocument.toggleAdminPanelView();
+			
+			if(model.userInfo.bTokenPossesed)
 			{
-				this.controlContainer.parentDocument.toggleAdminPanelView();
+				
 				model.synchObj.settingsOn=FlexGlobals.topLevelApplication.videoSwfView.visible;
 			}
-			//else
+			else
 			{
 				//no event will be produced but ignored
 			}

@@ -251,7 +251,10 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 		
 		try
 		{
+			//*************************************************************************
 			//This is to let the all logged-in-users to the currently joined user
+			//To MYSELF
+			//************************************************************************
 			IConnection current = Red5.getConnectionLocal();
 			Collection<Set<IConnection>> conCollection = room.getConnections();
 			for (Set<IConnection> cons : conCollection) 
@@ -260,22 +263,27 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 				{
 					if (conn != null) 
 					{
-						//do something with the connection
-						if (conn.equals(current)) continue; // // Don't notify current client
+						//the 'current' is not in room.getConnections() yet
 	
 						if (conn instanceof IServiceCapableConnection)
 						{
-							//This is to notify the connected clients in the same room about other room members being joined
-							log.info("roomJoin() is called in MainApplication.java, userBean="+(UserBean)conn.getClient().getAttribute("userBean"));
+							//I (currently joined one) want to know who are in my room
+							log.info("roomJoin() is called in MainApplication.java, by individual one already in the room, userBean="+(UserBean)conn.getClient().getAttribute("userBean"));
 							((IServiceCapableConnection) current).invoke("loggedInUser", new Object[]{(UserBean)conn.getClient().getAttribute("userBean")});
 						}		
 					}
 				}
 			}
-			//broadcast all connected client in order to let them know who is in	
-			log.info("roomJoin() is called in MainApplication.java, userBean="+(UserBean)client.getAttribute("userBean"));
+			//To MYSELF about my own information
+			((IServiceCapableConnection) current).invoke("loggedInUser", new Object[]{(UserBean)current.getClient().getAttribute("userBean")});
+			//*************************************************************************
+			//broadcast all connected clients in order to let them know who is in
+			//To ROOM MEMBERS
+			//*************************************************************************
+			log.info("roomJoin() is called in MainApplication.java, the newly joined one before broadcasting to the room members, userBean="+(UserBean)client.getAttribute("userBean"));
 			Object[] param ={ client.getAttribute("userBean") };
-			ServiceUtils.invokeOnAllConnections(scope, "loggedInUser", param);			
+			ServiceUtils.invokeOnAllConnections(room, "loggedInUser", param);//to all room members except for the currently joined one
+			
 		}
 		catch(Exception e)
 		{
@@ -292,7 +300,7 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 			log.info("roomLeave() is called in MainApplication.java, userBean="+(UserBean)client.getAttribute("userBean"));
 			//broadcast all connected client in order to let them know who is out			
 			Object[] param ={ client.getAttribute("userBean") };
-			ServiceUtils.invokeOnAllConnections(scope, "loggedOutUser", param);			
+			ServiceUtils.invokeOnAllConnections(room, "loggedOutUser", param);	//to all room members except for the currently joined one		
 		}
 		catch(Exception e)
 		{
@@ -313,7 +321,7 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 		{
 			IConnection current = Red5.getConnectionLocal();
 			log.info("TTT.clientLog(String logStr) is called from active and passive clients with\nfrom Client ID:" + current.getClient().getId() + "\nlogStr :" + logStr+" in MainApplication.java");
-			for(Set<IConnection> connections : this.scope.getConnections())
+			for(Set<IConnection> connections : current.getScope().getConnections())
 				 for (IConnection conn: connections) 
 				 {
 					UserBean ubAttr=(UserBean)conn.getClient().getAttribute("userBean");
@@ -344,7 +352,8 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 			String senderType=arg.split("\\|")[0];
 			IConnection current = Red5.getConnectionLocal();
 			log.info("TTT.tokenPassed(String arg) is called from active and passive clients with\nfrom Client ID:" + current.getClient().getId() + "\narg :" + arg+" in MainApplication.java");
-			for(Set<IConnection> connections : this.scope.getConnections())
+		
+			for(Set<IConnection> connections : current.getScope().getConnections())
 				 for (IConnection conn: connections) 
 				 {
 					 	if (conn.equals(current)) continue; // // Don't notify current client
@@ -357,7 +366,7 @@ public class MainApplication extends ApplicationAdapter  implements IPendingServ
 							if (conn instanceof IServiceCapableConnection)
 							{	
 								((IServiceCapableConnection) conn).invoke("tokenReceive",new Object[]{arg});
-								return;
+								return;//no break because 'tokenSendFailed' can be implemented if 'break;'
 							}
 						}
 				}
