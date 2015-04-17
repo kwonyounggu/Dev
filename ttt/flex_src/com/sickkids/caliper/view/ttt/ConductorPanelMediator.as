@@ -6,7 +6,10 @@ package com.sickkids.caliper.view.ttt
 	import com.sickkids.caliper.model.TttModel;
 	import com.sickkids.caliper.service.INetConnectionService;
 	
+	import flash.display.StageDisplayState;
 	import flash.events.ActivityEvent;
+	import flash.events.FullScreenEvent;
+	import flash.events.MouseEvent;
 	import flash.events.NetStatusEvent;
 	import flash.events.StatusEvent;
 	import flash.media.Camera;
@@ -19,6 +22,7 @@ package com.sickkids.caliper.view.ttt
 	
 	import mx.controls.Alert;
 	import mx.core.FlexGlobals;
+	import mx.managers.SystemManager;
 	import mx.utils.StringUtil;
 	
 	import org.robotlegs.mvcs.Mediator;
@@ -29,6 +33,7 @@ package com.sickkids.caliper.view.ttt
 		[Inject] public var model:TttModel;
 		[Inject] public var netConnectionService:INetConnectionService;
 		private var callServiceResponder:Responder=new Responder(okResult, faultResult);
+		private var sm:SystemManager=FlexGlobals.topLevelApplication.systemManager;
 		
 		public function ConductorPanelMediator()
 		{
@@ -39,7 +44,9 @@ package com.sickkids.caliper.view.ttt
 			trace("INFO: onRegister() is called in ConductorPanelMediator.as");
 			//view.localWebcamDisplay.addEventListener(ResizeEvent.RESIZE, onVideoDisplayResize);
 			this.addContextListener(TttNetConnectionEvent.ROOM_CONNECTED_EVENT, onNetConnectionStatus, TttNetConnectionEvent);
-			this.addContextListener(TttNetConnectionEvent.ROOM_DISCONNECTED_EVENT, onNetConnectionStatus, TttNetConnectionEvent);			
+			this.addContextListener(TttNetConnectionEvent.ROOM_DISCONNECTED_EVENT, onNetConnectionStatus, TttNetConnectionEvent);	
+			
+			sm.stage.addEventListener (FullScreenEvent.FULL_SCREEN, onFullScreenHandler);
 		}
 		override public function onRemove():void
 		{
@@ -63,6 +70,9 @@ package com.sickkids.caliper.view.ttt
 					view.netStream1.attachAudio(model.localMic);
 					view.netStream1.attachCamera(model.localCamera);
 					view.netStream1.publish(model.userInfo.lecturerId);
+					//***********************************************************************************************
+					//On the panel title, put the first name of lecturerId, partially showing on the top of the video
+					//***********************************************************************************************
 					
 					//subcribe Active#1. WebCam and Audio
 					view.netStream2=new NetStream(netConnectionService.netConnection());
@@ -71,6 +81,9 @@ package com.sickkids.caliper.view.ttt
 					view.remoteWebcamDisplay.video=new Video();
 					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
 					view.netStream2.play(model.userInfo.activeParticipantId1);
+					//***********************************************************************************************
+					//On the panel title, put the first name of activeParticipantId1
+					//***********************************************************************************************
 				}
 				else if(view.myObject=="RN")//instance
 				{
@@ -83,6 +96,9 @@ package com.sickkids.caliper.view.ttt
 					view.localWebcamDisplay.video=new Video();
 					view.localWebcamDisplay.video.attachNetStream(view.netStream1);
 					view.netStream1.play(model.userInfo.teachingAssistantId);
+					//***********************************************************************************************
+					//On the panel title, put the first name of teachingAssistantId, partially showing on the top of the video
+					//***********************************************************************************************
 					
 					//subcribe
 					view.netStream2=new NetStream(netConnectionService.netConnection());
@@ -91,6 +107,9 @@ package com.sickkids.caliper.view.ttt
 					view.remoteWebcamDisplay.video=new Video();
 					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
 					view.netStream2.play(model.userInfo.activeParticipantId2);
+					//***********************************************************************************************
+					//On the panel title, put the first name of activeParticipantId2
+					//***********************************************************************************************
 				}
 				
 			}
@@ -105,7 +124,9 @@ package com.sickkids.caliper.view.ttt
 					view.localWebcamDisplay.video=new Video();
 					view.localWebcamDisplay.video.attachNetStream(view.netStream1);
 					view.netStream1.play(model.userInfo.lecturerId);
-					
+					//***********************************************************************************************
+					//On the panel title, put the first name of lecturerId, partially showing on the top of the video
+					//***********************************************************************************************
 					//subcribe Active#1. WebCam and Audio
 					view.netStream2=new NetStream(netConnectionService.netConnection());
 					view.netStream2.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
@@ -113,6 +134,9 @@ package com.sickkids.caliper.view.ttt
 					view.remoteWebcamDisplay.video=new Video();
 					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
 					view.netStream2.play(model.userInfo.activeParticipantId1);
+					//***********************************************************************************************
+					//On the panel title, put the first name of activeParticipantId1
+					//***********************************************************************************************
 				}
 				else if(view.myObject=="RN")
 				{
@@ -124,6 +148,9 @@ package com.sickkids.caliper.view.ttt
 					view.netStream1.attachAudio(model.localMic);
 					view.netStream1.attachCamera(model.localCamera);
 					view.netStream1.publish(model.userInfo.teachingAssistantId);
+					//***********************************************************************************************
+					//On the panel title, put the first name of teachingAssistantId, partially showing on the top of the video
+					//***********************************************************************************************
 					
 					//subcribe Active#1. WebCam and Audio
 					view.netStream2=new NetStream(netConnectionService.netConnection());
@@ -132,6 +159,9 @@ package com.sickkids.caliper.view.ttt
 					view.remoteWebcamDisplay.video=new Video();
 					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
 					view.netStream2.play(model.userInfo.activeParticipantId2);
+					//***********************************************************************************************
+					//On the panel title, put the first name of activeParticipantId2
+					//***********************************************************************************************
 				}
 			}
 			else if(model.userInfo.participantType=="INTERACTIVE_VIEWER1")
@@ -148,7 +178,9 @@ package com.sickkids.caliper.view.ttt
 					view.netStream1.attachAudio(model.localMic);
 					view.netStream1.attachCamera(model.localCamera);
 					view.netStream1.publish(model.userInfo.activeParticipantId1);
-					
+					//***********************************************************************************************
+					//On the panel title, put the first name of activeParticipantId1, partially showing on the top of the video --
+					//***********************************************************************************************
 					//subcribe Active#1. WebCam and Audio
 					view.netStream2=new NetStream(netConnectionService.netConnection());
 					view.netStream2.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
@@ -156,6 +188,9 @@ package com.sickkids.caliper.view.ttt
 					view.remoteWebcamDisplay.video=new Video();
 					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
 					view.netStream2.play(model.userInfo.lecturerId);
+					//***********************************************************************************************
+					//On the panel title, put the first name of lecturerId, partially showing on the top of the video --
+					//***********************************************************************************************
 				}
 				else if(view.myObject=="RN")
 				{
@@ -165,6 +200,9 @@ package com.sickkids.caliper.view.ttt
 					view.localWebcamDisplay.video=new Video();
 					view.localWebcamDisplay.video.attachNetStream(view.netStream1);
 					view.netStream1.play(model.userInfo.activeParticipantId2);
+					//***********************************************************************************************
+					//On the panel title, put the first name of activeParticipantId2, partially showing on the top of the video --
+					//***********************************************************************************************
 					
 					//subcribe Active#1. WebCam and Audio
 					view.netStream2=new NetStream(netConnectionService.netConnection());
@@ -173,6 +211,9 @@ package com.sickkids.caliper.view.ttt
 					view.remoteWebcamDisplay.video=new Video();
 					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
 					view.netStream2.play(model.userInfo.teachingAssistantId);
+					//***********************************************************************************************
+					//On the panel title, put the first name of teachingAssistantId, partially showing on the top of the video --
+					//***********************************************************************************************
 				}
 			}
 			else if(model.userInfo.participantType=="INTERACTIVE_VIEWER2")
@@ -185,6 +226,9 @@ package com.sickkids.caliper.view.ttt
 					view.localWebcamDisplay.video=new Video();
 					view.localWebcamDisplay.video.attachNetStream(view.netStream1);
 					view.netStream1.play(model.userInfo.activeParticipantId1);
+					//***********************************************************************************************
+					//On the panel title, put the first name of activeParticipantId1, partially showing on the top of the video --
+					//***********************************************************************************************
 					
 					//subcribe Active#1. WebCam and Audio
 					view.netStream2=new NetStream(netConnectionService.netConnection());
@@ -193,6 +237,9 @@ package com.sickkids.caliper.view.ttt
 					view.remoteWebcamDisplay.video=new Video();
 					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
 					view.netStream2.play(model.userInfo.lecturerId);
+					//***********************************************************************************************
+					//On the panel title, put the first name of lecturerId, partially showing on the top of the video --
+					//***********************************************************************************************
 				}
 				else if(view.myObject=="RN")
 				{
@@ -206,6 +253,9 @@ package com.sickkids.caliper.view.ttt
 					view.netStream1.attachAudio(model.localMic);
 					view.netStream1.attachCamera(model.localCamera);
 					view.netStream1.publish(model.userInfo.activeParticipantId2);
+					//***********************************************************************************************
+					//On the panel title, put the first name of activeParticipantId2, partially showing on the top of the video--
+					//***********************************************************************************************
 					
 					//subcribe Active#1. WebCam and Audio
 					view.netStream2=new NetStream(netConnectionService.netConnection());
@@ -214,6 +264,9 @@ package com.sickkids.caliper.view.ttt
 					view.remoteWebcamDisplay.video=new Video();
 					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
 					view.netStream2.play(model.userInfo.teachingAssistantId);
+					//***********************************************************************************************
+					//On the panel title, put the first name of teachingAssistantId, partially showing on the top of the video --
+					//***********************************************************************************************
 				}
 			}
 			else
@@ -227,6 +280,9 @@ package com.sickkids.caliper.view.ttt
 					view.localWebcamDisplay.video=new Video();
 					view.localWebcamDisplay.video.attachNetStream(view.netStream1);
 					view.netStream1.play(model.userInfo.activeParticipantId1);
+					//***********************************************************************************************
+					//On the panel title, put the first name of activeParticipantId1, partially showing on the top of the video--
+					//***********************************************************************************************
 					
 					//subcribe Active#1. WebCam and Audio
 					view.netStream2=new NetStream(netConnectionService.netConnection());
@@ -235,6 +291,9 @@ package com.sickkids.caliper.view.ttt
 					view.remoteWebcamDisplay.video=new Video();
 					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
 					view.netStream2.play(model.userInfo.lecturerId);
+					//***********************************************************************************************
+					//On the panel title, put the first name of lecturerId, partially showing on the top of the video--
+					//***********************************************************************************************
 				}
 				else if(view.myObject=="RN")
 				{
@@ -244,6 +303,9 @@ package com.sickkids.caliper.view.ttt
 					view.localWebcamDisplay.video=new Video();
 					view.localWebcamDisplay.video.attachNetStream(view.netStream1);
 					view.netStream1.play(model.userInfo.activeParticipantId2);
+					//***********************************************************************************************
+					//On the panel title, put the first name of activeParticipantId2, partially showing on the top of the video--
+					//***********************************************************************************************
 					
 					//subcribe Active#1. WebCam and Audio
 					view.netStream2=new NetStream(netConnectionService.netConnection());
@@ -252,6 +314,9 @@ package com.sickkids.caliper.view.ttt
 					view.remoteWebcamDisplay.video=new Video();
 					view.remoteWebcamDisplay.video.attachNetStream(view.netStream2);
 					view.netStream2.play(model.userInfo.teachingAssistantId);
+					//***********************************************************************************************
+					//On the panel title, put the first name of teachingAssistantId, partially showing on the top of the video--
+					//***********************************************************************************************
 				}
 			}
 		}
@@ -466,6 +531,123 @@ package com.sickkids.caliper.view.ttt
 			{
 				trace("faultResult(), "+p + " : " + o[p]);
 			}	
+		}
+		private function onFullScreenHandler(e:FullScreenEvent):void
+		{
+			if(e.fullScreen) //Do something specific here if swiched to the full screen
+			{
+				if(model.userInfo.participantType=="LECTURER")
+				{
+					if(view.myObject=="DR")
+					{
+						//***********************************************************************************************
+						//On the panel title, put the first name of lecturerId, partially showing on the top of the video
+						//***********************************************************************************************
+						//***********************************************************************************************
+						//On the panel title, put the first name of activeParticipantId1
+						//***********************************************************************************************
+					}
+					else if(view.myObject=="RN")//instance
+					{
+						//***********************************************************************************************
+						//On the panel title, put the first name of teachingAssistantId, partially showing on the top of the video
+						//***********************************************************************************************
+						//***********************************************************************************************
+						//On the panel title, put the first name of activeParticipantId2
+						//***********************************************************************************************
+					}
+					
+				}
+				else if(model.userInfo.participantType=="TEACHING_ASSISTANT")
+				{
+					if(view.myObject=="DR")
+					{
+						//***********************************************************************************************
+						//On the panel title, put the first name of lecturerId, partially showing on the top of the video
+						//***********************************************************************************************
+						//***********************************************************************************************
+						//On the panel title, put the first name of activeParticipantId1
+						//***********************************************************************************************
+					}
+					else if(view.myObject=="RN")
+					{
+						//***********************************************************************************************
+						//On the panel title, put the first name of teachingAssistantId, partially showing on the top of the video
+						//***********************************************************************************************
+						//***********************************************************************************************
+						//On the panel title, put the first name of activeParticipantId2
+						//***********************************************************************************************
+					}
+				}
+				else if(model.userInfo.participantType=="INTERACTIVE_VIEWER1")
+				{
+					if(view.myObject=="DR")
+					{
+						//***********************************************************************************************
+						//On the panel title, put the first name of activeParticipantId1, partially showing on the top of the video --
+						//***********************************************************************************************
+						//***********************************************************************************************
+						//On the panel title, put the first name of lecturerId, partially showing on the top of the video --
+						//***********************************************************************************************
+					}
+					else if(view.myObject=="RN")
+					{
+						//***********************************************************************************************
+						//On the panel title, put the first name of activeParticipantId2, partially showing on the top of the video --
+						//***********************************************************************************************
+						//***********************************************************************************************
+						//On the panel title, put the first name of teachingAssistantId, partially showing on the top of the video --
+						//***********************************************************************************************
+					}
+				}
+				else if(model.userInfo.participantType=="INTERACTIVE_VIEWER2")
+				{
+					if(view.myObject=="DR")
+					{
+						//***********************************************************************************************
+						//On the panel title, put the first name of activeParticipantId1, partially showing on the top of the video --
+						//***********************************************************************************************
+						//***********************************************************************************************
+						//On the panel title, put the first name of lecturerId, partially showing on the top of the video --
+						//***********************************************************************************************
+					}
+					else if(view.myObject=="RN")
+					{
+						//***********************************************************************************************
+						//On the panel title, put the first name of activeParticipantId2, partially showing on the top of the video--
+						//***********************************************************************************************
+						//***********************************************************************************************
+						//On the panel title, put the first name of teachingAssistantId, partially showing on the top of the video --
+						//***********************************************************************************************
+					}
+				}
+				else
+				{
+					//left side then DR, right side then RN
+					if(view.myObject=="DR")
+					{
+						//***********************************************************************************************
+						//On the panel title, put the first name of activeParticipantId1, partially showing on the top of the video--
+						//***********************************************************************************************
+						//***********************************************************************************************
+						//On the panel title, put the first name of lecturerId, partially showing on the top of the video--
+						//***********************************************************************************************
+					}
+					else if(view.myObject=="RN")
+					{
+						//***********************************************************************************************
+						//On the panel title, put the first name of activeParticipantId2, partially showing on the top of the video--
+						//***********************************************************************************************
+						//***********************************************************************************************
+						//On the panel title, put the first name of teachingAssistantId, partially showing on the top of the video--
+						//***********************************************************************************************
+					}
+				}
+			}
+			else //Do something specific here if swiched to the normal screen
+			{
+				//this.dispatchEvent(e);
+			}
 		}
 	}
 	

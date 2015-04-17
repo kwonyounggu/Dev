@@ -70,6 +70,7 @@
 	<s:BorderContainer id="topBorderContainer" width="100%" height="{this.width*0.75}" borderAlpha="0" backgroundColor="0xff1234">
 		<ttt:VideoContainer id="remoteWebcamDisplay" width="100%" height="100%" top="0" left="0"/>	
 		<ttt:VideoContainer id="localWebcamDisplay" width="25%" height="25%" bottom="0" right="0" mouseOver="localWebcamDisplayMouseHandler(event)" mouseOut="localWebcamDisplayMouseHandler(event)"/>
+		<s:Label id="localWebcamLabel" bottom="0" right="0"/>
 	</s:BorderContainer>
 	<s:BorderContainer id="bottomBorderContainer" width="100%" height="{this.width*0.25}" borderWeight="0" borderAlpha="0" >
 		<s:layout>
