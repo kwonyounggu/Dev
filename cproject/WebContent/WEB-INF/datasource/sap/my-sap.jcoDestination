@@ -1,0 +1,8 @@
+jco.client.lang=en
+jco.destination.peak_limit=10
+jco.client.client=001
+jco.client.passwd=changeme
+jco.client.user=sapuser
+jco.client.sysnr=00
+jco.destination.pool_capacity=2
+jco.client.ashost=sap.mycompany.com
