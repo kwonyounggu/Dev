@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Troubleshooting">
+	<fx:Script>
+		<![CDATA[
+			
+			public function refresh(): void 
+			{ 
+				trace("INFO: call this whenever you need to get newer data/reset for "+this.title+"!");
+			} 
+			
+			protected function textinput1_enterHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				slide.displayPopUp = true;
+				trace("INFO: here in textinput1_enterHandler.");
+				stage.focus=null;
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Graphic>
+		<s:TextInput id="hsPressure" width="40" click="textinput1_enterHandler(event)" skinClass="spark.skins.mobile.TextInputSkin" />
+		
+			
+		<s:PopUpAnchor id="slide" x="{hsPressure.x+10}" y="{hsPressure.y}">
+			<s:VSlider width="40"
+				maxHeight="100" 
+			    minimum="0"
+			    maximum="100"
+			    value="50"
+				thumbRelease="slide.displayPopUp = false"/>
+		</s:PopUpAnchor>
+		
+	</s:Graphic>
+</s:View>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TabbedViewNavigatorApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+								  xmlns:s="library://ns.adobe.com/flex/spark" applicationDPI="160"
+								  initialize="trackEvent(event)"
+								  preinitialize="trackEvent(event)"
+								  creationComplete="trackEvent(event)"
+								  applicationComplete="trackEvent(event)" xmlns:hvac="com.webmonster.hvac.*"
+								   >
+	
+	<fx:Script>
+		<![CDATA[
+			
+			/*import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+		
+			[Bindable]
+			public var _host:String="";
+			protected function application1_preinitializeHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				Security.allowDomain("*");
+				_host=FlexGlobals.topLevelApplication.parameters.host;
+				if(_host!=null) trace("host name from flashvars="+_host);
+			}*/
+			private function trackEvent(event:Event):void
+			{
+				trace (event.type + " event occured at "+ flash.utils.getTimer() + "ms" + "\n");
+			}
+		
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<hvac:HvacContext contextView="{this}" />
+	</fx:Declarations>
+	
+	<s:ViewNavigator label="Home" width="100%" height="100%" firstView="com.webmonster.hvac.view.HomeView"/>
+	<!--<s:ViewNavigator label="AC" width="100%" height="100%" firstView="com.webmonster.hvac.view.ACView"/>-->
+	<s:SplitViewNavigator id="acSvn" label="AC" width="100%" height="100%" autoHideFirstViewNavigator="true">	
+		<s:layout>
+			<s:VerticalLayout />
+		</s:layout>
+		<s:ViewNavigator id="acMenu" width="240" height="100%" firstView="com.webmonster.hvac.view.ac.ACMenuView"/>
+		<s:ViewNavigator id="acMenuDetails" width="100%" height="100%" firstView="com.webmonster.hvac.view.ac.PerformancePHView" >
+			<s:navigationContent>
+				<s:Button id="menuButton" icon="@Embed(source='assets/icons/list_menu.jpg')" click="acSvn.showFirstViewNavigatorInPopUp(menuButton)"/>
+			</s:navigationContent>
+			<s:actionContent> 
+				<s:Button id="refreshBtn" 
+						  icon="@Embed('assets/icons/refresh160.png')" 
+						  click="Object(acMenuDetails.activeView).refresh()"> 
+				</s:Button> 
+			</s:actionContent> 
+
+		</s:ViewNavigator>
+	</s:SplitViewNavigator>
+	<s:ViewNavigator label="Boiler" width="100%" height="100%" firstView="com.webmonster.hvac.view.BoilerView"/>
+	<s:ViewNavigator label="Furnace" width="100%" height="100%" firstView="com.webmonster.hvac.view.FurnaceView"/>
+	<s:ViewNavigator label="Etc" width="100%" height="100%" firstView="com.webmonster.hvac.view.EtcView"/>
+	
+
+</s:TabbedViewNavigatorApplication>

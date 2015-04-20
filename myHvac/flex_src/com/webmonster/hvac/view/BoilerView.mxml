@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		title="Boiler">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			
+			import spark.collections.Sort;
+			import spark.collections.SortField;
+		
+		[Bindable]
+		public var expenses:ArrayCollection = new ArrayCollection([
+		{Month:"Jan", Profit:2000, Expenses:1500, Max:450},
+		{Month:"Feb", Profit:1000, Expenses:200,  Max:600},
+		{Month:"Mar", Profit:1500, Expenses:500,  Max:300},
+		]);
+			
+		/*public var pointList:ArrayCollection=new ArrayCollection
+			([
+				{enthalpy: 100, 	pressure: 140.2},
+				{enthalpy: 105.5, 	pressure: 140.2},
+				{enthalpy: 107.7, 	pressure: 140.2},
+				{enthalpy: 120.1, 	pressure: 160.2},
+				{enthalpy: 105.3, 	pressure: 160.2},
+				{enthalpy: 40.1, 	pressure: 160.2},
+				{enthalpy: 32.0, 	pressure: 160.2},
+				{enthalpy: 32.0, 	pressure: 155.2},
+				{enthalpy: 32.0, 	pressure: 140.2}
+			]);*/
+		public var pointList:ArrayCollection=new ArrayCollection
+			([new Point(100, 140.2), new Point(105.5,140.2), new Point(107.7, 140.2),new Point(120.1,160.2),new Point(105.3,160.2),new Point(40.1,160.2),new Point(32.0,160.2),new Point(32.0,155.2),new Point(32.0,140.2)
+			]);
+		private function onComplete() : void
+		{
+			arrayCollectionSort(pointList, "y", true);
+		/*canvas.clear();
+		canvas.lineStyle(1, 0x000000, .75, true, 
+		LineScaleMode.NORMAL, CapsStyle.NONE, 
+		JointStyle.MITER, 2);
+		
+		canvas.moveTo("Jan", 450);
+		canvas.lineTo("Feb", 600);*/
+		}		
+		public static function arrayCollectionSort(ar:ArrayCollection, fieldName:String, isNumeric:Boolean):void 
+		{
+			var dataSortField:SortField = new SortField();
+			dataSortField.name = fieldName;
+			dataSortField.numeric = isNumeric;
+			var numericDataSort:Sort = new Sort();
+			numericDataSort.fields = [dataSortField];
+			ar.sort = numericDataSort;
+			ar.refresh();
+		}
+		]]>
+	</fx:Script>
+	
+	<s:Panel>
+		<mx:PlotChart dataProvider="{pointList}" creationComplete="onComplete()" >
+			
+			
+			<mx:verticalAxis>
+				<mx:LinearAxis id="yAxisId" title="pressure (psia)" minimum="{pointList.getItemAt(0).pressure-20}"/>
+			</mx:verticalAxis>
+			<mx:verticalAxisRenderers>
+				<mx:AxisRenderer placement="left" verticalAxisTitleAlignment="vertical" axis="{yAxisId}" />
+			</mx:verticalAxisRenderers>
+			
+			<mx:horizontalAxis>
+				<mx:LinearAxis id="xAxisId" title="Age (Years)" />
+			</mx:horizontalAxis>
+			
+			<mx:series>
+				<mx:PlotSeries yField="y" xField="x" />
+			</mx:series>
+			
+			<!--<mx:annotationElements>
+				<mx:CartesianDataCanvas id="canvas"  />
+			</mx:annotationElements>-->
+			
+		</mx:PlotChart>
+	</s:Panel>
+</s:View>

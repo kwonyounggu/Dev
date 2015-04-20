@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:flextras="http://www.flextras.com/mxml"
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		title="Performance (P-H)" 
+	    backgroundColor="#cfcfcf"
+	    creationComplete="view1_creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import com.webmonster.hvac.components.PressureTemperatureCallout;
+			import com.webmonster.hvac.vo.RefrigerantTypeBean;
+			
+			import mx.charts.renderers.CircleItemRenderer;
+			import mx.collections.ArrayList;
+			import mx.events.FlexEvent;
+			
+			public var pressureTemperatureCallout:PressureTemperatureCallout=new PressureTemperatureCallout();
+			//public var pressureTemperatureCallout:PressureTemperatureCallout=null;
+			public function refresh(): void 
+			{ 
+				trace("INFO: call this whenever you need to get newer data/reset for "+this.title+"!");
+			} 
+			public function refrigerantLabel(item:Object):String
+			{
+				var o:RefrigerantTypeBean=item as RefrigerantTypeBean;
+				return o.product;
+			}
+
+			protected function changeNSHandler(event:Event):void
+			{
+				// TODO Auto-generated method stub
+				if(chartSection.visible)
+				{
+					chartSection.visible=chartSection.includeInLayout=false;
+				}
+				//pressureTemperatureCallout.open(event.currentTarget as NumericStepper, true);
+			}
+					
+			protected function clickNSHandler(event:MouseEvent):void
+			{
+				//*** Apply the following if-statment only if data changed ***
+				//if(chartSection.visible)
+				//{
+				//	chartSection.visible=chartSection.includeInLayout=false;
+				//}
+				pressureTemperatureCallout.open(event.currentTarget as NumericStepper, true);
+			}
+			
+			protected function view1_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				//pressureTemperatureCallout=new PressureTemperatureCallout();			
+			}
+			public function drawPHData():void
+			{
+				canvas.clear();
+				canvas.lineStyle(1, 
+					0xCCCCCC, 
+					.75, 
+					true, 
+					LineScaleMode.NORMAL, 
+					CapsStyle.ROUND, 
+					JointStyle.MITER, 
+					2
+				);
+				//canvas.beginFill(0xFF0033, 1);      
+				//canvas.drawCircle("Feb", 1000, 20);      
+				//canvas.endFill();
+				var phList:Array=phChart.dataProvider.source as Array;
+				var pt:Point=phList[0];
+				canvas.moveTo(pt.x, pt.y);
+				for(var i:int=1;i<phList.length;i++)
+				{
+					pt=phList[i];
+					canvas.lineTo(pt.x, pt.y);
+				}
+				canvas.lineTo(phList[0].x, phList[0].y);
+				
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<mx:SolidColor id="sc1" color="0xFF6799" alpha="1"/>
+	</fx:Declarations>
+	<s:Scroller left="0" right="0" bottom="0" top="0">
+		<s:VGroup horizontalCenter="0" paddingTop="2" paddingRight="2" paddingBottom="2" paddingLeft="2">		
+			<s:BorderContainer width="100%" height="310">
+				<s:layout>
+					<s:VerticalLayout paddingTop="10" paddingLeft="15" horizontalAlign="center"/>
+				</s:layout>
+				<s:VGroup horizontalAlign="left" >
+					<s:HGroup verticalAlign="middle">
+						<s:Label text="Refrigerant:" />
+						<flextras:DropDownList id="refrigerantList" height="25" width="150" popUpWidth="150" labelField="product" labelFunction="refrigerantLabel" change="changeNSHandler(event)"/>
+					</s:HGroup>
+					<s:Spacer height="3"/>
+					<s:Label text="High Side Inputs"/>
+					<s:HGroup verticalAlign="middle" paddingLeft="40" paddingBottom="5">
+						<s:Label text="Pressure:" width="100"/>
+						<s:NumericStepper id="highPressureNS" width="60" snapInterval="0" stepSize="0" allowValueWrap="true" click="clickNSHandler(event)" initialize="highPressureNS.textDisplay.editable=false"/>					
+						<s:Label paddingLeft="10" id="highSidePressureUnit" text="(psig)" />				
+					</s:HGroup>
+					<s:HGroup verticalAlign="middle" paddingLeft="40">
+						<s:Label text="Temperature:"  width="100"/>
+						<s:NumericStepper id="highTemperatureNS" width="60" snapInterval="0" stepSize="0" allowValueWrap="true" click="clickNSHandler(event)" initialize="highTemperatureNS.textDisplay.editable=false"/>
+						<s:Label paddingLeft="10" id="highSideTemperatureUnit" />
+					</s:HGroup>
+					<s:Spacer height="3"/>
+					<s:Label text="Low Side Inputs"/>
+					<s:HGroup verticalAlign="middle" paddingLeft="40" paddingBottom="5">
+						<s:Label text="Pressure:"  width="100"/>
+						<s:NumericStepper id="lowPressureNS" width="60" snapInterval="0" stepSize="0" allowValueWrap="true" click="clickNSHandler(event)" initialize="lowPressureNS.textDisplay.editable=false"/>
+						<s:Label paddingLeft="10" id="lowSidePressureUnit" text="(psig)" />
+					</s:HGroup>
+					<s:HGroup verticalAlign="middle" paddingLeft="40" paddingBottom="7">
+						<s:Label text="Temperature:"  width="100"/>
+						<s:NumericStepper id="lowTemperatureNS" width="60" snapInterval="0" stepSize="0" allowValueWrap="true" click="clickNSHandler(event)" initialize="lowTemperatureNS.textDisplay.editable=false"/>
+						<s:Label paddingLeft="10" id="lowSideTemperatureUnit" text="(\u2103 \u2109)" />
+					</s:HGroup>
+					
+					<s:Button id="computeButton" label="Compute" width="100" fontWeight="normal" />
+				</s:VGroup>
+			</s:BorderContainer>		
+			<s:BorderContainer id="chartSection" visible="false" includeInLayout="false" width="100%" height="450" >
+				<s:layout>
+					<s:VerticalLayout paddingTop="10" paddingLeft="0" horizontalAlign="center"/>
+				</s:layout>
+				<s:VGroup horizontalAlign="left">
+					<s:HGroup>
+						<s:RichText id="chartTitle" horizontalCenter="0" text="R-22 Pressure-Enthalpy Chart" paddingLeft="30"/>
+					</s:HGroup>
+					<s:Graphic >		
+						<mx:PlotChart id="phChart" x="0" y="0" height="80%" width="80%">
+							<mx:verticalAxis>
+								<mx:LinearAxis id="yAxisId" title="Pressure (psia)" />
+							</mx:verticalAxis>
+							<mx:verticalAxisRenderers>
+								<mx:AxisRenderer placement="left" verticalAxisTitleAlignment="vertical" axis="{yAxisId}" />
+							</mx:verticalAxisRenderers>
+							
+							<mx:horizontalAxis>
+								<mx:LinearAxis id="xAxisId" title="Enthalpy (Btu/lb)" />
+							</mx:horizontalAxis>
+							
+							<mx:series>
+								<mx:PlotSeries yField="y" xField="x" itemRenderer="mx.charts.renderers.CircleItemRenderer" fill="{sc1}" radius="2"/>
+							</mx:series>
+							
+							<mx:annotationElements>
+								<mx:CartesianDataCanvas id="canvas"  />
+							</mx:annotationElements>				
+						</mx:PlotChart>				
+					</s:Graphic>
+					<!-- table section to show the results -->
+					<s:Graphic>
+						<s:Rect width="100%" height="1000">
+							<s:fill>
+								<s:SolidColor color="#DDDDDD" />
+							</s:fill>
+						</s:Rect>
+						<s:RichText text="Hello FXG!" />
+					</s:Graphic>
+						
+						<!--<s:Graphic viewWidth="100" viewHeight="100">
+							<s:Rect width="500" height="500">
+								<s:fill>
+									<s:SolidColor color="0x333333" />
+								</s:fill>
+							</s:Rect>
+						</s:Graphic>	-->
+				</s:VGroup>
+			</s:BorderContainer>
+		</s:VGroup>
+	</s:Scroller>
+</s:View>

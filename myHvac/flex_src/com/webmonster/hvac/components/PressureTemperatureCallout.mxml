@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Callout xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" width="100"
+		   verticalPosition="middle" 
+		   horizontalPosition="after"
+		   open="openHandler(event)"
+		   close="closeHandler(event)"
+		   >
+	
+	<fx:Script>
+		<![CDATA[
+			//import spark.collections.NumericDataProvider;
+			import spark.components.NumericStepper;
+			import spark.events.PopUpEvent;
+			protected function openHandler(e:PopUpEvent):void
+			{
+				//var spepper:NumericDataProvider
+				//var p:PopUpEvent=e;
+				var o:NumericStepper=e.currentTarget.owner as NumericStepper;
+				trace("INFO: openHandler() is called ..."+o.minimum+", "+o.maximum);
+				spinnerDataList.minimum=o.minimum;
+				spinnerDataList.maximum=o.maximum;
+				spinnerList.selectedItem=o.value;
+			}
+			
+			protected function closeHandler(e:PopUpEvent):void
+			{
+				// TODO Auto-generated method stub
+				trace("INFO: closeHandler() is called ..."+e.commit+", "+e.data);
+				var o:NumericStepper;
+				if(e.commit)
+				{
+					o=e.currentTarget.owner as NumericStepper;
+					o.value=e.data;
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+	</fx:Declarations>
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<!--<s:VGroup paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10" horizontalAlign="center">
+		<s:List id="list" dataProvider="{ac}" width="240" change="close(true, list.selectedItem)"/>
+	</s:VGroup>  -->
+	<s:ActionBar width="100%">
+		<s:actionContent>
+			<s:Button icon="@Embed(source='assets/icons/close36x36.png')" click="close()"/>
+		</s:actionContent>
+		<!--<s:navigationContent>
+			<s:Button label="H"/>
+		</s:navigationContent>-->
+	</s:ActionBar>
+
+	<s:SpinnerListContainer width="100%" id="spinnerContainer">
+		<s:SpinnerList id="spinnerList" width="100%" click="close(true, spinnerList.selectedItem)">
+			<s:dataProvider>
+				<s:NumericDataProvider id="spinnerDataList" stepSize="1"/>
+			</s:dataProvider>
+		</s:SpinnerList>
+	</s:SpinnerListContainer>
+</s:Callout>
