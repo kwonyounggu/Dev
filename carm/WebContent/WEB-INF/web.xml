@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+  <display-name>carm</display-name>
+
+	<context-param>
+		<param-name>flex.class.path</param-name>
+		<param-value>/WEB-INF/flex/hotfixes,/WEB-INF/flex/jars</param-value>
+	</context-param>
+
+	<!-- Http Flex Session attribute and binding listener support -->
+	<listener>
+		<listener-class>flex.messaging.HttpFlexSession</listener-class>
+	</listener>
+  	<listener>
+    	<listener-class>com.sickkids.caliper.service.OracleContextListener</listener-class>
+  	</listener>
+  	<listener>
+    	<listener-class>com.sickkids.caliper.service.ContextListener</listener-class>
+  	</listener>
+  	<listener>
+    	<listener-class>com.sickkids.caliper.service.CsrHttpSessionListener</listener-class>
+  	</listener>
+	<!-- MessageBroker Servlet -->
+	<servlet>
+		<servlet-name>MessageBrokerServlet</servlet-name>
+		<servlet-class>flex.messaging.MessageBrokerServlet</servlet-class>
+		<init-param>
+			<param-name>services.configuration.file</param-name>
+			<param-value>/WEB-INF/flex/services-config.xml</param-value>
+		</init-param>
+		<init-param>
+			<param-name>flex.write.path</param-name>
+			<param-value>/WEB-INF/flex</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+    	<servlet-name>UploadServlet</servlet-name>
+    	<servlet-class>com.sickkids.caliper.servlet.UploadServlet</servlet-class>
+    </servlet>
+	<servlet>
+		<servlet-name>DownloadServlet</servlet-name>		
+		<servlet-class>com.sickkids.caliper.servlet.DownloadServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>FileUploadServlet</servlet-name>
+		<servlet-class>com.sickkids.caliper.servlet.FileUploadServlet</servlet-class>
+	</servlet>	
+	<servlet>
+    	<servlet-name>DocUploadServlet</servlet-name>
+    	<servlet-class>com.sickkids.caliper.servlet.DocUploadServlet</servlet-class>
+    </servlet>
+    <servlet>
+    	<servlet-name>CarmCentralController</servlet-name>
+    	<servlet-class>com.sickkids.caliper.servlet.CarmCentralController</servlet-class>
+    </servlet>
+    <servlet>
+    	<description>
+    	</description>
+    	<display-name>SuperAdminServlet</display-name>
+    	<servlet-name>SuperAdminServlet</servlet-name>
+    	<servlet-class>com.sickkids.caliper.servlet.SuperAdminServlet</servlet-class>
+    </servlet>  
+	<servlet-mapping>
+		<servlet-name>MessageBrokerServlet</servlet-name>
+		<url-pattern>/messagebroker/*</url-pattern>
+	</servlet-mapping>
+		<servlet-mapping>
+		<servlet-name>DownloadServlet</servlet-name>
+		<url-pattern>/csv/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>FileUploadServlet</servlet-name>
+		<url-pattern>/file_upload</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>DocUploadServlet</servlet-name>
+		<url-pattern>/ms_doc_upload</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>CarmCentralController</servlet-name>
+		<url-pattern>/carm_controller</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>SuperAdminServlet</servlet-name>
+		<url-pattern>/admin</url-pattern>
+	</servlet-mapping>	
+<!-- 	<session-config> -->
+<!-- 		<session-timeout>10</session-timeout> -->
+<!-- 	</session-config> -->
+  <welcome-file-list>
+  	<welcome-file>carm_controller</welcome-file>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+
+	<!-- for WebSphere deployment, please uncomment -->
+	<!--
+		<resource-ref>
+		<description>Flex Messaging WorkManager</description>
+		<res-ref-name>wm/MessagingWorkManager</res-ref-name>
+		<res-type>com.ibm.websphere.asynchbeans.WorkManager</res-type>
+		<res-auth>Container</res-auth>
+		<res-sharing-scope>Shareable</res-sharing-scope>
+	</resource-ref>
+	-->
+</web-app>

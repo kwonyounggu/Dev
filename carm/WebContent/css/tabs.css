@@ -1,0 +1,57 @@
+
+@media Screen, Projection    
+{
+.tabs-hide {
+	DISPLAY: none
+}
+
+}
+
+@media Print    
+{
+.tabs-nav {
+	DISPLAY: none
+}
+    }
+.tabs-nav:after {
+	DISPLAY: block; CLEAR: both; CONTENT: " "
+}
+.tabs-nav LI {
+	FLOAT: left
+}
+.tabs-nav A {
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 10px; PADDING-RIGHT: 10px; DISPLAY: block; MARGIN-RIGHT: 1px; PADDING-TOP: 0px
+}
+.tabs-nav A SPAN {
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 10px; PADDING-RIGHT: 10px; DISPLAY: block; MARGIN-RIGHT: 1px; PADDING-TOP: 0px
+}
+.tabs-nav A {
+	TEXT-ALIGN: center; LINE-HEIGHT: 30px; FONT-FAMILY: Georgia, Times New Roman, serif; WHITE-SPACE: nowrap; BACKGROUND: #b0a998; COLOR: #2f2f2f; TEXT-DECORATION: none
+}
+.tabs-nav .tabs-selected A {
+	BACKGROUND: url(images/menu-item-over.jpg) repeat-x; COLOR: #f4f4ea
+}
+.tabs-nav .tabs-selected A:link {
+	CURSOR: text
+}
+.tabs-nav .tabs-selected A:visited {
+	CURSOR: text
+}
+.tabs-nav .tabs-disabled A:link {
+	CURSOR: text
+}
+.tabs-nav .tabs-disabled A:visited {
+	CURSOR: text
+}
+.tabs-nav A:hover {
+	COLOR: #e1decd; CURSOR: pointer
+}
+.tabs-nav A:focus {
+	COLOR: #e1decd; CURSOR: pointer
+}
+.tabs-nav A:active {
+	COLOR: #e1decd; CURSOR: pointer
+}
+.tabs-container {
+	BORDER-BOTTOM: #51473d 5px solid; BORDER-LEFT: #51473d 5px solid; BACKGROUND: #ffffff; BORDER-TOP: #51473d 5px solid; BORDER-RIGHT: #51473d 5px solid
+}
