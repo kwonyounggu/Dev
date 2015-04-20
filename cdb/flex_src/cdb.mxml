@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   width="920" 
+
+			   xmlns:caliper="com.sickkids.caliper.*" 
+			   xmlns:view="com.sickkids.caliper.view.*" 
+			   preinitialize="application1_preinitializeHandler(event)"
+			   resize="onAppResize(event)"
+			   >
+		<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		
+		s|HGroup 
+		{ 
+			verticalAlign: baseline;
+		}
+	</fx:Style>	
+	<fx:Script>
+		<![CDATA[
+
+			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
+			
+			[Bindable]
+			public var _host:String="";
+			protected function application1_preinitializeHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				Security.allowDomain("*");
+				_host=FlexGlobals.topLevelApplication.parameters.host;
+				if(_host!=null) trace("host name from flashvars="+_host);
+			}
+			public function onAppResize(event:ResizeEvent):void
+			{			
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<caliper:CaliperContext contextView="{this}" />
+	</fx:Declarations>
+	
+	<view:CustomReferenceIntervalsView width="100%"/>
+	
+</s:Application>

@@ -1,0 +1,114 @@
+.droplinebar{
+overflow: hidden;
+}
+
+.droplinebar ul{
+margin: 0;
+padding: 0;
+float: left;
+width: 100%;
+font: bold 13px Arial;
+background: #242c54 url(../../images/menu/blockactive.gif) center center repeat-x; /*default background of menu bar 242c54*/
+}
+
+.droplinebar ul li{
+display: inline;
+}
+
+.droplinebar ul li a{
+float: left;
+color: white;
+padding: 9px 11px;
+text-decoration: none;
+}
+
+.droplinebar ul li a:visited{
+color: white;
+}
+
+.droplinebar ul li .current,
+.droplinebar ul li a.selected,
+.droplinebar ul li a:hover
+
+{ /*background of main menu bar links onMouseover*/
+	color: white;
+	/*background: transparent url(../../images/menu/blockdefault.gif) center center repeat-x;*/	
+	background: #CEA10C center center repeat-x;
+}
+
+/* Sub level menus*/
+.droplinebar ul li ul
+{
+	position: absolute;
+	z-index: 100;
+	left: 0;
+	top: 0;
+	background: #CEA10C; /*sub menu background color 303c76*/
+	visibility: hidden;
+}
+
+/* Sub level menu links style */
+.droplinebar ul li ul li a
+{
+	font: normal 12px Verdana;
+	/*padding: 6px;*/
+	padding-right: 2px;
+	padding-left: 6px;
+	margin: 0;
+	border-bottom: 1px solid navy;
+	
+}
+
+.droplinebar ul li ul li a:hover
+{ /*sub menu links' background color onMouseover */
+	background: #242c54;
+}
+
+/***************vertical menu ********************************/
+.arrowgreen
+{
+	width: 203px; /*width of menu*/
+	border-style: solid solid none solid;
+	border-color: #94AA74;
+	border-size: 1px;
+	border-width: 1px;
+}
+
+.arrowgreen ul
+{
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+.arrowgreen li
+{
+	background: transparent url(../../images/co.gif) no-repeat center left;
+}	
+.arrowgreen li a
+{
+	font: bold 12px Verdana, Arial, Helvetica, sans-serif;
+	display: block;
+	background: transparent url(../../images/lhs_menu/arrowblue.gif) 100% 0;
+  height: 24px; /*Set to height of bg image- padding within link (ie: 32px - 4px - 4px)*/
+	padding: 4px 0 4px 10px;
+	line-height: 24px; /*Set line-height of bg image- padding within link (ie: 32px - 4px - 4px)*/
+	text-decoration: none;
+}	
+	
+.arrowgreen li a:link, .arrowgreen li a:visited 
+{
+	color: #5E7830;
+}
+
+.arrowgreen li a:hover
+{
+	color: #26370A;
+	background-position: 100% -32px;
+}
+
+	
+.arrowgreen li a.selected
+{
+	color: #26370A;
+	background-position: 100% -64px;
+}

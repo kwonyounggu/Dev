@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 initialize="initData();"
+		 >
+
+
+	<fx:Script>
+		<![CDATA[
+			import mx.charts.HitData;
+			import mx.charts.series.items.PlotSeriesItem;
+			
+			// Initialize initDG variable from the Array. 
+			public function initData():void 
+			{ 				
+			} 
+			
+			private function plotTipFunction(hitData:HitData):String
+			{           
+				var series:PlotSeries = PlotSeries(hitData.element);    
+				var item1:PlotSeriesItem = PlotSeriesItem(hitData.chartItem);
+				var age:Object = item1.item.age;
+				var value:Number = Number(item1.yValue);
+				
+				return  " <b>" + series.displayName + "</b>\n" +
+					" <b>Age:\t\t</b>" + age + " \n" +
+					" <b>Concentration:\t</b>" + value;
+				
+			}
+
+			private function labelCI(item:Object, column:AdvancedDataGridColumn):String
+			{
+				if(column.dataField=="lowerCI")
+					return (item.lowerCI5==-10000.0 ? "" : numberFormatter.format(item.lowerCI5))+" ~ "+(item.lowerCI95==-10000.0 ? "" : numberFormatter.format(item.lowerCI95));
+				else if(column.dataField=="lowerCIWithLT")
+					return (item.lowerCI5WithLT==-10000.0 ? "" : numberFormatter.format(item.lowerCI5WithLT))+" ~ "+(item.lowerCI95WithLT==-10000.0 ? "" : numberFormatter.format(item.lowerCI95WithLT));
+				else  if(column.dataField=="upperCI")
+				{
+					trace(item.upperCI5+" to "+ item.upperCI95);
+					return (item.upperCI5==-10000.0 ? "" : numberFormatter.format(item.upperCI5))+" ~ "+(item.upperCI95==-10000.0 ? "" : numberFormatter.format(item.upperCI95));
+				}
+				else //upperCIWithLT
+					return (item.upperCI5WithLT==-10000.0 ? "" : numberFormatter.format(item.upperCI5WithLT))+" ~ "+(item.upperCI95WithLT==-10000.0 ? "" : numberFormatter.format(item.upperCI95WithLT));
+			}
+			//lowerLimit, lowerLimitWithLT, upperLimit, upperLimitWithLT
+			private function labelNumberFormat(item:Object, column:AdvancedDataGridColumn):String
+			{
+				if(column.dataField=="lowerLimit") return (item.lowerLimit==-10000.0 ? "" : numberFormatter.format(item.lowerLimit));
+				else if(column.dataField=="lowerLimitWithLT") return (item.lowerLimitWithLT==-10000.0 ? "" : numberFormatter.format(item.lowerLimitWithLT));
+				else if(column.dataField=="upperLimit") return  (item.upperLimit==-10000 ? "" : numberFormatter.format(item.upperLimit));
+				else return  (item.upperLimitWithLT==-10000.0 ? "" : numberFormatter.format(item.upperLimitWithLT));
+			}
+			//Sample size before and after outliers
+			private function labelSamplSizeFormat(item:Object, column:AdvancedDataGridColumn):String
+			{
+				return item.samples+"/"+item.samplesWithLT;
+			}
+			//skewness before after transformation
+			private function labelSkewness(item:Object, column:AdvancedDataGridColumn):String
+			{
+				return numberFormatter.format(item.pValue1)+"/"+numberFormatter.format(item.pValue2);
+			}
+			private function ageTip(item:Object):String 
+			{
+				return "Age range you have selected.";
+			}
+			private function boxcoxTip(item:Object):String 
+			{
+				return "Data result produced from the Box-Cox transformation.";
+			}
+			private function robustNonPTip(item:Object):String 
+			{
+				return "Data result produced from the robust method if n in between 40 and 120 or non-parametric method if n is over 120.";
+			}
+			private function skewnessPTip(item:Object):String 
+			{
+				return "Skewness without transformation with the given sample size/with the Box-Cox transformation if the sample size is in between 40 and 120 else without transformation.";
+			}
+			private function sampleSizeTip(item:Object):String 
+			{
+				return "Sample size before/after outliers";
+			}
+		]]>
+	</fx:Script>
+	<fx:Style>
+		.axisStyle 
+		{
+			fontFamily:Arial;
+			fontSize:12;
+			color:#000000;
+			fontWeight:bold;
+			fontStyle:italic;
+		}
+		.analyteNameStyle 
+		{
+			fontFamily:Arial;
+			fontSize:12;
+			color:#000000;
+			fontWeight:bold;
+			fontStyle:italic;
+		}
+	</fx:Style>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<mx:SolidColor id="sc1" color="0x5C9CD5" alpha="1"/>
+		<mx:SolidColor id="sc2" color="0xFF6799" alpha="1" />
+		<mx:SolidColorStroke id="stroke1" color="blue" weight="1"/>
+		<s:RadioButtonGroup id="metricSystem" />
+		<s:RadioButtonGroup id="gender"/>
+		
+		<mx:NumberFormatter id="numberFormatter" precision="1" useThousandsSeparator="false" useNegativeSign="true"/>
+	</fx:Declarations>
+	<s:BorderContainer id="errorContainer" borderStyle="inset" borderWeight="1" width="100%" backgroundColor="#ff0000" visible="false" includeInLayout="false">
+		<s:layout>
+			<s:VerticalLayout paddingTop="5" paddingRight="20" paddingBottom="5" paddingLeft="20"/>
+		</s:layout>
+		<s:Label id="faultCodeLabel" width="100%" textAlign="left" color="#ffffff" text="faultCode = Server.ResourceUnavailable"/>
+		<s:Label id="faultDetailLabel" width="100%" textAlign="left" color="#ffffff" text="faultDetail = Method 'getRawDataList' not found."/>
+		<s:Label id="faultStringLabel" width="100%" textAlign="left" color="#ffffff" text="faultString = Cannot invoke method 'getRawDataList'."/>
+	</s:BorderContainer>
+	<s:BorderContainer borderStyle="inset" borderWeight="1" width="100%">
+		<s:layout>
+			<s:VerticalLayout paddingTop="5" paddingRight="20" paddingBottom="5" paddingLeft="20"/>
+		</s:layout>
+		<s:HGroup width="100%">
+			<s:HGroup verticalAlign="baseline">
+				<s:Label text="Analyte: "/>
+				<s:DropDownList width="420" requireSelection="true" id="analyteList" >
+					<s:layout>
+						<s:VerticalLayout gap="0"
+										  horizontalAlign="contentJustify"
+										  requestedRowCount="30" />
+					</s:layout>
+				</s:DropDownList>
+			</s:HGroup>
+			<s:Spacer width="100%" />
+			<s:HGroup left="0" verticalAlign="baseline">
+				<s:Label text="Instrument: "/>
+				<s:DropDownList requireSelection="true" id="instrumentList" labelField="instrument_name" width="200"/>
+					
+			</s:HGroup>		
+		</s:HGroup>
+		<s:HGroup width="100%">
+			<s:HGroup  verticalAlign="baseline">
+				<s:Label text="Age range: "/>
+				<s:Label text="from"/>
+				<s:DropDownList requireSelection="true" id="ageFromList" >
+					<s:layout>
+						<s:VerticalLayout gap="0"
+										  horizontalAlign="contentJustify"
+										  requestedRowCount="18" />
+					</s:layout>
+				</s:DropDownList>
+				<s:Label text="to"/>
+				<s:DropDownList requireSelection="true" id="ageToList" >
+					<s:layout>
+						<s:VerticalLayout gap="0"
+										  horizontalAlign="contentJustify"
+										  requestedRowCount="18" />
+					</s:layout>
+				</s:DropDownList>
+			</s:HGroup>
+			<s:Spacer width="100%" />
+			<s:HGroup right="0"  verticalAlign="baseline">
+				<s:Label text="Metric Units: " />
+				<s:RadioButton value="1" label="SI" group="{metricSystem}" selected="true"/>
+				<s:RadioButton value="2" label="Conventional" group="{metricSystem}"/>
+			</s:HGroup>		
+		</s:HGroup>
+		<s:HGroup width="100%">
+			<s:HGroup verticalAlign="baseline">
+				<s:Label text="Sex: "/>
+				<s:RadioButton value="2" label="Female" group="{gender}"/><!-- changed 1 to 2 -->
+				<s:RadioButton value="1" label="Male" group="{gender}"/><!-- changed 2 to 1 -->
+				<s:RadioButton value="3" label="Both" group="{gender}" selected="true"/>
+			</s:HGroup>
+			<s:Spacer width="100%" />
+			<s:HGroup verticalAlign="baseline">
+				<s:Button id="submitButton" label="Submit" enabled="false" color="green"/>
+			</s:HGroup>
+		</s:HGroup>		
+	</s:BorderContainer>
+	
+	<s:BorderContainer borderStyle="inset" borderWeight="1" width="100%">
+		<s:layout>
+			<s:VerticalLayout paddingTop="10" paddingRight="20" paddingBottom="5" paddingLeft="20"/>
+		</s:layout>
+		<s:HGroup horizontalAlign="center" width="100%">
+			<s:Label id="selectedAnalyteName" styleName="analyteNameStyle"/>
+		</s:HGroup>
+		<mx:PlotChart id="plotChart" showDataTips="true" width="100%" axisTitleStyleName="axisStyle" dataTipFunction="plotTipFunction">
+			<mx:verticalAxis>
+				<mx:LinearAxis id="yAxisId"/>
+			</mx:verticalAxis>
+			<mx:verticalAxisRenderers>
+				<mx:AxisRenderer placement="left" verticalAxisTitleAlignment="vertical" axis="{yAxisId}" />
+			</mx:verticalAxisRenderers>
+			<mx:horizontalAxis>
+				<mx:LinearAxis id="xAxisId" title="Age (Years)" />
+			</mx:horizontalAxis>
+			<mx:series>
+				<!-- changed Aug-13-2014 -->
+				<!--<mx:PlotSeries id="plotMaleId"  verticalAxis="{yAxisId}" displayName="Male" itemRenderer="mx.charts.renderers.CircleItemRenderer"/>
+				<mx:PlotSeries id="plotFemaleId"   verticalAxis="{yAxisId}" displayName="Female" itemRenderer="mx.charts.renderers.CircleItemRenderer" />-->
+				<mx:PlotSeries id="plotFemaleId"  verticalAxis="{yAxisId}" displayName="Female" itemRenderer="mx.charts.renderers.CircleItemRenderer" fill="{sc2}" radius="2" />
+				<mx:PlotSeries id="plotMaleId"   verticalAxis="{yAxisId}" displayName="Male" itemRenderer="mx.charts.renderers.CircleItemRenderer"  fill="{sc1}" radius="2"/>
+			</mx:series>
+		</mx:PlotChart>
+		      
+		<mx:Legend dataProvider="{plotChart}" direction="horizontal"/>   
+	</s:BorderContainer>
+	
+	<!--<s:BorderContainer borderStyle="inset" borderWeight="1" width="100%">
+		<s:layout>
+			<s:VerticalLayout paddingTop="5" paddingRight="20" paddingBottom="5" paddingLeft="20"/>
+		</s:layout>-->
+	<s:Spacer height="20" />
+	<s:HGroup horizontalAlign="left" width="100%" verticalAlign="baseline">
+		<s:Label text="Reference Intervals" fontWeight="bold" id="analyteNameLabel"/>
+		<s:Spacer width="100%" />
+		<s:Label text="Max rows: 10 " fontWeight="normal"/>
+		<s:Button id="resetButton" label="Reset" enabled="false"/>
+	</s:HGroup>
+	
+	<!--</s:BorderContainer>-->
+	<mx:AdvancedDataGrid id="referenceIntervals" width="100%" height="100%" rowCount="12" rowHeight="25" sortableColumns="false" sortItemRenderer="{null}"> 
+		<mx:groupedColumns>
+			<mx:AdvancedDataGridColumn dataField="age" headerText="Age" showDataTips="true" dataTipFunction="ageTip"/>
+			<mx:AdvancedDataGridColumnGroup headerText="Lower Limit">
+				<mx:AdvancedDataGridColumn dataField="lowerLimitWithLT" headerText="BoxCox"  labelFunction="labelNumberFormat" textAlign="center" showDataTips="true" dataTipFunction="boxcoxTip"/>
+				<mx:AdvancedDataGridColumn dataField="lowerLimit" headerText="Rob/Non-P"  labelFunction="labelNumberFormat" textAlign="center" showDataTips="true" dataTipFunction="robustNonPTip"/>
+			</mx:AdvancedDataGridColumnGroup>
+			<mx:AdvancedDataGridColumnGroup headerText="Upper Limit">
+				<mx:AdvancedDataGridColumn dataField="upperLimitWithLT" headerText="BoxCox"  labelFunction="labelNumberFormat" textAlign="center" showDataTips="true" dataTipFunction="boxcoxTip"/>
+				<mx:AdvancedDataGridColumn dataField="upperLimit" headerText="Rob/Non-P"  labelFunction="labelNumberFormat" textAlign="center" showDataTips="true" dataTipFunction="robustNonPTip"/>
+			</mx:AdvancedDataGridColumnGroup>
+			<mx:AdvancedDataGridColumn dataField="samples" headerText="n/n'" textAlign="center" labelFunction="labelSamplSizeFormat" showDataTips="true" dataTipFunction="sampleSizeTip"/>
+			<mx:AdvancedDataGridColumn dataField="gender" headerText="Sex" textAlign="center"/>
+			<mx:AdvancedDataGridColumn dataField="metricSystem" headerText="Unit" textAlign="center"/>
+			<mx:AdvancedDataGridColumn dataField="pValue" headerText="Skew" textAlign="center" labelFunction="labelSkewness"  showDataTips="true" dataTipFunction="skewnessPTip"/>
+			<mx:AdvancedDataGridColumnGroup headerText="Lower CI">
+				<mx:AdvancedDataGridColumn dataField="lowerCIWithLT" headerText="BoxCox"  labelFunction="labelCI" textAlign="center" showDataTips="true" dataTipFunction="boxcoxTip"/>
+				<mx:AdvancedDataGridColumn dataField="lowerCI" headerText="Rob/Non-P"  labelFunction="labelCI" textAlign="center" showDataTips="true" dataTipFunction="robustNonPTip"/>
+			</mx:AdvancedDataGridColumnGroup>
+			<mx:AdvancedDataGridColumnGroup headerText="Higher CI">
+				<mx:AdvancedDataGridColumn dataField="upperCIWithLT" headerText="BoxCox"  labelFunction="labelCI" textAlign="center" showDataTips="true" dataTipFunction="boxcoxTip"/>
+				<mx:AdvancedDataGridColumn dataField="upperCI" headerText="Rob/Non-P"  labelFunction="labelCI" textAlign="center" showDataTips="true" dataTipFunction="robustNonPTip"/>
+			</mx:AdvancedDataGridColumnGroup>
+		</mx:groupedColumns>
+	</mx:AdvancedDataGrid>
+	
+</s:VGroup>
