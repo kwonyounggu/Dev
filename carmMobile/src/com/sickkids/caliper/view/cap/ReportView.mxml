@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="ReportView" viewActivate="view1_viewActivateHandler(event)"
+	    creationComplete="view1_creationCompleteHandler(event)"
+		>
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import spark.events.ViewNavigatorEvent;
+			
+			protected function view1_viewActivateHandler(event:ViewNavigatorEvent):void
+			{
+				// TODO Auto-generated method stub
+				this.tabBarVisible=false;
+				webView.loadURL("http://www.google.com");
+			}
+			public var webView:StageWebView = new StageWebView();
+			protected function view1_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				webView.stage = this.stage;
+				webView.viewPort = new Rectangle( 10, 10, stage.stageWidth/2, stage.stageHeight/2);
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:titleContent>
+		<s:VGroup>
+			<s:Label text="CAP - Report" color="#ffffff"/>
+			<s:Label text="Cardiac Arrest Preventability" fontSize="12" color="#000000"/>
+		</s:VGroup>
+	</s:titleContent>
+</s:View>

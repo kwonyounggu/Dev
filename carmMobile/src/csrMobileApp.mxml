@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   applicationDPI="160" >
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		s|TabbedViewNavigator #tabBar 
+		{
+			skinClass: ClassReference("com.sickkids.caliper.skins.ScrollingTabBarSkin");
+		}
+		s|TabbedViewNavigator #tabBar s|Scroller 
+		{
+			skinClass: ClassReference("com.sickkids.caliper.skins.NoScrollBarScrollerSkin"); 
+		}
+	</fx:Style>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			protected function tvn_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				tvn.hideTabBar();
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:TabbedViewNavigator id="tvn" width="100%" height="100%" creationComplete="tvn_creationCompleteHandler(event)">
+		<s:ViewNavigator  label="Home" width="100%" height="100%" firstView="views.CAPView"/>
+		<s:ViewNavigator label="Bpews" width="100%" height="100%" firstView="views.CAPView"/>
+		<s:ViewNavigator label="CAP" width="100%" height="100%" firstView="views.CAPView"/>
+		<s:ViewNavigator label="Epoch" width="100%" height="100%" firstView="views.CAPView"/>
+		<s:ViewNavigator label="Exemplar" width="100%" height="100%" firstView="views.CAPView"/>
+		<s:ViewNavigator label="Spire" width="100%" height="100%" firstView="views.CAPView"/>
+	</s:TabbedViewNavigator>
+</s:Application>

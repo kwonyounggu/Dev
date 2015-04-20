@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark">
+	<fx:Script>
+		<![CDATA[
+			//import mx.controls.ToolTip;
+			//import mx.core.IUIComponent;
+			//import mx.managers.ToolTipManager;
+
+			[Bindable] public var cellText:String="";
+			//[Bindable] public var display:Boolean=true;
+			[Bindable] public var bg:String="0xffffff";
+			//[Bindable] public var weightBold:String="normal";
+			/*private var toolTipS:ToolTip;
+			protected function myLabel_rollOutHandler(event:MouseEvent):void
+			{
+				if(toolTipS)
+				{
+					ToolTipManager.destroyToolTip(toolTipS);
+					toolTipS=null;
+				}
+			}
+			
+			protected function myLabel_rollOverHandler(event:MouseEvent):void
+			{
+				if(myLabel.text.length>0)
+					toolTipS=ToolTipManager.createToolTip(myLabel.text, event.currentTarget.x + event.currentTarget.width, event.currentTarget.y, null, IUIComponent(event.currentTarget)) as ToolTip;				
+			}
+			*/
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Rect width="100%" height="100%">
+		<s:stroke>
+			<s:SolidColorStroke color="0xCCCCCC" weight="0"/>
+		</s:stroke>
+		<s:fill><s:SolidColor color="{bg}" /></s:fill>
+	</s:Rect>
+	<s:Label id="myLabel" width="{this.width}" text="{cellText}" height="100%" paddingTop="2" paddingLeft="2" paddingRight="2" paddingBottom="2"/>
+	
+</s:Group>

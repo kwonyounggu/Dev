@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ViewNavigator xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				 xmlns:s="library://ns.adobe.com/flex/spark" width="100%" height="100%" xmlns:caliper="com.sickkids.caliper.*" 
+				 initialize="initializeData()" 
+				 >
+	<fx:Script>
+		<![CDATA[
+			import com.sickkids.caliper.view.cap.ReportView;
+			import com.sickkids.caliper.view.cap.ReviewView;
+			import com.sickkids.caliper.view.cap.SettingsView;
+			
+			import mx.collections.ArrayCollection;
+			
+			import spark.events.IndexChangeEvent;
+
+			private var menuListArray:Array=
+			 [
+				{label: "Read and Review", view: ReviewView}, 
+				{label: "Report", view: ReportView}, 
+				{label: "Settings", view: SettingsView}
+			 ];
+			public var menuList:ArrayCollection=new ArrayCollection(menuListArray);
+			
+			
+			public function initializeData():void
+			{
+				capMenuList.dataProvider=menuList;
+				capMenuList.validateNow();
+				capMenuList.selectedIndex=0;
+				
+				//this.addEventListener.addEventListener(MouseEvent.CLICK, onSubmitButton_clickHandler);
+			}
+			
+			protected function capMenuList_changeHandler(event:IndexChangeEvent):void
+			{
+				// TODO Auto-generated method stub
+				trace("capMenuList_changeHandler");
+				var obj:Object=event.currentTarget.selectedItem;
+				this.pushView(obj.view, obj.label);
+				capMenuButton.closeDropDown();
+			}
+			public function onLogoutClick(e:MouseEvent):void
+			{
+				this.popToFirstView();
+				capMenuList.selectedIndex=0;
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<caliper:CapContext contextView="{this}" />
+	</fx:Declarations>
+	<s:icon>
+		<s:MultiDPIBitmapSource source160dpi="@Embed('assets/images/common/ic_action_heart.png')"/>
+	</s:icon>
+	<s:navigationContent>
+		<s:CalloutButton id="capMenuButton"
+						 horizontalPosition="end"
+						 verticalPosition="after"
+						 icon="@Embed(source='assets/images/common/list_menu.jpg')"
+						 >
+			<s:calloutLayout>
+				<s:VerticalLayout paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10" horizontalAlign="center" gap="5"/>
+			</s:calloutLayout>
+			<s:List id="capMenuList" width="100%" height="100%" labelField="label" change="capMenuList_changeHandler(event)"/>
+		</s:CalloutButton>
+	</s:navigationContent>
+	<s:titleContent>
+		<s:VGroup>
+			<s:Label text="CAP" color="#ffffff"/>
+			<s:Label text="Cardiac Arrest Preventability" fontSize="12" color="#000000"/>
+		</s:VGroup>
+	</s:titleContent>
+	<s:actionContent>
+		<s:HGroup paddingBottom="20" visible="true" fontSize="12">
+			<s:Label text="logout" buttonMode="true" paddingRight="8" color="#00A400" click="onLogoutClick(event)"/>
+		</s:HGroup>	
+	</s:actionContent>
+</s:ViewNavigator>

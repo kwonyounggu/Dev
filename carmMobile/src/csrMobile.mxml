@@ -1,0 +1,113 @@
+<s:TabbedViewNavigatorApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+								  xmlns:s="library://ns.adobe.com/flex/spark" 
+								  applicationDPI="160" 
+								  xmlns:csr="com.sickkids.caliper.*"
+								  applicationComplete="tabbedviewnavigatorapplication1_applicationCompleteHandler(event)" xmlns:navigator="com.sickkids.caliper.view.navigator.*"
+								  >
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		/*BEGIN - This is a bug in Flex, related to native text controls. If you include the following on your top level application, it solves the problem.
+				  http://stackoverflow.com/questions/14412301/flex-textarea-and-textinput-on-mobile-not-positioning-correctly
+		*/
+		
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		@namespace local "*";
+		
+		s|TextInput 
+		{
+			/*skinClass: ClassReference("spark.skins.mobile.TextInputSkin");*/
+			skinClass: ClassReference("spark.skins.mobile.TextInputSkin");
+			showPromptWhenFocused:false;
+		}
+		s|TextArea 
+		{
+			skinClass: ClassReference("spark.skins.mobile.TextAreaSkin");
+		}
+		/*END - This is a bug in Flex, related to native text controls. If you include the following on your top level application, it solves the problem:*/
+		/*
+		s|TabbedViewNavigator #tabBar
+		{
+			skinClass: ClassReference("com.sickkids.caliper.skins.MyTabBarSkin");
+		}
+		*/
+		s|ActionBar
+		{
+			/*chromeColor: #FF0000;
+			skinClass: ClassReference("com.sickkids.caliper.skins.SolidActionBarSkin");
+			backgroundImage: Embed("assets/images/common/csr.png");
+			defaultButtonAppearance: beveled;*/			
+		}
+		
+		s|Button
+		{
+			/*backgroundImage: Embed("assets/images/common/csr_mobile.png");*/
+		}
+	</fx:Style>
+	<fx:Script>
+		<![CDATA[
+			import com.sickkids.caliper.skins.CsrActionBarSkin;
+			
+			import mx.events.EffectEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			import spark.effects.Fade;
+			import spark.events.IndexChangeEvent;
+
+			protected function tabbedviewnavigatorapplication1_applicationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				homeViewNavigator.actionBar.setStyle("skinClass", com.sickkids.caliper.skins.CsrActionBarSkin);
+				this.tabbedNavigator.addEventListener(IndexChangeEvent.CHANGE, onTabChange);
+			}
+			protected function onTabChange(event:IndexChangeEvent):void
+			{
+				//showMessage();
+				switch(event.oldIndex)
+				{
+					case 0: break;//Home Navigator
+					case 1: break;//Bpews Navigator
+					case 2: trace("CapViewNavigator-deactivated from other tab change!");
+						capViewNavigator.popToFirstView();	
+						capViewNavigator.capMenuList.selectedIndex=0;
+							break;
+					default: break;
+				}
+			}
+			public function showAlertMessage(title:String):void
+			{
+				msgWindow.title=title;
+				PopUpManager.addPopUp(msgWindow, this, true);
+				PopUpManager.centerPopUp(msgWindow);
+				msgWindowFadeIn.play();
+				
+				
+			}
+			
+			protected function msgWindow_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				event.currentTarget.closeButton.visible=false;
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<csr:ApplicationContext contextView="{this}" />
+		<s:Fade id="msgWindowFadeIn" duration="1500" target="{msgWindow}" alphaFrom="0.7" alphaTo="1.0" effectEnd="msgWindowFadeOut.play();"/>
+		<s:Fade id="msgWindowFadeOut" duration="1500" target="{msgWindow}" alphaFrom="1.0" alphaTo="0.7" effectEnd="PopUpManager.removePopUp(msgWindow);"/>
+		<s:TitleWindow id="msgWindow" width="100%" height="20" backgroundColor="#000000" color="#ffffff" creationComplete="msgWindow_creationCompleteHandler(event)"/>		
+	</fx:Declarations>
+	<!--<s:NavigatorContent>
+	<s:Button icon="@Embed('assets/images/common/home.png')" click="navigator.popToFirstView()" />
+	</s:NavigatorContent>-->
+	
+	<navigator:HomeViewNavigator label="Home" id="homeViewNavigator" firstView="com.sickkids.caliper.view.HomeView" />
+	<s:ViewNavigator label="Bpews" width="100%" height="100%" firstView="com.sickkids.caliper.view.HomeView" icon="@Embed('assets/images/common/ic_action_bargraph.png')"/>
+	<navigator:CapViewNavigator label="CAP" id="capViewNavigator" firstView="com.sickkids.caliper.view.cap.LoginView" />
+	<s:ViewNavigator label="Epoch" width="100%" height="100%" firstView="com.sickkids.caliper.view.BeckmanHomeView"  icon="@Embed('assets/images/common/ic_action_dice4.png')"/>
+	<s:ViewNavigator label="Spire" width="100%" height="100%" firstView="com.sickkids.caliper.view.RocheHomeView"  icon="@Embed('assets/images/common/ic_action_yinyang.png')"/>
+	<navigator:TttViewNavigator label="TTT" id="tttViewNavigator" firstView="com.sickkids.caliper.view.SiemensHomeView"  icon="@Embed('assets/images/common/ic_action_bargraph.png')"/>
+
+</s:TabbedViewNavigatorApplication>

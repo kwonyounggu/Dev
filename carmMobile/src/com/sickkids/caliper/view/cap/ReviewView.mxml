@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		title="ReviewView"
+
+		xmlns:components="com.sickkids.caliper.components.*" 
+		xmlns:cap="com.sickkids.caliper.view.cap.*"
+	    creationComplete="view1_creationCompleteHandler(event)"
+		>
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		.title 
+		{
+			fontFamily: Times;
+			fontSize: 30;
+			fontWeight: bold;
+		}
+		.body 
+		{
+			color: #222222;
+			fontFamily: Times;
+			fontSize: 12;
+			fontStyle: italic;
+			textAlign: justify;
+		}
+		.main-signature 
+		{
+			fontFamily: Helvetica;
+			fontSize: 18;
+		}
+		.state-signatures 
+		{
+			fontFamily: Helvetica;
+			fontSize: 12;
+		}
+	</fx:Style> 
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import flashx.textLayout.conversion.TextConverter;
+			import flashx.textLayout.elements.TextFlow;
+			[Bindable] public var itemNumber:Number=-1;				
+			
+			protected function view1_creationCompleteHandler(event:FlexEvent):void
+			{
+				//var htmlText:String = "<html><body><p>Hi whirld</p></body></html>";
+				//var flow:TextFlow = TextConverter.importToFlow(htmlText, TextConverter.TEXT_FIELD_HTML_FORMAT);
+				//helpMessage.textFlow = flow;
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<components:ItemCallout id="itemCallout" />
+		<!--<s:HTTPService id="reviewHttpService" requestTimeout="300" url="http://localhost:8080/carm" useProxy="false" method="POST"/>-->
+		<fx:String id="htmlTextAsHTML">
+			<![CDATA[
+				<p><b>How to review the clinical data</b></p>
+				<p> 1. Choose an item number by clicking its icon<br/>
+					2. Look at the Clinical Summary<br/>
+					3. Look at the Diagnoses<br/>
+					4. Look at the Problems<br/>
+					5. Look at the Laborotory<br/>
+					6. Look at the Vital Signs<br/>
+					7. Look at the Medications<br/>
+					8. Look at the Radiology<br/>
+					9. Rate your opinion<br/>
+					10. Put your comments if you disagree
+				</p>
+			]]>
+		</fx:String>
+	</fx:Declarations>
+	<s:titleContent>
+		<s:VGroup gap="3">
+			<s:Label text="CAP - Read and Review" color="#CDCAC9"/>			
+			<s:HGroup>
+				<s:Label text=" - Item Number List" fontSize="12" color="#ffffff"/>
+				<s:Image id="itemImage" source="@Embed('assets/images/common/item_icon.png')" buttonMode="true" width="16" height="16" />
+				<s:Label id="itemLabel" buttonMode="true" text="Pick" fontSize="13" color="#ffffff" paddingLeft="0" paddingTop="0" paddingBottom="0" paddingRight="0" />
+			</s:HGroup>	
+		</s:VGroup>
+	</s:titleContent>
+<!--	<s:actionContent>		
+		<s:VGroup>
+			<s:Label text="logout" buttonMode="true" fontSize="12" color="#00A400" click="CapViewNavigator(navigator).onLogoutClick(event)"/>
+			<s:HGroup>
+				<s:Image id="itemImage" source="@Embed('assets/images/common/item_icon.png')" buttonMode="true" width="16" height="16" />
+				<s:Label id="itemLabel" buttonMode="true" text="Pick" fontSize="13" color="#ffffff" paddingLeft="0" paddingTop="0" paddingBottom="0" paddingRight="20" />
+			</s:HGroup>	
+		</s:VGroup>
+	</s:actionContent>-->
+	
+	<s:Scroller left="0" right="0" bottom="0" top="0" id="reviewViewScroller" >
+		<s:VGroup  horizontalCenter="0" paddingTop="1" paddingRight="1" paddingBottom="1" paddingLeft="1" gap="1">	
+			<s:BorderContainer id="alertContainerBorderContainer" width="100%" visible="false" includeInLayout="false">
+				<s:layout>
+					<s:VerticalLayout paddingTop="5" paddingRight="5" paddingBottom="5" paddingLeft="5"/>
+				</s:layout>
+				<s:RichText id="alertMessage" width="100%" fontSize="11" color="#F72609"/>
+			</s:BorderContainer>
+
+			<!-- http://blog.flexexamples.com/2009/10/19/repositioning-the-control-bar-on-a-spark-panel-container-in-flex-4/ -->
+			<!-- the above link contains CustomPanelSkin and the corresponding description -->
+			<cap:SummaryPanel id="summaryPanel" title="Clinical Summary" width="100%"/>
+			<cap:DiagnosesPanel id="diagnosesPanel" title="Diagnoses" width="100%"/>
+			<cap:ProblemsPanel id="problemsPanel" title="Problems" width="100%"/>
+			<cap:LaborotoryPanel id="laborotoryPanel" title="Laborotory" width="100%"/>
+			<cap:VitalSignPanel id="vitalSignPanel" title="Vital Signs" width="100%"/>
+			<cap:MedicationPanel id="medicationPanel" title="Medications, 24Hrs before event" width="100%"/>
+			<cap:RadiologyPanel id="radiologyPanel" title="Radiology" width="100%"/>
+			<cap:ReviewPanel id="reviewPanel" title="Please describe your ..." width="100%"/>
+			<cap:ForumPanel id="forumPanel" title="Forum" width="100%"/>
+			<s:BorderContainer id="helpContainer" width="100%" >
+				<s:layout>
+					<s:VerticalLayout paddingTop="2" paddingRight="5" paddingBottom="5" paddingLeft="5"/>
+				</s:layout>
+				<s:RichText id="helpMessage" width="100%" textFlow="{TextConverter.importToFlow(htmlTextAsHTML, TextConverter.TEXT_FIELD_HTML_FORMAT)}"/>				
+			</s:BorderContainer>
+		</s:VGroup>
+	</s:Scroller>
+</s:View>

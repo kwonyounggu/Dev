@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" xmlns:components="com.sickkids.caliper.components.*">
+	<fx:Script>
+		<![CDATA[
+			import com.sickkids.caliper.model.CapModel;
+			
+			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			
+			[Bindable] public var cellText:String="";
+			[Bindable] public var display:Boolean=true;
+			[Bindable] public var bg:String="0xffffff";
+			[Bindable] public var weightBold:String="normal";
+			
+			protected function textInput_enterHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				commentText.text+=textInput.text+"\n";
+				if(commentText.text.length>CapModel.MAX_COMMENTS_LENGTH) commentText.text=commentText.text.substr(0, CapModel.MAX_COMMENTS_LENGTH);
+				textInput.text="";
+				commentTextTitle.text="My Comments (Current: "+commentText.text.length+", Max: 2500)";
+				
+				//trace("INFO: "+this.parentDocument.parentDocument.reviewViewScroller.top+", "+this.parentDocument.parentDocument.reviewViewScroller.bottom);
+			}
+			
+			protected function textInput_focusInHandler(event:FocusEvent):void
+			{
+				// TODO Auto-generated method stub
+				this.parentDocument.parentDocument.reviewViewScroller.enabled=false;
+				trace("INFO: "+this.parentDocument.parentDocument.reviewViewScroller.enabled+", textInput_focusInHandler");
+			}
+			
+			protected function textInput_focusOutHandler(event:FocusEvent):void
+			{
+				// TODO Auto-generated method stub
+				this.parentDocument.parentDocument.reviewViewScroller.enabled=true;
+				trace("INFO: "+this.parentDocument.parentDocument.reviewViewScroller.enabled+", textInput_focusOutHandler");
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Rect width="100%" height="100%">
+		<s:stroke>
+			<s:SolidColorStroke color="0xCCCCCC" weight="0"/>
+		</s:stroke>
+		<s:fill><s:SolidColor color="{bg}" /></s:fill>
+	</s:Rect>
+	
+	<s:VGroup width="{this.width}" height="100%" paddingTop="2" paddingRight="2" paddingBottom="5" paddingLeft="2" horizontalCenter="0">	
+		<s:Label id="cellId" width="{this.width}" text="{cellText}" height="100%" paddingTop="7" paddingRight="7" paddingBottom="7" paddingLeft="7"/>
+		<s:Spacer height="10"/>
+		<s:Label id="commentTextTitle" text="My Comments (Max: 2500)" fontStyle="italic" color="0x008838" paddingLeft="7"/>
+		<s:Label id="commentText" width="{this.width}"  paddingTop="2" paddingRight="7" paddingBottom="7" paddingLeft="7" />
+		<s:HGroup horizontalCenter="0" horizontalAlign="center" width="100%">
+			<s:TextInput width="98%" id="textInput" enter="textInput_enterHandler(event)" editable="true" skinClass="spark.skins.mobile.TextInputSkin" focusIn="textInput_focusInHandler(event)" focusOut="textInput_focusOutHandler(event)"/>
+			<!--<s:TextArea width="97%" skinClass="spark.skins.mobile.TextAreaSkin"/> parentScroller="{FlexGlobals.topLevelApplication.capViewNavigator.reviewViewScroller}"-->
+			<!--<s:TextArea width="97%" skinClass="spark.skins.mobile.TextAreaSkin"/>
+			<components:MyTextArea width="97%" parentScroller="{this.parentDocument.parentDocument.reviewViewScroller}"/>-->
+		</s:HGroup>
+			
+	</s:VGroup>
+</s:Group>

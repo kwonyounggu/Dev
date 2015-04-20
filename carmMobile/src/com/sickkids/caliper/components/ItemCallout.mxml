@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Callout xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" width="100"
+		   verticalPosition="middle" 
+		   horizontalPosition="after"		   
+		   >
+	
+	<fx:Script>
+		<![CDATA[
+			import com.sickkids.caliper.model.CapModel;
+			import com.sickkids.caliper.view.cap.ReviewView;
+			
+			import mx.collections.ArrayCollection;
+			
+			import spark.components.Label;
+			import spark.components.View;
+			import spark.events.PopUpEvent;
+			
+			import org.robotlegs.adapters.SwiftSuspendersInjector;
+			import org.robotlegs.core.IInjector;
+			
+			[Bindable] public var itemList:ArrayCollection=null;
+			/*open="openHandler(event)"
+			close="closeHandler(event)"*/
+			//[Inject] public var capModel:CapModel;
+			//private var injector:IInjector=new SwiftSuspendersInjector();
+			//private var capModel:CapModel=injector.getInstance(CapModel);
+			/*protected function openHandler(e:PopUpEvent):void
+			{
+				//var o:ReviewView=e.currentTarget.owner as ReviewView;
+				//var o:NumericStepper=e.currentTarget.owner as NumericStepper;
+				//trace("INFO: openHandler() is called ..."+o.minimum+", "+o.maximum);
+				//spinnerDataList.minimum=o.minimum;
+				//spinnerDataList.maximum=o.maximum;
+				//spinnerList.selectedItem=o.value;
+				trace("INFO: openHandler(e:PopUpEvent) is called in ItemCallout.mxml");
+				//trace("INFO: openHandler(e:PopUpEvent) itemList="+(itemList.length)+" in ItemCallout.mxml");
+			}
+			
+			protected function closeHandler(e:PopUpEvent):void
+			{
+				// TODO Auto-generated method stub
+				trace("INFO: closeHandler() is called ..."+e.commit+", "+e.data+" in ItemCallout.mxml");
+				
+				if(e.commit)
+				{
+					var o:Label=e.currentTarget.owner as Label;
+					//o.value=e.data;
+					o.text="9999";
+				}
+			}*/
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+	</fx:Declarations>
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<!--<s:VGroup paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10" horizontalAlign="center">
+		<s:List id="list" dataProvider="{ac}" width="240" change="close(true, list.selectedItem)"/>
+	</s:VGroup>  -->
+	<s:ActionBar width="100%">
+		<s:actionContent>
+			<s:Button icon="@Embed(source='assets/images/common/close36x36.png')" click="close()"/>
+		</s:actionContent>
+		<!--<s:navigationContent>
+			<s:Button label="H"/>
+		</s:navigationContent>-->
+	</s:ActionBar>
+
+	<s:SpinnerListContainer width="100%" id="spinnerContainer">
+		<s:SpinnerList id="spinnerList" width="100%" dataProvider="{itemList}" click="close(true, spinnerList.selectedItem)" labelField="carmId"/>
+	</s:SpinnerListContainer>
+</s:Callout>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TabbedViewNavigatorApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+								  xmlns:s="library://ns.adobe.com/flex/spark" applicationDPI="160" xmlns:caliper="com.sickkids.caliper.*">
+	<fx:Declarations>
+		<caliper:CaliperContext contextView="{this}"/>
+	</fx:Declarations>
+	<s:ViewNavigator id="homeViewNavigator" label="Home" width="100%" height="100%" firstView="com.sickkids.caliper.view.HomeView" />
+	
+	<s:ViewNavigator id="abbottViewNavigator" label="Abbott" width="100%" height="100%" firstView="com.sickkids.caliper.view.AbbottHomeView" enabled="false"/>
+	<s:ViewNavigator id="beckmanViewNavigator" label="Beckman" width="100%" height="100%" firstView="com.sickkids.caliper.view.BeckmanHomeView" enabled="false"/>
+	<s:ViewNavigator id="searchViewNavigator" label="SearchView" width="100%" height="100%" firstView="com.sickkids.caliper.view.SearchView" enabled="false"/>
+</s:TabbedViewNavigatorApplication>
+

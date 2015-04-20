@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark">
+	<fx:Script>
+		<![CDATA[
+			import flashx.textLayout.conversion.TextConverter;
+			[Bindable] public var cellText:String="";
+			[Bindable] public var display:Boolean=true;
+			[Bindable] public var bg:String="0xffffff";
+			[Bindable] public var weightBold:String="normal";
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Rect width="100%" height="100%">
+		<s:stroke>
+			<s:SolidColorStroke color="0xCCCCCC" weight="0"/>
+		</s:stroke>
+		<s:fill><s:SolidColor color="{bg}" /></s:fill>
+	</s:Rect>
+	
+	<s:VGroup width="{this.width}" height="100%" paddingTop="2" paddingRight="2" paddingBottom="5" paddingLeft="2">	
+		<s:Label id="cellId" width="{this.width}" text="{cellText}" height="100%" paddingTop="7" paddingRight="7" paddingBottom="7" paddingLeft="7"/>
+		<!--<s:HGroup width="{this.width}" gap="2">
+			<s:RadioButton groupName="rate11" id="radio1" label="1" />
+			<s:RadioButton groupName="rate11" id="radio2" label="2" />
+			<s:RadioButton groupName="rate11" id="radio3" label="3" />
+			<s:RadioButton groupName="rate11" id="radio4" label="4" />
+			<s:RadioButton groupName="rate11" id="radio5" label="5" />
+			<s:RadioButton groupName="rate11" id="radio6" label="6" />
+		</s:HGroup>-->
+		<s:HSlider id="mySlider" liveDragging="true" dataTipPrecision="0"/>
+	</s:VGroup>
+</s:Group>

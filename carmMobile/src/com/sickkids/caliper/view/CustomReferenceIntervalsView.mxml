@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 initialize="initData();"
+		 >
+
+
+	<fx:Script>
+		<![CDATA[
+			import mx.charts.HitData;
+			import mx.charts.series.items.PlotSeriesItem;
+			import mx.collections.ArrayCollection;
+			
+			
+			private var dgArray:Array = [{lowerlimit:12, upperlimit:12, samples:6000, lowerci:20, higherci:23}]; 
+			
+			[Bindable] 
+			public var initDG:ArrayCollection; 
+			
+			// Initialize initDG variable from the Array. 
+			public function initData():void 
+			{ 
+				initDG = new ArrayCollection(dgArray); 
+			} 
+			
+			private function plotTipFunction(hitData:HitData):String
+			{           
+				var series:PlotSeries = PlotSeries(hitData.element);    
+				var item1:PlotSeriesItem = PlotSeriesItem(hitData.chartItem);
+				var age:Object = item1.item.age;
+				var value:Number = Number(item1.yValue);
+				
+				return  " <b>" + series.displayName + "</b>\n" +
+					" <b>Age:\t\t</b>" + age + " \n" +
+					" <b>Concentration:\t</b>" + value;
+				
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Style>
+		.axisStyle 
+		{
+			fontFamily:Arial;
+			fontSize:12;
+			color:#000000;
+			fontWeight:bold;
+			fontStyle:italic;
+		}
+		.analyteNameStyle 
+		{
+			fontFamily:Arial;
+			fontSize:12;
+			color:#000000;
+			fontWeight:bold;
+			fontStyle:italic;
+		}
+	</fx:Style>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<mx:SolidColor id="sc1" color="blue" alpha=".3"/>
+		<mx:SolidColorStroke id="stroke1" color="blue" weight="1"/>
+		<s:RadioButtonGroup id="metricSystem" />
+		<s:RadioButtonGroup id="gender"/>
+	</fx:Declarations>
+	<s:BorderContainer id="errorContainer" borderStyle="inset" borderWeight="1" width="100%" backgroundColor="#ff0000" visible="false" includeInLayout="false">
+		<s:layout>
+			<s:VerticalLayout paddingTop="5" paddingRight="20" paddingBottom="5" paddingLeft="20"/>
+		</s:layout>
+		<s:Label id="faultCodeLabel" width="100%" textAlign="left" color="#ffffff" text="faultCode = Server.ResourceUnavailable"/>
+		<s:Label id="faultDetailLabel" width="100%" textAlign="left" color="#ffffff" text="faultDetail = Method 'getRawDataList' not found."/>
+		<s:Label id="faultStringLabel" width="100%" textAlign="left" color="#ffffff" text="faultString = Cannot invoke method 'getRawDataList'."/>
+	</s:BorderContainer>
+	<s:BorderContainer borderStyle="inset" borderWeight="1" width="100%">
+		<s:layout>
+			<s:VerticalLayout paddingTop="5" paddingRight="20" paddingBottom="5" paddingLeft="20"/>
+		</s:layout>
+		<s:HGroup width="100%">
+			<s:HGroup left="0" verticalAlign="baseline">
+				<s:Label text="Instrument: "/>
+				<s:DropDownList requireSelection="true" id="instrumentList" labelField="instrument_name" width="200"/>
+					
+			</s:HGroup>
+			<s:Spacer width="100%" />
+			<s:HGroup right="0"  verticalAlign="baseline">
+				<s:Label text="Metric Units: " />
+				<s:RadioButton value="1" label="SI" group="{metricSystem}" selected="true"/>
+				<s:RadioButton value="2" label="Conventional" group="{metricSystem}"/>
+			</s:HGroup>			
+		</s:HGroup>
+		<s:HGroup width="100%">
+			<s:HGroup  verticalAlign="baseline">
+				<s:Label text="Age range: "/>
+				<s:Label text="from"/>
+				<s:DropDownList requireSelection="true" id="ageFromList" >
+					<s:layout>
+						<s:VerticalLayout gap="0"
+										  horizontalAlign="contentJustify"
+										  requestedRowCount="18" />
+					</s:layout>
+				</s:DropDownList>
+				<s:Label text="to"/>
+				<s:DropDownList requireSelection="true" id="ageToList" >
+					<s:layout>
+						<s:VerticalLayout gap="0"
+										  horizontalAlign="contentJustify"
+										  requestedRowCount="18" />
+					</s:layout>
+				</s:DropDownList>
+			</s:HGroup>
+			<s:Spacer width="100%" />
+			<s:HGroup verticalAlign="baseline">
+				<s:Label text="Gender: "/>
+				<s:RadioButton value="1" label="Female" group="{gender}"/>
+				<s:RadioButton value="2" label="Male" group="{gender}"/>
+				<s:RadioButton value="3" label="Both" group="{gender}" selected="true"/>
+			</s:HGroup>
+		</s:HGroup>
+		<s:HGroup width="100%">
+			<s:HGroup verticalAlign="baseline">
+				<s:Label text="Analyte: "/>
+				<s:DropDownList width="420" requireSelection="true" id="analyteList" >
+					<s:layout>
+						<s:VerticalLayout gap="0"
+										  horizontalAlign="contentJustify"
+										  requestedRowCount="30" />
+					</s:layout>
+				</s:DropDownList>
+			</s:HGroup>
+			<s:Spacer width="100%" />
+			<s:HGroup verticalAlign="baseline">
+				<s:Button id="submitButton" label="Submit" enabled="false"/>
+			</s:HGroup>
+		</s:HGroup>		
+	</s:BorderContainer>
+	
+	<s:BorderContainer borderStyle="inset" borderWeight="1" width="100%">
+		<s:layout>
+			<s:VerticalLayout paddingTop="10" paddingRight="20" paddingBottom="5" paddingLeft="20"/>
+		</s:layout>
+		<s:HGroup horizontalAlign="center" width="100%">
+			<s:Label id="selectedAnalyteName" styleName="analyteNameStyle"/>
+		</s:HGroup>
+		<mx:PlotChart id="plotChart" showDataTips="true" width="100%" axisTitleStyleName="axisStyle" dataTipFunction="plotTipFunction">
+			<mx:verticalAxis>
+				<mx:LinearAxis id="yAxisId"/>
+			</mx:verticalAxis>
+			<mx:verticalAxisRenderers>
+				<mx:AxisRenderer placement="left" verticalAxisTitleAlignment="vertical" axis="{yAxisId}" />
+			</mx:verticalAxisRenderers>
+			<mx:horizontalAxis>
+				<mx:LinearAxis id="xAxisId" title="Age (Years)" />
+			</mx:horizontalAxis>
+			<mx:series>
+				<mx:PlotSeries id="plotMaleId"  verticalAxis="{yAxisId}" displayName="Male" itemRenderer="mx.charts.renderers.CircleItemRenderer"/>
+				<mx:PlotSeries id="plotFemaleId"   verticalAxis="{yAxisId}" displayName="Female" itemRenderer="mx.charts.renderers.CircleItemRenderer" />
+			</mx:series>
+		</mx:PlotChart>
+		      
+		<mx:Legend dataProvider="{plotChart}" direction="horizontal"/>   
+	</s:BorderContainer>
+	
+	<!--<s:BorderContainer borderStyle="inset" borderWeight="1" width="100%">
+		<s:layout>
+			<s:VerticalLayout paddingTop="5" paddingRight="20" paddingBottom="5" paddingLeft="20"/>
+		</s:layout>-->
+	<s:Spacer height="20" />
+	<s:HGroup horizontalAlign="left" width="100%">
+		<s:Label text="Reference Intervals for both male and female, age from 0 to 18" fontWeight="bold"/>
+	</s:HGroup>
+		<s:DataGrid id="customReferenceIntervals" width="100%"  textAlign="center" dataProvider="{initDG}" minHeight="0" > 
+			<s:columns>
+				<s:ArrayList>
+					<s:GridColumn dataField="lowerlimit" headerText="Lower Limit" />
+
+					<s:GridColumn dataField="upperlimit" headerText="Upper Limit"/>
+					<s:GridColumn dataField="samples" headerText="Samples"/>
+					<s:GridColumn dataField="lowerci" headerText="Lower CI"/>
+					<s:GridColumn dataField="higherci" headerText="Higher CI"/>
+				</s:ArrayList>
+			</s:columns>
+		</s:DataGrid> 
+		
+		
+	<!--</s:BorderContainer>-->
+</s:VGroup>

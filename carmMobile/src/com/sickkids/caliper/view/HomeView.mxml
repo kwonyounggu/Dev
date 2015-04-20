@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		title="Center for Safety Research"
+		backgroundColor="#cfcfcf"
+	    addedToStage="view1_addedToStageHandler(event)"
+	    creationComplete="view1_creationCompleteHandler(event)"
+		>
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import com.sickkids.caliper.model.HomeModel;
+			
+			import flash.media.StageWebView;
+			
+			import mx.charts.renderers.CircleItemRenderer;
+			import mx.events.FlexEvent;
+			
+			import flashx.textLayout.conversion.TextConverter;
+
+			private var cnt:int = 0;
+			[Inject] public var homeModel:HomeModel;
+			protected function addText():void
+			{
+				
+			}			
+			
+			protected function view1_addedToStageHandler(event:Event):void
+			{
+				trace(navigator.actionBar.height+", "+navigator.actionBar.width);
+				//var webView:StageWebView = new StageWebView();  
+				//webView.stage = this.stage;
+				//webView.viewPort = new Rectangle( 0, 100, this.stage.stageWidth, this.stage.stageHeight-100 );
+				
+				//webView.viewPort = new Rectangle( 0, navigator.actionBar.height, navigator.actionBar.width, this.height );
+				
+				//webView.viewPort = new Rectangle(5, 20, screen.width-10, screen.height-40);
+				//webView.addEventListener(Event.COMPLETE, onURLLoadComplete);
+				//webView.addEventListener(LocationChangeEvent.LOCATION_CHANGE, onLocationChange);
+				
+				//webView.loadURL("https://www.centerforsafetyresearch.com");
+				//webView.loadString( 'Your HTML Here' );
+			}
+			protected function onURLLoadComplete(event:Event):void
+			{
+				trace("Load Complete");
+			}
+			
+			protected function onLocationChange(event:LocationChangeEvent):void
+			{
+				trace("Location change: " + event.location);
+			}
+			
+			protected function view1_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:BorderContainer id="errorContainer" borderStyle="inset" borderWeight="1" width="100%" backgroundColor="#ff0000" visible="false" includeInLayout="false">
+		<s:layout>
+			<s:VerticalLayout paddingTop="20" paddingRight="20" paddingBottom="20" paddingLeft="20"/>
+		</s:layout>
+		<s:Label id="faultCodeLabel" width="100%" textAlign="left" color="#ffffff" text="faultCode = Server.ResourceUnavailable"/>
+		<s:Label id="faultDetailLabel" width="100%" textAlign="left" color="#ffffff" text="faultDetail = Method 'getRawDataList' not found."/>
+		<s:Label id="faultStringLabel" width="100%" textAlign="left" color="#ffffff" text="faultString = Cannot invoke method 'getRawDataList'."/>
+		<s:Spacer height="20"/>
+		<s:Label id="errorMessage" width="100%" text="The application requires an Internet connection. Please check your network settings and try again." color="#ffffff" fontWeight="bold"/>
+	</s:BorderContainer>
+	<s:Scroller left="0" right="0" bottom="0" top="0" width="100%" height="100%">
+		<s:VGroup horizontalCenter="0" paddingTop="2" paddingRight="2" paddingBottom="2" paddingLeft="2" width="100%" height="100%">		
+			<s:BorderContainer width="100%" height="100%">
+				<s:layout>
+					<s:VerticalLayout paddingTop="20" paddingRight="10" paddingBottom="10" paddingLeft="10" horizontalAlign="center"/>
+				</s:layout>
+				<s:Line width="100%">
+					<s:stroke>
+						<s:SolidColorStroke color="#eaead5" weight="20" caps="square"/>
+					</s:stroke>
+				</s:Line>
+				
+				<s:Group width="100%" height="40%">	
+					
+					<s:RichText width="100%" height="100%" paddingTop="10" paddingRight="10" paddingBottom="10" paddingLeft="10" >
+						<s:content>
+						<s:p>The Center for Safety Research is in the Critical Care Program at the Hospital for Sick Children. Our work is to improve the safety of clinical care.<s:br/>
+						</s:p>	
+						</s:content> 
+					</s:RichText>	
+					<s:Rect width="100%" height="70%">
+						<s:stroke>
+							<s:SolidColorStroke color="#daebe1"/>
+						</s:stroke>
+					</s:Rect>
+				</s:Group>
+				<s:Line width="100%">
+					<s:stroke>
+						<s:SolidColorStroke color="#eaead5" weight="20" caps="square"/>
+					</s:stroke>
+				</s:Line>
+				<s:Group width="100%" height="60%">		
+					<s:RichText width="100%" height="100%" paddingTop="10" paddingRight="10" paddingBottom="10" paddingLeft="10" >
+						<s:content>
+							<s:p backgroundColor="#ff0000">CSR projects are funded by the CIHR, The Heart &amp; Stroke Foundation of Canada, and the Ministry of Health &amp; Long Term Care.
+								<s:br /><s:br />Selected studies of the Center are projects of the Canadian Critical Care Trials Group.
+							</s:p>	
+						</s:content> 
+					</s:RichText>	
+					
+					<s:Rect width="100%" height="80%">
+						<s:stroke>
+							<s:SolidColorStroke color="#daebe1"/>
+						</s:stroke>
+					</s:Rect>
+				</s:Group>
+				
+			</s:BorderContainer>		
+			<s:BorderContainer id="chartSection" visible="false" includeInLayout="false" width="100%" height="450" >
+				<s:layout>
+					<s:VerticalLayout paddingTop="10" paddingLeft="0" horizontalAlign="center"/>
+				</s:layout>
+				<s:VGroup horizontalAlign="left">
+					<s:HGroup>
+						<s:RichText id="chartTitle" horizontalCenter="0" text="R-22 Pressure-Enthalpy Chart" paddingLeft="30"/>
+					</s:HGroup>
+					<!-- table section to show the results -->
+					<s:Graphic>
+						<s:Rect width="100%" height="1000">
+							<s:fill>
+								<s:SolidColor color="#DDDDDD" />
+							</s:fill>
+						</s:Rect>
+						<s:RichText text="Hello FXG!" />
+					</s:Graphic>
+					<s:Graphic>
+						<s:Rect width="100%" height="1000">
+							<s:fill>
+								<s:SolidColor color="#DDDDDD" />
+							</s:fill>
+						</s:Rect>
+						<s:RichText text="Hello FXG!" />
+					</s:Graphic>
+					<!--<s:Graphic viewWidth="100" viewHeight="100">
+					<s:Rect width="500" height="500">
+					<s:fill>
+					<s:SolidColor color="0x333333" />
+					</s:fill>
+					</s:Rect>
+					</s:Graphic>	-->
+				</s:VGroup>
+			</s:BorderContainer>
+		</s:VGroup>
+	</s:Scroller>
+</s:View>
+
