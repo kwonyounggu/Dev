@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="this is a title section of view">
+	
+	<fx:Script>
+		<![CDATA[
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				label_id1.text = "Hey Brent, waz uppppppppppppppppp1";
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:VGroup paddingLeft="20">
+		<s:Button  label="button" click="button1_clickHandler(event)" />
+		<s:CheckBox   label="check box" />
+		<s:Label id="label_id1" text="this is a label"/>
+	</s:VGroup>
+	
+</s:View>
