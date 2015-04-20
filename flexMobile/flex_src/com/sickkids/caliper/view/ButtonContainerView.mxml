@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 creationComplete="group1_creationCompleteHandler(event)"
+		 >
+	<fx:Script>
+		<![CDATA[
+			import com.sickkids.caliper.events.RawDataRMIEvent;
+			import com.sickkids.caliper.events.SimpleAppEvent;
+			
+			import mx.events.FlexEvent;
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				trace("INFO: group1_creationCompleteHandler(.) is called in ButtonContainerView.mxml");
+			}
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				this.dispatchEvent(new RawDataRMIEvent(RawDataRMIEvent.GET_STRING, "hello"));
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<!-- the event is dispached to the Mediator's event listener through the view mediator mapping -->
+	<s:Button label="Choose File" click="dispatchEvent(new SimpleAppEvent(SimpleAppEvent.CHOOSE_FILE));"/>
+	<s:Button label="Get Data from DB" click="button1_clickHandler(event)"/>
+</s:HGroup>

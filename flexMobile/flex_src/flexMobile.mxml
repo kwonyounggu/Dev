@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TabbedViewNavigatorApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+							xmlns:s="library://ns.adobe.com/flex/spark" applicationDPI="160" xmlns:caliper="com.sickkids.caliper.*">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<caliper:CaliperContext contextView="{this}" />
+	</fx:Declarations>
+	<!--<s:NavigatorContent>
+		<s:Button icon="@Embed('assets/images/common/home.png')" click="navigator.popToFirstView()" />
+	</s:NavigatorContent>-->
+	
+	<s:ViewNavigator label="THome" width="100%" height="100%" firstView="com.sickkids.caliper.view.TempMobileHomeView" >
+		<s:icon>
+			<s:MultiDPIBitmapSource source160dpi="@Embed('assets/images/common/home.png')"/>
+		</s:icon>
+	</s:ViewNavigator>
+	<s:ViewNavigator label="Home" width="100%" height="100%" firstView="com.sickkids.caliper.view.HomeView" />
+	<s:ViewNavigator label="Abott" width="100%" height="100%" firstView="com.sickkids.caliper.view.AbbottHomeView" />
+	<s:ViewNavigator label="Beckman" width="100%" height="100%" firstView="com.sickkids.caliper.view.BeckmanHomeView" />
+	<s:ViewNavigator label="Ortho" width="100%" height="100%" firstView="com.sickkids.caliper.view.OrthoHomeView" />
+	<s:ViewNavigator label="Roche" width="100%" height="100%" firstView="com.sickkids.caliper.view.RocheHomeView" />
+	<s:ViewNavigator label="Siemens" width="100%" height="100%" firstView="com.sickkids.caliper.view.SiemensHomeView" />
+</s:TabbedViewNavigatorApplication>

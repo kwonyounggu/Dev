@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="THome"
+	    creationComplete="view1_creationCompleteHandler(event)"
+		>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			[Bindable]
+			private var xmlData:XML = null;
+			
+			protected function httpXmlDataService_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				trace("result:"+event.result);
+			}
+			
+			protected function httpXmlDataService_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+				trace("falut:"+event.fault);
+			}
+			
+			protected function view1_creationCompleteHandler(event:FlexEvent):void
+			{
+				//httpXmlDataService.send();
+				
+			}
+			
+			protected function submitBtn_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				//Getting parameters with two ways
+				//1. using the request s:requestt
+				//2. 
+				//var params:Object = {};
+				//params.analyte = "CO"
+				//params.instrument = "Abbott";
+				//params.metric = 1;//1:SI, 2:Conventional
+				trace("send----------------------");
+				//httpXmlDataService.send();
+				
+				//remoteObj.setCredentials("","");
+				remoteObj.getTestString.send();
+				//remoteObj.
+			}
+			
+			protected function method1_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				trace("method1_resultHandler(..) is called");
+			}
+			
+			protected function roMajor_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+				trace("roMajor_faultHandler("+event+") is called");
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:HTTPService  id="httpXmlDataService"
+						url="http://localhost:8080/cdb/mobileservice"
+						resultFormat="e4x"
+					    result="httpXmlDataService_resultHandler(event)"
+					    fault="httpXmlDataService_faultHandler(event)"
+						useProxy="false"
+					    showBusyCursor="true"
+					    method="POST"
+						>
+			<s:request xmlns="">
+				<analyte>{analyteValue.text}</analyte>
+				<metric>{metricValue.text}</metric>
+				<instrument>{instrumentValue.text}</instrument>
+			</s:request>
+		</s:HTTPService>
+		
+		<s:RemoteObject id="remoteObj" destination="caliperProxy" endpoint="http://localhost:8080/cdb/messagebroker/amf"
+						 fault="roMajor_faultHandler(event)">
+			<s:method name="getTestString" result="method1_resultHandler(event)">
+				<s:arguments>
+					<in>
+						whatever
+					</in>
+				</s:arguments>
+			</s:method>
+		</s:RemoteObject>
+			
+	</fx:Declarations>
+	<s:layout>
+		<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"/>
+	</s:layout>
+	<s:HGroup>
+		<s:Label text="Analyte:"/>	
+		<s:TextInput id="analyteValue"  text="analyte name"/>
+	</s:HGroup>
+	<s:HGroup>
+		<s:Label text="Metric Unit" />
+		<s:TextInput id="metricValue"  text="metric name"/>
+	</s:HGroup>
+	<s:HGroup>
+		<s:Label text="Instrument" />
+		<s:TextInput id="instrumentValue" text="instrument name"/>
+	</s:HGroup>
+	<s:Button id="submitBtn" click="submitBtn_clickHandler(event)" />
+</s:View>

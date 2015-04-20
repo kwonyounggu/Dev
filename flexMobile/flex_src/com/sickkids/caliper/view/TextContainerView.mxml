@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 creationComplete="vgroup1_creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			protected function vgroup1_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				trace("INFO: vgroup1_creationCompleteHandler(.) is called in TextContainerView.mxml");
+			}
+			
+			public function setFileName(name:String):void
+			{
+				fileName.text=name;
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:TextInput width="255" id="fileName"/>
+	<s:HGroup>
+		<s:TextArea width="420" id="fielPath"/>
+		<s:TextArea width="420" id="remoteString"/>
+	</s:HGroup>
+</s:VGroup>

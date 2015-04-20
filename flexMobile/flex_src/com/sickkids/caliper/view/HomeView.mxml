@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="HomeView">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:BorderContainer id="errorContainer" borderStyle="inset" borderWeight="1" width="100%" backgroundColor="#ff0000" visible="false" includeInLayout="false">
+		<s:layout>
+			<s:VerticalLayout paddingTop="20" paddingRight="20" paddingBottom="20" paddingLeft="20"/>
+		</s:layout>
+		<s:Label id="faultCodeLabel" width="100%" textAlign="left" color="#ffffff" text="faultCode = Server.ResourceUnavailable"/>
+		<s:Label id="faultDetailLabel" width="100%" textAlign="left" color="#ffffff" text="faultDetail = Method 'getRawDataList' not found."/>
+		<s:Label id="faultStringLabel" width="100%" textAlign="left" color="#ffffff" text="faultString = Cannot invoke method 'getRawDataList'."/>
+		<s:Spacer height="20"/>
+		<s:Label id="errorMessage" width="100%" text="The application requires an Internet connection. Please check your network settings and try again." color="#ffffff" fontWeight="bold"/>
+	</s:BorderContainer>
+</s:View>
+
