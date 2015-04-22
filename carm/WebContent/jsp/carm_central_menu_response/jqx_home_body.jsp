@@ -3,7 +3,7 @@
 <%@ page import="com.sickkids.caliper.common.*" %>
 <%@ page import="com.sickkids.caliper.database.*" %>
 <%@ page import="com.sickkids.caliper.dao.*" %>
-<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+
 <%@ page import="java.util.*" %>
 <%@ page isELIgnored ="false" %>
 <style type="text/css">
